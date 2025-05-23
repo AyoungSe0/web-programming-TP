@@ -14,33 +14,33 @@ const BLOCK_TYPES = {
 
 const levelBlockLayouts = {
   1: [
-    { x: 50, y: 50, type: BLOCK_TYPES.GLASS },
-    { x: 130, y: 50, type: BLOCK_TYPES.GLASS },
-    { x: 210, y: 50, type: BLOCK_TYPES.GLASS },
-    { x: 290, y: 50, type: BLOCK_TYPES.GLASS },
-    { x: 370, y: 50, type: BLOCK_TYPES.GLASS },
+    { x: 50, y: 50, type: BLOCK_TYPES.ITEM_BARRIER},
+    { x: 130, y: 50, type: BLOCK_TYPES.ITEM_COOLER },
+    { x: 210, y: 50, type: BLOCK_TYPES.ITEM_COOLER },
+    { x: 290, y: 50, type: BLOCK_TYPES.ITEM_COOLER },
+    { x: 370, y: 50, type: BLOCK_TYPES.ITEM_COOLER },
     { x: 50, y: 90, type: BLOCK_TYPES.GLASS },
-    { x: 130, y: 90, type: BLOCK_TYPES.NORMAL },
+    { x: 130, y: 90, type: BLOCK_TYPES.GLASS },
     { x: 210, y: 90, type: BLOCK_TYPES.GLASS },
     { x: 290, y: 90, type: BLOCK_TYPES.GLASS },
-    { x: 370, y: 90, type: BLOCK_TYPES.GLASS },
+    { x: 370, y: 90, type: BLOCK_TYPES.ITEM_CUTTER },
     { x: 50, y: 130, type: BLOCK_TYPES.GLASS },
-    { x: 130, y: 130, type: BLOCK_TYPES.GLASS },
-    { x: 210, y: 130, type: BLOCK_TYPES.GLASS },
-    { x: 290, y: 130, type: BLOCK_TYPES.GLASS },
-    { x: 370, y: 130, type: BLOCK_TYPES.GLASS }
+    { x: 130, y: 130, type: BLOCK_TYPES.ITEM_BARRIER },
+    { x: 210, y: 130, type: BLOCK_TYPES.ITEM_BARRIER },
+    { x: 290, y: 130, type: BLOCK_TYPES.ITEM_BARRIER },
+    { x: 370, y: 130, type: BLOCK_TYPES.ITEM_GUIDE }
   ],
 
   2: [
-    { x: 50, y: 50, type: BLOCK_TYPES.NORMAL },
+    { x: 50, y: 50, type:  BLOCK_TYPES.TIRE },
     { x: 130, y: 50, type: BLOCK_TYPES.TIRE },
-    { x: 210, y: 50, type: BLOCK_TYPES.FUEL },
-    { x: 290, y: 50, type: BLOCK_TYPES.METAL },
-    { x: 370, y: 50, type: BLOCK_TYPES.GLASS },
-    { x: 50, y: 90, type: BLOCK_TYPES.LIGHT },
-    { x: 130, y: 90, type: BLOCK_TYPES.NORMAL },
+    { x: 210, y: 50, type:  BLOCK_TYPES.TIRE},
+    { x: 290, y: 50, type:  BLOCK_TYPES.TIRE },
+    { x: 370, y: 50, type:  BLOCK_TYPES.TIRE },
+    { x: 50, y: 90, type:  BLOCK_TYPES.TIRE},
+    { x: 130, y: 90, type:  BLOCK_TYPES.TIRE },
     { x: 210, y: 90, type: BLOCK_TYPES.TIRE },
-    { x: 290, y: 90, type: BLOCK_TYPES.FUEL },
+    { x: 290, y: 90, type:  BLOCK_TYPES.TIRE },
     { x: 370, y: 90, type: BLOCK_TYPES.METAL },
     { x: 50, y: 130, type: BLOCK_TYPES.GLASS },
     { x: 130, y: 130, type: BLOCK_TYPES.LIGHT },
@@ -49,15 +49,15 @@ const levelBlockLayouts = {
     { x: 370, y: 130, type: BLOCK_TYPES.FUEL }
   ],
   3: [
-    { x: 50, y: 50, type: BLOCK_TYPES.NORMAL },
-    { x: 130, y: 50, type: BLOCK_TYPES.TIRE },
-    { x: 210, y: 50, type: BLOCK_TYPES.FUEL },
+    { x: 50, y: 50, type: BLOCK_TYPES.METAL },
+    { x: 130, y: 50, type: BLOCK_TYPES.METAL },
+    { x: 210, y: 50, type: BLOCK_TYPES.METAL },
     { x: 290, y: 50, type: BLOCK_TYPES.METAL },
-    { x: 370, y: 50, type: BLOCK_TYPES.GLASS },
-    { x: 50, y: 90, type: BLOCK_TYPES.LIGHT },
-    { x: 130, y: 90, type: BLOCK_TYPES.NORMAL },
-    { x: 210, y: 90, type: BLOCK_TYPES.TIRE },
-    { x: 290, y: 90, type: BLOCK_TYPES.FUEL },
+    { x: 370, y: 50, type: BLOCK_TYPES.METAL },
+    { x: 50, y: 90, type: BLOCK_TYPES.METAL },
+    { x: 130, y: 90, type: BLOCK_TYPES.METAL },
+    { x: 210, y: 90, type: BLOCK_TYPES.METAL},
+    { x: 290, y: 90, type: BLOCK_TYPES.METAL },
     { x: 370, y: 90, type: BLOCK_TYPES.METAL },
     { x: 50, y: 130, type: BLOCK_TYPES.GLASS },
     { x: 130, y: 130, type: BLOCK_TYPES.LIGHT },
@@ -70,9 +70,13 @@ const levelBlockLayouts = {
 
 
 // === 블럭 색상 매핑 ===. 나중에 이미지로
-function getColorByType(type) {
+function getColorByType(type, hitCount = 0) {
   switch (type) {
-    case BLOCK_TYPES.METAL: return "#777";
+    case BLOCK_TYPES.METAL:
+      if (hitCount === 0) return "#aaa";
+      if (hitCount === 1) return "#888";
+      if (hitCount === 2) return "#555";
+      return "#333";
     case BLOCK_TYPES.TIRE: return "#444";
     case BLOCK_TYPES.FUEL: return "#f00";
     case BLOCK_TYPES.LIGHT: return "#fff";
@@ -85,6 +89,7 @@ function getColorByType(type) {
     default: return "#ccc";
   }
 }
+
 
 // ===== GameState.js =====
 
@@ -351,17 +356,62 @@ function draw() {
   if (ball.x + ball.dx > canvas.width - ball.radius || ball.x + ball.dx < ball.radius) {
     ball.dx = -ball.dx;
   }
-
   if (ball.y + ball.dy < ball.radius) {
+  ball.dy = -ball.dy;
+}
+
+
+  if (ball.y + ball.dy > canvas.height - ball.radius - paddle.height - 10) {
+  if (ball.x > paddle.x && ball.x < paddle.x + paddle.width) {
     ball.dy = -ball.dy;
-  } else if (ball.y + ball.dy > canvas.height - ball.radius - paddle.height - 10) {
-    if (ball.x > paddle.x && ball.x < paddle.x + paddle.width) {
-      ball.dy = -ball.dy;
+  } else {
+    if ((GameState.barrierCount || 0) > 0) {
+      GameState.barrierCount--;
+
+      cancelAnimationFrame(animationId);
+      animationId=null;
+      let countdown = 3;
+      const overlay = document.createElement('div');
+      overlay.style.position = 'absolute';
+      overlay.style.top = '0';
+      overlay.style.left = '0';
+      overlay.style.width = '100%';
+      overlay.style.height = '100%';
+      overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+      overlay.style.color = 'white';
+      overlay.style.fontSize = '80px';
+      overlay.style.display = 'flex';
+      overlay.style.alignItems = 'center';
+      overlay.style.justifyContent = 'center';
+      overlay.style.zIndex = '1000';
+      overlay.id = 'barrierOverlay';
+      document.body.appendChild(overlay);
+
+      const interval = setInterval(() => {
+        overlay.textContent = countdown;
+        countdown--;
+        if (countdown < 0) {
+          clearInterval(interval);
+          document.body.removeChild(overlay);
+
+          ball.x = canvas.width / 2;
+          ball.y = canvas.height - 30;
+          ball.dx = 2;
+          ball.dy = -2;
+          ball.speed = 3;
+
+          draw(); // 다시 루프 시작
+        }
+      }, 1000);
+
+      return; // draw 루프 중지
     } else {
       gameOver();
       return;
     }
   }
+}
+
 
   // ✅ 속도 조절 반영 (정규화 + 방어코드 포함)
   let magnitude = Math.sqrt(ball.dx * ball.dx + ball.dy * ball.dy);
@@ -410,12 +460,13 @@ function drawBricks() {
     if (b.status === 1) {
       ctx.beginPath();
       ctx.rect(b.x, b.y, 70, 20);
-      ctx.fillStyle = getColorByType(b.type);
+      ctx.fillStyle = getColorByType(b.type, b.hitCount);
       ctx.fill();
       ctx.closePath();
     }
   });
 }
+
 
 function collisionDetection() {
   bricks.forEach(b => {
@@ -822,12 +873,12 @@ function handleItemCutterBlock(block) {
   block.status = 0;
 }
 
-// 이후 collisionDetection 내부에서 적용 필요:
+
 function applyCutterIfAvailable(block) {
   if (GameState.hasCutter) {
     block.status = 0;
     GameState.hasCutter = false;
-    return true; // 처리 완료
+    return true;
   }
   return false;
 }
@@ -836,10 +887,16 @@ function handleItemBarrierBlock(block) {
   block.status = 0;
 }
 function handleItemGuideBlock(block) {
-  ball.dy = -Math.abs(ball.dy);
-  ball.dx = (paddle.x + paddle.width / 2 - ball.x) / 10;
+  ball.x = paddle.x + paddle.width / 2;
+  ball.y = canvas.height - paddle.height - 20 - ball.radius;
+
+  ball.dx = 0;
+  ball.dy = -2;
+  ball.speed = 3;
+
   block.status = 0;
 }
+
 
 function applyScore(numBlocks = 1, baseScore = 10) {
   comboCount += numBlocks;
