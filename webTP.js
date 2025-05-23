@@ -1,3 +1,94 @@
+const BLOCK_TYPES = {
+  NORMAL: "일반",
+  GLASS: "유리창",
+  METAL: "철프레임",
+  TIRE: "타이어",
+  FUEL: "연료통",
+  LIGHT: "라이트",
+
+  ITEM_COOLER: "냉각제",
+  ITEM_CUTTER: "고출력 커터",
+  ITEM_BARRIER: "차단막",
+  ITEM_GUIDE: "유도로봇팔",
+};
+
+const levelBlockLayouts = {
+  1: [
+    { x: 50, y: 50, type: BLOCK_TYPES.ITEM_BARRIER},
+    { x: 130, y: 50, type: BLOCK_TYPES.ITEM_COOLER },
+    { x: 210, y: 50, type: BLOCK_TYPES.ITEM_COOLER },
+    { x: 290, y: 50, type: BLOCK_TYPES.ITEM_COOLER },
+    { x: 370, y: 50, type: BLOCK_TYPES.ITEM_COOLER },
+    { x: 50, y: 90, type: BLOCK_TYPES.GLASS },
+    { x: 130, y: 90, type: BLOCK_TYPES.GLASS },
+    { x: 210, y: 90, type: BLOCK_TYPES.GLASS },
+    { x: 290, y: 90, type: BLOCK_TYPES.GLASS },
+    { x: 370, y: 90, type: BLOCK_TYPES.ITEM_CUTTER },
+    { x: 50, y: 130, type: BLOCK_TYPES.GLASS },
+    { x: 130, y: 130, type: BLOCK_TYPES.ITEM_BARRIER },
+    { x: 210, y: 130, type: BLOCK_TYPES.ITEM_BARRIER },
+    { x: 290, y: 130, type: BLOCK_TYPES.ITEM_BARRIER },
+    { x: 370, y: 130, type: BLOCK_TYPES.ITEM_GUIDE }
+  ],
+
+  2: [
+    { x: 50, y: 50, type:  BLOCK_TYPES.TIRE },
+    { x: 130, y: 50, type: BLOCK_TYPES.TIRE },
+    { x: 210, y: 50, type:  BLOCK_TYPES.TIRE},
+    { x: 290, y: 50, type:  BLOCK_TYPES.TIRE },
+    { x: 370, y: 50, type:  BLOCK_TYPES.TIRE },
+    { x: 50, y: 90, type:  BLOCK_TYPES.TIRE},
+    { x: 130, y: 90, type:  BLOCK_TYPES.TIRE },
+    { x: 210, y: 90, type: BLOCK_TYPES.TIRE },
+    { x: 290, y: 90, type:  BLOCK_TYPES.TIRE },
+    { x: 370, y: 90, type: BLOCK_TYPES.METAL },
+    { x: 50, y: 130, type: BLOCK_TYPES.GLASS },
+    { x: 130, y: 130, type: BLOCK_TYPES.LIGHT },
+    { x: 210, y: 130, type: BLOCK_TYPES.NORMAL },
+    { x: 290, y: 130, type: BLOCK_TYPES.TIRE },
+    { x: 370, y: 130, type: BLOCK_TYPES.FUEL }
+  ],
+  3: [
+    { x: 50, y: 50, type: BLOCK_TYPES.METAL },
+    { x: 130, y: 50, type: BLOCK_TYPES.METAL },
+    { x: 210, y: 50, type: BLOCK_TYPES.METAL },
+    { x: 290, y: 50, type: BLOCK_TYPES.METAL },
+    { x: 370, y: 50, type: BLOCK_TYPES.METAL },
+    { x: 50, y: 90, type: BLOCK_TYPES.METAL },
+    { x: 130, y: 90, type: BLOCK_TYPES.METAL },
+    { x: 210, y: 90, type: BLOCK_TYPES.METAL},
+    { x: 290, y: 90, type: BLOCK_TYPES.METAL },
+    { x: 370, y: 90, type: BLOCK_TYPES.METAL },
+    { x: 50, y: 130, type: BLOCK_TYPES.GLASS },
+    { x: 130, y: 130, type: BLOCK_TYPES.LIGHT },
+    { x: 210, y: 130, type: BLOCK_TYPES.NORMAL },
+    { x: 290, y: 130, type: BLOCK_TYPES.TIRE },
+    { x: 370, y: 130, type: BLOCK_TYPES.FUEL }
+  ]
+};
+
+
+
+// === 블럭 색상 매핑 ===. 나중에 이미지로
+function getColorByType(type, hitCount = 0) {
+  switch (type) {
+    case BLOCK_TYPES.METAL:
+      if (hitCount === 0) return "#aaa";
+      if (hitCount === 1) return "#888";
+      if (hitCount === 2) return "#555";
+      return "#333";
+    case BLOCK_TYPES.TIRE: return "#444";
+    case BLOCK_TYPES.FUEL: return "#f00";
+    case BLOCK_TYPES.LIGHT: return "#fff";
+    case BLOCK_TYPES.GLASS: return "#0ff";
+    case BLOCK_TYPES.ITEM_BARRIER: return "#f5a";
+    case BLOCK_TYPES.ITEM_COOLER: return "#5af";
+    case BLOCK_TYPES.ITEM_CUTTER: return "#fa0";
+    case BLOCK_TYPES.ITEM_GUIDE: return "#5f5";
+    case BLOCK_TYPES.NORMAL:
+    default: return "#ccc";
+  }
+}
 
 
 // ===== GameState.js =====
@@ -204,7 +295,7 @@ function startStage(stageNumber) {
 function initGameElements() {
   let speed = 2 + GameState.selectedStage;
   if (GameState.upgrades.includes("스피드업")) {
-    speed += 1; // 디버프 적용
+    speed += 1;
   }
 
   ball = {
@@ -229,26 +320,27 @@ function initGameElements() {
     leftPressed: false
   };
 
-  bricks = [];
-  for (let c = 0; c < 5; c++) {
-    bricks[c] = [];
-    for (let r = 0; r < 2; r++) {
-      const colors = ['#00FECA', '#FDF200', '#FF85EA', '#7B61F8'];
-      const color = colors[Math.floor(Math.random() * colors.length)];
-      const points = 10 + Math.floor(Math.random() * 30);
-      bricks[c][r] = { x: 0, y: 0, status: 1, color, points };
-    }
-  }
+  const layout = levelBlockLayouts[GameState.selectedStage];
+  bricks = layout.map(block => ({
+    x: block.x,
+    y: block.y,
+    type: block.type,
+    status: 1,
+    hitCount: 0,
+    maxHits: block.type === BLOCK_TYPES.METAL ? 3 : 1
+  }));
 
   $(document).off('keydown').on('keydown', function (e) {
     if (e.key === "ArrowRight") paddle.rightPressed = true;
     if (e.key === "ArrowLeft") paddle.leftPressed = true;
   });
+
   $(document).on('keyup', function (e) {
     if (e.key === "ArrowRight") paddle.rightPressed = false;
     if (e.key === "ArrowLeft") paddle.leftPressed = false;
   });
 }
+
 
 function draw() {
   if (isGameOver) return;
@@ -260,23 +352,82 @@ function draw() {
   collisionDetection();
   checkGameClear();
 
-  if (ball.x + ball.dx > canvas.width - ball.radius || ball.x + ball.dx < ball.radius)
+  // 벽 충돌 검사
+  if (ball.x + ball.dx > canvas.width - ball.radius || ball.x + ball.dx < ball.radius) {
     ball.dx = -ball.dx;
-
+  }
   if (ball.y + ball.dy < ball.radius) {
+  ball.dy = -ball.dy;
+}
+
+
+  if (ball.y + ball.dy > canvas.height - ball.radius - paddle.height - 10) {
+  if (ball.x > paddle.x && ball.x < paddle.x + paddle.width) {
     ball.dy = -ball.dy;
-  } else if (ball.y + ball.dy > canvas.height - ball.radius - paddle.height - 10) {
-    if (ball.x > paddle.x && ball.x < paddle.x + paddle.width) {
-      ball.dy = -ball.dy;
+  } else {
+    if ((GameState.barrierCount || 0) > 0) {
+      GameState.barrierCount--;
+
+      cancelAnimationFrame(animationId);
+      animationId=null;
+      let countdown = 3;
+      const overlay = document.createElement('div');
+      overlay.style.position = 'absolute';
+      overlay.style.top = '0';
+      overlay.style.left = '0';
+      overlay.style.width = '100%';
+      overlay.style.height = '100%';
+      overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+      overlay.style.color = 'white';
+      overlay.style.fontSize = '80px';
+      overlay.style.display = 'flex';
+      overlay.style.alignItems = 'center';
+      overlay.style.justifyContent = 'center';
+      overlay.style.zIndex = '1000';
+      overlay.id = 'barrierOverlay';
+      document.body.appendChild(overlay);
+
+      const interval = setInterval(() => {
+        overlay.textContent = countdown;
+        countdown--;
+        if (countdown < 0) {
+          clearInterval(interval);
+          document.body.removeChild(overlay);
+
+          ball.x = canvas.width / 2;
+          ball.y = canvas.height - 30;
+          ball.dx = 2;
+          ball.dy = -2;
+          ball.speed = 3;
+
+          draw(); // 다시 루프 시작
+        }
+      }, 1000);
+
+      return; // draw 루프 중지
     } else {
       gameOver();
       return;
     }
   }
+}
 
-  ball.x += ball.dx;
-  ball.y += ball.dy;
 
+  // ✅ 속도 조절 반영 (정규화 + 방어코드 포함)
+  let magnitude = Math.sqrt(ball.dx * ball.dx + ball.dy * ball.dy);
+  if (magnitude === 0) {
+    // 방향이 완전히 사라졌을 경우 기본 방향 부여
+    ball.dx = 1;
+    ball.dy = -1;
+    magnitude = Math.sqrt(ball.dx * ball.dx + ball.dy * ball.dy);
+  }
+  const vx = (ball.dx / magnitude) * ball.speed;
+  const vy = (ball.dy / magnitude) * ball.speed;
+
+  ball.x += vx;
+  ball.y += vy;
+
+  // 패들 이동
   if (paddle.rightPressed && paddle.x < canvas.width - paddle.width) {
     paddle.x += 5;
   } else if (paddle.leftPressed && paddle.x > 0) {
@@ -285,6 +436,7 @@ function draw() {
 
   animationId = requestAnimationFrame(draw);
 }
+
 
 function drawBall() {
   ctx.beginPath();
@@ -302,56 +454,84 @@ function drawPaddle() {
   ctx.closePath();
 }
 
+// === drawBricks ===
 function drawBricks() {
-  for (let c = 0; c < bricks.length; c++) {
-    for (let r = 0; r < bricks[c].length; r++) {
-      const b = bricks[c][r];
-      if (b.status === 1) {
-        const x = c * (70 + 10) + 35;
-        const y = r * (20 + 10) + 30;
-        b.x = x;
-        b.y = y;
-        ctx.beginPath();
-        ctx.rect(x, y, 70, 20);
-        ctx.fillStyle = b.color;
-        ctx.fill();
-        ctx.closePath();
-      }
+  bricks.forEach(b => {
+    if (b.status === 1) {
+      ctx.beginPath();
+      ctx.rect(b.x, b.y, 70, 20);
+      ctx.fillStyle = getColorByType(b.type, b.hitCount);
+      ctx.fill();
+      ctx.closePath();
     }
-  }
+  });
 }
+
 
 function collisionDetection() {
-  for (let c = 0; c < bricks.length; c++) {
-    for (let r = 0; r < bricks[c].length; r++) {
-      const b = bricks[c][r];
-      if (b.status === 1) {
-        if (ball.x > b.x && ball.x < b.x + 70 && ball.y > b.y && ball.y < b.y + 20) {
-          b.status = 0;
-          ball.dy = -ball.dy;
-          score += b.points;
-          comboCount++;
-          comboScore += comboCount * 5;
+  bricks.forEach(b => {
+    if (b.status === 1 &&
+      ball.x > b.x && ball.x < b.x + 70 &&
+      ball.y > b.y && ball.y < b.y + 20) {
 
-          $('#score').text(score + comboScore);
-          $('#combo').text(comboCount);
-
-          if (comboTimer) clearTimeout(comboTimer);
-          comboTimer = setTimeout(() => {
-            comboCount = 0;
-          }, 1500);
-        }
+      // 고출력 커터 효과 우선 적용
+      if (applyCutterIfAvailable(b)) {
+        ball.dy = -ball.dy;
+        score += 10;
+        return;
       }
+
+      switch (b.type) {
+        case BLOCK_TYPES.NORMAL:
+          handleNormalBlock(b);
+          break;
+        case BLOCK_TYPES.METAL:
+          handleMetalBlock(b);
+          break;
+        case BLOCK_TYPES.GLASS:
+          handleGlassBlock(b);
+          break;
+        case BLOCK_TYPES.FUEL:
+          handleFuelBlock(b);
+          break;
+        case BLOCK_TYPES.TIRE:
+          handleTireBlock(b);
+          break;
+        case BLOCK_TYPES.LIGHT:
+          handleLightBlock(b);
+          break;
+        case BLOCK_TYPES.ITEM_COOLER:
+          handleItemCoolerBlock(b);
+          break;
+        case BLOCK_TYPES.ITEM_CUTTER:
+          handleItemCutterBlock(b);
+          break;
+        case BLOCK_TYPES.ITEM_BARRIER:
+          handleItemBarrierBlock(b);
+          break;
+        case BLOCK_TYPES.ITEM_GUIDE:
+          handleItemGuideBlock(b);
+          break;
+        default:
+          b.status = 0;
+      }
+
+      ball.dy = -ball.dy;
+      score += 10;
     }
-  }
+  });
 }
 
+
+
 function checkGameClear() {
-  const cleared = bricks.every(col => col.every(b => b.status === 0));
+  const cleared = bricks.every(b => b.status === 0);
   if (cleared) {
     endGame();
   }
 }
+
+
 
 function gameOver() {
   cancelAnimationFrame(animationId);
@@ -585,3 +765,213 @@ function toggleBGM() {
 $(document).ready(() => {
   showStartUI();
 });
+
+function handleNormalBlock(block) {
+  block.status = 0;
+}
+function handleGlassBlock(block) {
+  const count = explodeGlassChain(block);
+  applyScore(count, 10);
+}
+
+
+function explodeGlassChain(target) {
+  let destroyed = 0;
+  bricks.forEach(b => {
+    if (b.status === 1 && b.type === BLOCK_TYPES.GLASS) {
+      const dx = Math.abs(b.x - target.x);
+      const dy = Math.abs(b.y - target.y);
+      if (dx <= 80 && dy <= 40) {
+        b.status = 0;
+        destroyed++;
+        destroyed += explodeGlassChain(b);
+      }
+    }
+  });
+  return destroyed;
+}
+
+function handleMetalBlock(block) {
+  block.hitCount++;
+  if (block.hitCount >= block.maxHits) {
+    block.status = 0;
+  }
+}
+
+function handleTireBlock(block) {
+  ball.dx = (Math.random() - 0.5) * 6;
+  ball.dy = -Math.abs(ball.dy);
+  block.status = 0;
+}
+
+function handleFuelBlock(block) {
+  const count = explodeFuelChain(block);
+  applyScore(count, 15);
+}
+
+function explodeFuelChain(center) {
+  let destroyed = 0;
+  bricks.forEach(b => {
+    if (b.status === 1) {
+      const dx = Math.abs(b.x - center.x);
+      const dy = Math.abs(b.y - center.y);
+      if (dx <= 80 && dy <= 40) {
+        if (b.type === BLOCK_TYPES.METAL) {
+          b.hitCount++;
+          if (b.hitCount >= b.maxHits) {
+            b.status = 0;
+            destroyed++;
+          }
+        } else {
+          b.status = 0;
+          destroyed++;
+
+          if (b.type === BLOCK_TYPES.FUEL) {
+            destroyed += explodeFuelChain(b);
+          }
+          if (b.type === BLOCK_TYPES.GLASS) {
+            destroyed += explodeGlassChain(b);
+          }
+        }
+      }
+    }
+  });
+  return destroyed;
+}
+
+function destroySurroundingBlocks(center) {
+  bricks.forEach(b => {
+    if (b.status === 1) {
+      const dx = Math.abs(b.x - center.x);
+      const dy = Math.abs(b.y - center.y);
+      if (dx <= 80 && dy <= 40) {
+        b.status = 0;
+      }
+    }
+  });
+}
+function handleLightBlock(block) {
+  flashScreen();
+  block.status = 0;
+}
+
+function flashScreen() {
+  document.body.style.backgroundColor = "black";
+  setTimeout(() => {
+    document.body.style.backgroundColor = "white";
+    setTimeout(() => {
+      document.body.style.backgroundColor = "#f0f0f0";
+    }, 100);
+  }, 100);
+}
+function handleItemCoolerBlock(block) {
+  ball.speed = Math.max(1, ball.speed - 1);
+  block.status = 0;
+}
+function handleItemCutterBlock(block) {
+  GameState.hasCutter = true;
+  block.status = 0;
+}
+
+
+function applyCutterIfAvailable(block) {
+  if (GameState.hasCutter) {
+    block.status = 0;
+    GameState.hasCutter = false;
+    return true;
+  }
+  return false;
+}
+function handleItemBarrierBlock(block) {
+  GameState.barrierCount = (GameState.barrierCount || 0) + 1;
+  block.status = 0;
+}
+function handleItemGuideBlock(block) {
+  ball.x = paddle.x + paddle.width / 2;
+  ball.y = canvas.height - paddle.height - 20 - ball.radius;
+
+  ball.dx = 0;
+  ball.dy = -2;
+  ball.speed = 3;
+
+  block.status = 0;
+}
+
+
+function applyScore(numBlocks = 1, baseScore = 10) {
+  comboCount += numBlocks;
+  comboScore += comboCount * 5;
+  score += baseScore * numBlocks;
+
+  $('#score').text(score + comboScore);
+  $('#combo').text(comboCount);
+
+  if (comboTimer) clearTimeout(comboTimer);
+  comboTimer = setTimeout(() => {
+    comboCount = 0;
+    $('#combo').text("0");
+  }, 1500);
+}
+
+
+function collisionDetection() {
+  bricks.forEach(b => {
+    if (b.status === 1 &&
+      ball.x > b.x && ball.x < b.x + 70 &&
+      ball.y > b.y && ball.y < b.y + 20) {
+
+      // 고출력 커터 효과 우선 적용
+      if (applyCutterIfAvailable(b)) {
+        applyScore();
+        ball.dy = -ball.dy;
+        return;
+      }
+
+      switch (b.type) {
+        case BLOCK_TYPES.NORMAL:
+          handleNormalBlock(b);
+          applyScore();
+          break;
+        case BLOCK_TYPES.METAL:
+          handleMetalBlock(b);
+          applyScore();
+          break;
+        case BLOCK_TYPES.GLASS:
+          handleGlassBlock(b);
+          break;
+        case BLOCK_TYPES.FUEL:
+          handleFuelBlock(b);
+          break;
+        case BLOCK_TYPES.TIRE:
+          handleTireBlock(b);
+          applyScore(1, 20);
+          break;
+        case BLOCK_TYPES.LIGHT:
+          handleLightBlock(b);
+          applyScore(1, 10);
+          break;
+        case BLOCK_TYPES.ITEM_COOLER:
+          handleItemCoolerBlock(b);
+          applyScore();
+          break;
+        case BLOCK_TYPES.ITEM_CUTTER:
+          handleItemCutterBlock(b);
+          applyScore();
+          break;
+        case BLOCK_TYPES.ITEM_BARRIER:
+          handleItemBarrierBlock(b);
+          applyScore();
+          break;
+        case BLOCK_TYPES.ITEM_GUIDE:
+          handleItemGuideBlock(b);
+          applyScore();
+          break;
+        default:
+          b.status = 0;
+          applyScore();
+      }
+
+      ball.dy = -ball.dy;
+    }
+  });
+}
