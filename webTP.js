@@ -108,8 +108,12 @@ const GameState = {
     sfx: true,
     cursor: true,
   },
-  mapVisitedOnce: false
+  mapVisitedOnce: false,
+  hasCooler: false,
+  hasCutter: false,
+  barrierCount: 0
 };
+
 
 
 // ===== GameStartUI.js =====
@@ -219,6 +223,21 @@ function goToCharacterSelect() {
 
 // import { GameState } from './GameState.js';
 // import { startStage } from './GameStage.js';
+function updateItemUI() {
+  const $area = $('#itemStatusArea');
+  $area.empty();
+
+  if (GameState.hasCooler) {
+    $area.append('<span id="coolerStatus">❄️</span>');
+  }
+  if (GameState.barrierCount > 0) {
+    $area.append(`<span id="barrierStatus">🛡️×${GameState.barrierCount}</span>`);
+  }
+  if (GameState.hasCutter) {
+    $area.append('<span id="cutterStatus">🔥</span>');
+  }
+}
+
 
 function goToMapScene() {
   GameState.score = 0;
@@ -253,12 +272,101 @@ function goToMapScene() {
 }
 
 
-// ===== GameStage.js =====
+function draw() {
+  if (isGameOver) return;
 
-// import { GameState } from './GameState.js';
-// import { showScoreResult } from './ScoreManager.js';
-// import { goToMapScene } from './MapScene.js';
-// import { goToStoryScene } from './StoryScene.js';
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  drawBricks();
+  drawBall();
+  drawPaddle();
+  collisionDetection();
+  checkGameClear();
+
+  // 벽 충돌 검사
+  if (ball.x + ball.dx > canvas.width - ball.radius || ball.x + ball.dx < ball.radius) {
+    ball.dx = -ball.dx;
+  }
+  if (ball.y + ball.dy < ball.radius) {
+    ball.dy = -ball.dy;
+  }
+
+  if (ball.y + ball.dy > canvas.height - ball.radius - paddle.height - 10) {
+    if (ball.x > paddle.x && ball.x < paddle.x + paddle.width) {
+      ball.dy = -ball.dy;
+
+      // 슬로우 복구 처리
+      if (ball.collidedWithPaddleOnceAfterCooler) {
+        ball.speed = ball.originalSpeed || 3;
+        ball.collidedWithPaddleOnceAfterCooler = false;
+      }
+    } else {
+      if ((GameState.barrierCount || 0) > 0) {
+        GameState.barrierCount--;
+        cancelAnimationFrame(animationId);
+        animationId = null;
+        let countdown = 3;
+        const overlay = document.createElement('div');
+        overlay.style.position = 'absolute';
+        overlay.style.top = '0';
+        overlay.style.left = '0';
+        overlay.style.width = '100%';
+        overlay.style.height = '100%';
+        overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+        overlay.style.color = 'white';
+        overlay.style.fontSize = '80px';
+        overlay.style.display = 'flex';
+        overlay.style.alignItems = 'center';
+        overlay.style.justifyContent = 'center';
+        overlay.style.zIndex = '1000';
+        overlay.id = 'barrierOverlay';
+        document.body.appendChild(overlay);
+
+        const interval = setInterval(() => {
+          overlay.textContent = countdown;
+          countdown--;
+          if (countdown < 0) {
+            clearInterval(interval);
+            document.body.removeChild(overlay);
+
+            ball.x = canvas.width / 2;
+            ball.y = canvas.height - 30;
+            ball.dx = 2;
+            ball.dy = -2;
+            ball.speed = 3;
+
+            draw();
+          }
+        }, 1000);
+
+        return;
+      } else {
+        gameOver();
+        return;
+      }
+    }
+  }
+
+  let magnitude = Math.sqrt(ball.dx * ball.dx + ball.dy * ball.dy);
+  if (magnitude === 0) {
+    ball.dx = 1;
+    ball.dy = -1;
+    magnitude = Math.sqrt(ball.dx * ball.dx + ball.dy * ball.dy);
+  }
+  const vx = (ball.dx / magnitude) * ball.speed;
+  const vy = (ball.dy / magnitude) * ball.speed;
+
+  ball.x += vx;
+  ball.y += vy;
+
+  if (paddle.rightPressed && paddle.x < canvas.width - paddle.width) {
+    paddle.x += 5;
+  } else if (paddle.leftPressed && paddle.x > 0) {
+    paddle.x -= 5;
+  }
+
+  animationId = requestAnimationFrame(draw);
+}
+
 
 let canvas, ctx;
 let ball, paddle, bricks;
@@ -271,6 +379,11 @@ let animationId = null;
 
 function startStage(stageNumber) {
   score = 0;
+  GameState.hasCooler = false;
+  GameState.hasCutter = false;
+  GameState.barrierCount = 0;
+  updateItemUI();
+
   comboScore = 0;
   comboCount = 0;
   isGameOver = false;
@@ -281,6 +394,7 @@ function startStage(stageNumber) {
         총 점수: <span id="score">0</span> 
         / 콤보 횟수: <span id="combo">0</span>
       </div>
+      <div class="item-status" id="itemStatusArea"></div>
       <canvas id="gameCanvas" width="500" height="600"></canvas>
     </div>
   `);
@@ -357,66 +471,71 @@ function draw() {
     ball.dx = -ball.dx;
   }
   if (ball.y + ball.dy < ball.radius) {
-  ball.dy = -ball.dy;
-}
-
+    ball.dy = -ball.dy;
+  }
 
   if (ball.y + ball.dy > canvas.height - ball.radius - paddle.height - 10) {
-  if (ball.x > paddle.x && ball.x < paddle.x + paddle.width) {
-    ball.dy = -ball.dy;
-  } else {
-    if ((GameState.barrierCount || 0) > 0) {
-      GameState.barrierCount--;
+    if (ball.x > paddle.x && ball.x < paddle.x + paddle.width) {
+      ball.dy = -ball.dy;
 
-      cancelAnimationFrame(animationId);
-      animationId=null;
-      let countdown = 3;
-      const overlay = document.createElement('div');
-      overlay.style.position = 'absolute';
-      overlay.style.top = '0';
-      overlay.style.left = '0';
-      overlay.style.width = '100%';
-      overlay.style.height = '100%';
-      overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
-      overlay.style.color = 'white';
-      overlay.style.fontSize = '80px';
-      overlay.style.display = 'flex';
-      overlay.style.alignItems = 'center';
-      overlay.style.justifyContent = 'center';
-      overlay.style.zIndex = '1000';
-      overlay.id = 'barrierOverlay';
-      document.body.appendChild(overlay);
-
-      const interval = setInterval(() => {
-        overlay.textContent = countdown;
-        countdown--;
-        if (countdown < 0) {
-          clearInterval(interval);
-          document.body.removeChild(overlay);
-
-          ball.x = canvas.width / 2;
-          ball.y = canvas.height - 30;
-          ball.dx = 2;
-          ball.dy = -2;
-          ball.speed = 3;
-
-          draw(); // 다시 루프 시작
-        }
-      }, 1000);
-
-      return; // draw 루프 중지
+      // 슬로우 복구 처리
+      if (ball.collidedWithPaddleOnceAfterCooler) {
+        ball.speed = ball.originalSpeed || 3;
+        ball.collidedWithPaddleOnceAfterCooler = false;
+          GameState.hasCooler = false;       
+         updateItemUI();  
+      }
     } else {
-      gameOver();
-      return;
+      if ((GameState.barrierCount || 0) > 0) {
+        GameState.barrierCount--;
+        updateItemUI();
+        cancelAnimationFrame(animationId);
+        animationId = null;
+        let countdown = 3;
+        const overlay = document.createElement('div');
+        overlay.style.position = 'absolute';
+        overlay.style.top = '0';
+        overlay.style.left = '0';
+        overlay.style.width = '100%';
+        overlay.style.height = '100%';
+        overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+        overlay.style.color = 'white';
+        overlay.style.fontSize = '80px';
+        overlay.style.display = 'flex';
+        overlay.style.alignItems = 'center';
+        overlay.style.justifyContent = 'center';
+        overlay.style.zIndex = '1000';
+        overlay.id = 'barrierOverlay';
+        document.body.appendChild(overlay);
+
+        const interval = setInterval(() => {
+          overlay.textContent = countdown;
+          countdown--;
+          if (countdown < 0) {
+            clearInterval(interval);
+            document.body.removeChild(overlay);
+
+            ball.x = canvas.width / 2;
+            ball.y = canvas.height - 30;
+            ball.dx = 2;
+            ball.dy = -2;
+            ball.speed = 3;
+
+            draw();
+          }
+        }, 1000);
+
+        return;
+      } else {
+        gameOver();
+        return;
+      }
     }
   }
-}
 
 
-  // ✅ 속도 조절 반영 (정규화 + 방어코드 포함)
-  let magnitude = Math.sqrt(ball.dx * ball.dx + ball.dy * ball.dy);
+ let magnitude = Math.sqrt(ball.dx * ball.dx + ball.dy * ball.dy);
   if (magnitude === 0) {
-    // 방향이 완전히 사라졌을 경우 기본 방향 부여
     ball.dx = 1;
     ball.dy = -1;
     magnitude = Math.sqrt(ball.dx * ball.dx + ball.dy * ball.dy);
@@ -427,7 +546,6 @@ function draw() {
   ball.x += vx;
   ball.y += vy;
 
-  // 패들 이동
   if (paddle.rightPressed && paddle.x < canvas.width - paddle.width) {
     paddle.x += 5;
   } else if (paddle.leftPressed && paddle.x > 0) {
@@ -865,19 +983,30 @@ function flashScreen() {
   }, 100);
 }
 function handleItemCoolerBlock(block) {
-  ball.speed = Math.max(1, ball.speed - 1);
+  if (!GameState.hasCooler) {
+    ball.originalSpeed = ball.speed;
+    ball.speed = Math.max(1, ball.speed - 1);
+    ball.collidedWithPaddleOnceAfterCooler = true;
+    GameState.hasCooler = true;
+  }
   block.status = 0;
+  updateItemUI();
 }
+
+
 function handleItemCutterBlock(block) {
   GameState.hasCutter = true;
   block.status = 0;
+  updateItemUI();
 }
+
 
 
 function applyCutterIfAvailable(block) {
   if (GameState.hasCutter) {
-    block.status = 0;
     GameState.hasCutter = false;
+    updateItemUI();
+    block.status = 0;
     return true;
   }
   return false;
@@ -885,17 +1014,47 @@ function applyCutterIfAvailable(block) {
 function handleItemBarrierBlock(block) {
   GameState.barrierCount = (GameState.barrierCount || 0) + 1;
   block.status = 0;
+  updateItemUI(); 
 }
+
 function handleItemGuideBlock(block) {
-  ball.x = paddle.x + paddle.width / 2;
-  ball.y = canvas.height - paddle.height - 20 - ball.radius;
-
-  ball.dx = 0;
-  ball.dy = -2;
-  ball.speed = 3;
-
   block.status = 0;
+  updateItemUI();
+
+  const targetX = paddle.x + paddle.width / 2;
+  const targetY = canvas.height - paddle.height - 20 - ball.radius;
+  const startX = ball.x;
+  const startY = ball.y;
+  const duration = 500;
+  const startTime = Date.now();
+
+  function animateGuide() {
+    const now = Date.now();
+    const t = Math.min((now - startTime) / duration, 1);
+    const ease = t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+    ball.x = startX + (targetX - startX) * ease;
+    ball.y = startY + (targetY - startY) * ease;
+
+    if (t < 1) {
+      requestAnimationFrame(animateGuide);
+    } else {
+      ball.dx = 0;
+      ball.dy = -2;
+      ball.speed = 3;
+
+
+      if (GameState.hasCooler) {
+        GameState.hasCooler = false;
+        ball.collidedWithPaddleOnceAfterCooler = false;
+        updateItemUI();
+      }
+    }
+  }
+
+  animateGuide();
 }
+
+
 
 
 function applyScore(numBlocks = 1, baseScore = 10) {
