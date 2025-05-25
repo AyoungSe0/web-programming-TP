@@ -90,7 +90,6 @@ function getColorByType(type, hitCount = 0) {
   }
 }
 
-
 // ===== GameState.js =====
 
 const GameState = {
@@ -108,12 +107,8 @@ const GameState = {
     sfx: true,
     cursor: true,
   },
-  mapVisitedOnce: false,
-  hasCooler: false,
-  hasCutter: false,
-  barrierCount: 0
+  mapVisitedOnce: false
 };
-
 
 
 // ===== GameStartUI.js =====
@@ -122,17 +117,64 @@ const GameState = {
 
 function showStartUI() {
   $('body').html(`
-    <div style="text-align:center; font-family: 'DungGeunMo';">
-      <h1>폐차왕: 분노의 해체</h1>
-      <button id="startBtn">START</button>
-    </div>
+  <div style="text-align:center; position: relative;">
+      <canvas id="gameCanvas" width="1000" height="600"
+              style="background-color: black; border: none;"></canvas>
+  </div> 
   `);
 
-  $('#startBtn').on('click', () => {
-    goToStoryScene();
-  });
-}
 
+
+  // 이제 canvas가 DOM에 들어왔기 때문에 여기서 접근 가능
+  const canvas = document.getElementById("gameCanvas");
+  const ctx = canvas.getContext("2d");
+
+  const bgImage = new Image();
+  bgImage.src = "background.png"; // 이미지 경로는 필요시 수정
+
+  const startButtonImg = new Image();
+  startButtonImg.src = "StartButton.png";
+
+
+  bgImage.onload = () => {
+    
+    ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height);
+    drawStartButton(ctx, startButton);
+
+  };
+
+  startButtonImg.onload = () => {
+    ctx.drawImage(startButtonImg, 400, 420, 200, 60);
+  };
+
+  const button = {
+    x: 400,
+    y: 420,
+    width: 200,
+    height: 60
+  };
+
+
+  canvas.addEventListener("click", function (e) {
+    const rect = canvas.getBoundingClientRect();
+    const mx = e.clientX - rect.left;
+    const my = e.clientY - rect.top;
+
+    if (
+      mx >= button.x &&
+      mx <= button.x + button.width &&
+      my >= button.y &&
+      my <= button.y + button.height
+    ) {
+      // START 버튼 눌렀을 때 실행할 동작
+      goToStoryScene();
+    }
+  });
+
+
+  
+
+}
 
 // ===== StoryScene.js =====
 
@@ -141,42 +183,69 @@ function showStartUI() {
 // import { goToCharacterSelect } from './CharacterSelector.js';
 
 function goToStoryScene() {
-  let storyText = [
+  $('body').html(`
+    <div style="text-align:center;">
+      <canvas id="gameCanvas" width="1000" height="600" style="background-color:black; border:none;"></canvas>
+    </div>
+  `);
+
+  const canvas = document.getElementById("gameCanvas");
+  const ctx = canvas.getContext("2d");
+
+  const storyText = [
     "폐차장에 버려진 고물차들...",
     "그 안에는 아직 살아있는 부품들이 숨 쉬고 있다.",
     "전설의 폐차 전사, 당신의 이름은?"
   ];
-  let index = 0;
+  let storyIndex = 0;
+  let nickname = "";
 
-  $('body').html(`
-    <div style="text-align:center">
-      <div id="storyBox" style="margin-bottom:20px; min-height:60px;">${storyText[0]}</div>
-      <input id="nickname" placeholder="닉네임 입력" style="display:none">
-      <div id="nicknameLineBreak" style="display:none"><br><br></div>
-      <button id="nextLine">다음</button>
-      <button id="skipBtn">Skip</button>
-    </div>
-  `);
-
-  $('#nextLine').on('click', () => {
-    index++;
-    if (index < storyText.length) {
-      $('#storyBox').text(storyText[index]);
-      if (index === storyText.length - 1) {
-        $('#nickname').show();
-        $('#nicknameLineBreak').show();
-      }
+  function drawStoryScene() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "black";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  
+    ctx.fillStyle = "white";
+    ctx.font = "28px DungGeunMo, sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText(storyText[storyIndex], canvas.width / 2, 300);
+  }
+  
+  function advanceStory() {
+    if (storyIndex < storyText.length - 1) {
+      storyIndex++;
+      drawStoryScene();
     } else {
-      GameState.nickname = $('#nickname').val().trim() || "랄푸";
+      nickname = prompt("당신의 이름은?")?.trim() || "랄푸";
+      GameState.nickname = nickname;
+      $(document).off('keydown');
+      canvas.removeEventListener("click", advanceStory);
+      goToCharacterSelect();
+    }
+  }
+
+  // 마우스 클릭 --> 다음 대사
+  canvas.addEventListener("click", advanceStory);
+
+  // 키보드 이벤트: Space --> 다음 / Enter --> Skip
+  //앤터 입력시 스킵된다는 문구 추가 필요
+  $(document).on("keydown", (e) => {
+    if (e.code === "Space") {
+      e.preventDefault();
+      advanceStory();
+    } else if (e.code === "Enter") {
+      e.preventDefault();
+      GameState.nickname = "랄푸";
+      $(document).off('keydown');
+      canvas.removeEventListener("click", advanceStory);
       goToCharacterSelect();
     }
   });
 
-  $('#skipBtn').on('click', () => {
-    GameState.nickname = "랄푸";
-    goToCharacterSelect();
-  });
+  drawStoryScene();
 }
+
+
 
 
 // ===== CharacterSelector.js =====
@@ -184,39 +253,143 @@ function goToStoryScene() {
 // import { GameState } from './GameState.js';
 // import { goToMapScene } from './MapScene.js';
 
-const characters = ["야구선수", "축구선수", "메카닉"];
-let index = 0;
+// ===== CharacterSelector.js =====
+
+// import { GameState } from './GameState.js';
+// import { goToMapScene } from './MapScene.js';
+
+const characters = [
+  { name: "야구선수", image: "야구선수.jpeg" },
+  { name: "축구선수", image: "축구선수.jpeg" },
+  { name: "메카닉", image: "메카닉.jpeg" }
+];
+const imageCache = {};
 
 function goToCharacterSelect() {
-  index = 0;
-
   $('body').html(`
-    <div style="text-align:center">
-      <h2>캐릭터 선택</h2>
-      <p>${GameState.nickname}님 환영합니다!</p>
-      <p style="font-size:24px;">
-        <span id="leftBtn">⬅️</span>
-        <span id="charName">${characters[index]}</span>
-        <span id="rightBtn">➡️</span>
-      </p>
-      <p>← → 키로 이동, Enter 키로 선택</p>
+    <div style="text-align:center;">
+      <canvas id="gameCanvas" width="1000" height="600" style="background-color:black; border:none;"></canvas>
     </div>
   `);
 
-  $(document).off('keydown').on('keydown', function (e) {
-    if (e.key === "ArrowLeft") {
-      index = (index - 1 + characters.length) % characters.length;
-      $('#charName').text(characters[index]);
-    } else if (e.key === "ArrowRight") {
-      index = (index + 1) % characters.length;
-      $('#charName').text(characters[index]);
-    } else if (e.key === "Enter") {
-      GameState.selectedCharacter = characters[index];
-      $(document).off('keydown');
-      goToMapScene();
-    }
+  const canvas = document.getElementById("gameCanvas");
+  const ctx = canvas.getContext("2d");
+
+  let currentIndex = 0;
+  let selected = false;
+  let imagesLoaded = 0;
+
+  // 이미지 프리로드
+  characters.forEach(char => {
+    const img = new Image();
+    img.src = char.image;
+    img.onload = () => {
+      imageCache[char.name] = img;
+      imagesLoaded++;
+      if (imagesLoaded === characters.length) {
+        drawCharacterScene(ctx, canvas, currentIndex, GameState.nickname, characters, imageCache);
+        canvas.addEventListener("click", onClick);
+        $(document).on("keydown", onKeyDown);
+      }
+    };
   });
+
+  function selectCharacter() {
+    if (selected) return;
+    selected = true;
+    GameState.selectedCharacter = characters[currentIndex];
+    canvas.removeEventListener("click", onClick);
+    $(document).off("keydown", onKeyDown);
+    goToMapScene();
+  }
+
+  function onClick(e) {
+    const rect = canvas.getBoundingClientRect();
+    const mx = e.clientX - rect.left;
+    const my = e.clientY - rect.top;
+
+    // 왼쪽 버튼
+    if (mx >= canvas.width / 2 - 250 && mx <= canvas.width / 2 - 150 && my >= 340 && my <= 420) {
+      currentIndex = (currentIndex - 1 + characters.length) % characters.length;
+      drawCharacterScene(ctx, canvas, currentIndex, GameState.nickname, characters, imageCache);
+    }
+
+    // 오른쪽 버튼
+    if (mx >= canvas.width / 2 + 150 && mx <= canvas.width / 2 + 250 && my >= 340 && my <= 420) {
+      currentIndex = (currentIndex + 1) % characters.length;
+      drawCharacterScene(ctx, canvas, currentIndex, GameState.nickname, characters, imageCache);
+    }
+
+    // 선택 버튼
+    if (mx >= canvas.width / 2 - 100 && mx <= canvas.width / 2 + 100 && my >= 460 && my <= 520) {
+      selectCharacter();
+    }
+  }
+
+  function onKeyDown(e) {
+    if (e.key === "ArrowLeft") {
+      currentIndex = (currentIndex - 1 + characters.length) % characters.length;
+      drawCharacterScene(ctx, canvas, currentIndex, GameState.nickname, characters, imageCache);
+    } else if (e.key === "ArrowRight") {
+      currentIndex = (currentIndex + 1) % characters.length;
+      drawCharacterScene(ctx, canvas, currentIndex, GameState.nickname, characters, imageCache);
+    } else if (e.key === "Enter") {
+      selectCharacter();
+    }
+  }
 }
+
+function drawCharacterScene(ctx, canvas, currentIndex, nickname, characters, imageCache) {
+  const char = characters[currentIndex];
+  const img = imageCache[char.name];
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = "black";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  ctx.fillStyle = "white";
+  ctx.textAlign = "center";
+
+  // 타이틀
+  ctx.font = "28px DungGeunMo, sans-serif";
+  ctx.fillText("캐릭터 선택", canvas.width / 2, 80);
+
+  // 환영 메시지
+  ctx.font = "20px DungGeunMo, sans-serif";
+  ctx.fillText(`${nickname}님 환영합니다!`, canvas.width / 2, 120);
+
+  // 캐릭터 이미지
+  if (img && img.complete) {
+    const imgW = 200, imgH = 200;
+    ctx.drawImage(img, canvas.width / 2 - imgW / 2, 150, imgW, imgH);
+  }
+
+  // 캐릭터 이름
+  ctx.font = "bold 36px DungGeunMo, sans-serif";
+  ctx.fillText(char.name, canvas.width / 2, 380);
+
+  // 좌우 화살표
+  ctx.font = "48px DungGeunMo, sans-serif";
+  ctx.fillText("⬅️", canvas.width / 2 - 200, 400);
+  ctx.fillText("➡️", canvas.width / 2 + 200, 400);
+
+  // 선택 버튼 텍스트
+  ctx.fillStyle = "#000";
+  ctx.fillRect(canvas.width / 2 - 100, 460, 200, 60);
+  // ctx.strokeStyle = "white";
+  ctx.lineWidth = 2;
+  ctx.strokeRect(canvas.width / 2 - 100, 460, 200, 60);
+
+  ctx.fillStyle = "white";
+  ctx.font = "bold 24px DungGeunMo, sans-serif";
+  ctx.fillText("선택", canvas.width / 2, 490);
+
+  // 안내 메시지
+  ctx.font = "18px DungGeunMo, sans-serif";
+  ctx.fillText("← → 키 or 마우스로 이동, Enter 또는 선택 클릭", canvas.width / 2, 550);
+}
+
+
 
 
 // ===== MapScene.js =====
