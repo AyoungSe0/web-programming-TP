@@ -8,62 +8,62 @@ const BLOCK_TYPES = {
 
   ITEM_COOLER: "냉각제",
   ITEM_CUTTER: "고출력 커터",
-  ITEM_BARRIER: "차단막",
+  // ITEM_BARRIER: "차단막",
   ITEM_GUIDE: "유도로봇팔",
 };
 
 const levelBlockLayouts = {
   1: [
-    { x: 50, y: 50, type: BLOCK_TYPES.ITEM_BARRIER},
-    { x: 130, y: 50, type: BLOCK_TYPES.ITEM_COOLER },
-    { x: 210, y: 50, type: BLOCK_TYPES.ITEM_COOLER },
-    { x: 290, y: 50, type: BLOCK_TYPES.ITEM_COOLER },
-    { x: 370, y: 50, type: BLOCK_TYPES.ITEM_COOLER },
+    { x: 50, y: 50, type: BLOCK_TYPES.GLASS },
+    { x: 130, y: 50, type: BLOCK_TYPES.GLASS },
+    { x: 210, y: 50, type: BLOCK_TYPES.GLASS },
+    { x: 290, y: 50, type: BLOCK_TYPES.GLASS },
+    { x: 370, y: 50, type: BLOCK_TYPES.GLASS },
     { x: 50, y: 90, type: BLOCK_TYPES.GLASS },
     { x: 130, y: 90, type: BLOCK_TYPES.GLASS },
     { x: 210, y: 90, type: BLOCK_TYPES.GLASS },
     { x: 290, y: 90, type: BLOCK_TYPES.GLASS },
-    { x: 370, y: 90, type: BLOCK_TYPES.ITEM_CUTTER },
+    { x: 370, y: 90, type: BLOCK_TYPES.GLASS },
     { x: 50, y: 130, type: BLOCK_TYPES.GLASS },
-    { x: 130, y: 130, type: BLOCK_TYPES.ITEM_BARRIER },
-    { x: 210, y: 130, type: BLOCK_TYPES.ITEM_BARRIER },
-    { x: 290, y: 130, type: BLOCK_TYPES.ITEM_BARRIER },
-    { x: 370, y: 130, type: BLOCK_TYPES.ITEM_GUIDE }
+    { x: 130, y: 130, type: BLOCK_TYPES.GLASS },
+    { x: 210, y: 130, type: BLOCK_TYPES.GLASS },
+    { x: 290, y: 130, type: BLOCK_TYPES.GLASS },
+    { x: 370, y: 130, type: BLOCK_TYPES.GLASS }
   ],
 
   2: [
-    { x: 50, y: 50, type:  BLOCK_TYPES.TIRE },
-    { x: 130, y: 50, type: BLOCK_TYPES.TIRE },
-    { x: 210, y: 50, type:  BLOCK_TYPES.TIRE},
-    { x: 290, y: 50, type:  BLOCK_TYPES.TIRE },
-    { x: 370, y: 50, type:  BLOCK_TYPES.TIRE },
-    { x: 50, y: 90, type:  BLOCK_TYPES.TIRE},
-    { x: 130, y: 90, type:  BLOCK_TYPES.TIRE },
-    { x: 210, y: 90, type: BLOCK_TYPES.TIRE },
-    { x: 290, y: 90, type:  BLOCK_TYPES.TIRE },
-    { x: 370, y: 90, type: BLOCK_TYPES.METAL },
+    { x: 50, y: 50, type: BLOCK_TYPES.GLASS },
+    { x: 130, y: 50, type: BLOCK_TYPES.GLASS },
+    { x: 210, y: 50, type: BLOCK_TYPES.GLASS },
+    { x: 290, y: 50, type: BLOCK_TYPES.GLASS },
+    { x: 370, y: 50, type: BLOCK_TYPES.GLASS },
+    { x: 50, y: 90, type: BLOCK_TYPES.GLASS },
+    { x: 130, y: 90, type: BLOCK_TYPES.GLASS },
+    { x: 210, y: 90, type: BLOCK_TYPES.GLASS },
+    { x: 290, y: 90, type: BLOCK_TYPES.GLASS },
+    { x: 370, y: 90, type: BLOCK_TYPES.GLASS },
     { x: 50, y: 130, type: BLOCK_TYPES.GLASS },
-    { x: 130, y: 130, type: BLOCK_TYPES.LIGHT },
-    { x: 210, y: 130, type: BLOCK_TYPES.NORMAL },
-    { x: 290, y: 130, type: BLOCK_TYPES.TIRE },
-    { x: 370, y: 130, type: BLOCK_TYPES.FUEL }
+    { x: 130, y: 130, type: BLOCK_TYPES.GLASS },
+    { x: 210, y: 130, type: BLOCK_TYPES.GLASS },
+    { x: 290, y: 130, type: BLOCK_TYPES.GLASS },
+    { x: 370, y: 130, type: BLOCK_TYPES.GLASS }
   ],
   3: [
-    { x: 50, y: 50, type: BLOCK_TYPES.METAL },
-    { x: 130, y: 50, type: BLOCK_TYPES.METAL },
-    { x: 210, y: 50, type: BLOCK_TYPES.METAL },
-    { x: 290, y: 50, type: BLOCK_TYPES.METAL },
-    { x: 370, y: 50, type: BLOCK_TYPES.METAL },
-    { x: 50, y: 90, type: BLOCK_TYPES.METAL },
-    { x: 130, y: 90, type: BLOCK_TYPES.METAL },
-    { x: 210, y: 90, type: BLOCK_TYPES.METAL},
-    { x: 290, y: 90, type: BLOCK_TYPES.METAL },
-    { x: 370, y: 90, type: BLOCK_TYPES.METAL },
+    { x: 50, y: 50, type: BLOCK_TYPES.GLASS },
+    { x: 130, y: 50, type: BLOCK_TYPES.GLASS },
+    { x: 210, y: 50, type: BLOCK_TYPES.GLASS },
+    { x: 290, y: 50, type: BLOCK_TYPES.GLASS },
+    { x: 370, y: 50, type: BLOCK_TYPES.GLASS },
+    { x: 50, y: 90, type: BLOCK_TYPES.GLASS },
+    { x: 130, y: 90, type: BLOCK_TYPES.GLASS },
+    { x: 210, y: 90, type: BLOCK_TYPES.GLASS },
+    { x: 290, y: 90, type: BLOCK_TYPES.GLASS },
+    { x: 370, y: 90, type: BLOCK_TYPES.GLASS },
     { x: 50, y: 130, type: BLOCK_TYPES.GLASS },
-    { x: 130, y: 130, type: BLOCK_TYPES.LIGHT },
-    { x: 210, y: 130, type: BLOCK_TYPES.NORMAL },
-    { x: 290, y: 130, type: BLOCK_TYPES.TIRE },
-    { x: 370, y: 130, type: BLOCK_TYPES.FUEL }
+    { x: 130, y: 130, type: BLOCK_TYPES.GLASS },
+    { x: 210, y: 130, type: BLOCK_TYPES.GLASS },
+    { x: 290, y: 130, type: BLOCK_TYPES.GLASS },
+    { x: 370, y: 130, type: BLOCK_TYPES.GLASS }
   ]
 };
 
@@ -81,7 +81,7 @@ function getColorByType(type, hitCount = 0) {
     case BLOCK_TYPES.FUEL: return "#f00";
     case BLOCK_TYPES.LIGHT: return "#fff";
     case BLOCK_TYPES.GLASS: return "#0ff";
-    case BLOCK_TYPES.ITEM_BARRIER: return "#f5a";
+    //case BLOCK_TYPES.ITEM_BARRIER: return "#f5a";
     case BLOCK_TYPES.ITEM_COOLER: return "#5af";
     case BLOCK_TYPES.ITEM_CUTTER: return "#fa0";
     case BLOCK_TYPES.ITEM_GUIDE: return "#5f5";
@@ -110,7 +110,27 @@ const GameState = {
   mapVisitedOnce: false
 };
 
+function resetGameState() {
+  GameState.score = 0;
+  GameState.comboScore = 0;
+  GameState.comboCount = 0;
+  GameState.selectedStage = 1;
+  GameState.upgrades = [];
+  GameState.failedUpgrades = [];
+  GameState.reinforceChances = 0;
+  GameState.hasCooler = false;
+  GameState.hasCutter = false;
+  GameState.barrierCount = 0;
+}
+$('#retryBtn').on('click', () => {
+  resetGameState();
+  goToMapScene();
+});
 
+$('#restartBtn').on('click', () => {
+  resetGameState();
+  goToMapScene();
+});
 // ===== GameStartUI.js =====
 
 // import { goToStoryScene } from './StoryScene.js';
@@ -137,7 +157,7 @@ function showStartUI() {
 
 
   bgImage.onload = () => {
-    
+
     ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height);
     drawStartButton(ctx, startButton);
 
@@ -172,7 +192,7 @@ function showStartUI() {
   });
 
 
-  
+
 
 }
 
@@ -204,13 +224,13 @@ function goToStoryScene() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = "black";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-  
+
     ctx.fillStyle = "white";
     ctx.font = "28px DungGeunMo, sans-serif";
     ctx.textAlign = "center";
     ctx.fillText(storyText[storyIndex], canvas.width / 2, 300);
   }
-  
+
   function advanceStory() {
     if (storyIndex < storyText.length - 1) {
       storyIndex++;
@@ -260,8 +280,8 @@ function goToStoryScene() {
 
 const characters = [
   { name: "야구선수", image: "야구선수.jpeg" },
-  { name: "축구선수", image: "축구선수.jpeg" },
-  { name: "메카닉", image: "메카닉.jpeg" }
+  { name: "테니스선수", image: "메카닉.jpeg" },
+  { name: "축구선수", image: "축구선수.jpeg" }
 ];
 const imageCache = {};
 
@@ -403,11 +423,14 @@ function updateItemUI() {
   if (GameState.hasCooler) {
     $area.append('<span id="coolerStatus">❄️</span>');
   }
-  if (GameState.barrierCount > 0) {
-    $area.append(`<span id="barrierStatus">🛡️×${GameState.barrierCount}</span>`);
-  }
   if (GameState.hasCutter) {
     $area.append('<span id="cutterStatus">🔥</span>');
+  }
+  if ((GameState.barrierCount || 0) > 0) {
+    $area.append(`<span id="barrierStatus">🛡️ ×${GameState.barrierCount}</span>`);
+  }
+  if ($area.children().length === 0) {
+    $area.html('&nbsp;');
   }
 }
 
@@ -418,7 +441,7 @@ function goToMapScene() {
   GameState.comboCount = 0;
   GameState.upgrades = [];
   GameState.failedUpgrades = [];
-  GameState.reinforceChances = 3;
+  GameState.reinforceChances = 0;
 
   $('body').html(`
     <div style="text-align:center">
@@ -427,8 +450,7 @@ function goToMapScene() {
       <button class="stageBtn" data-stage="2">스포츠카 해체</button>
       <button class="stageBtn" data-stage="3">탱크 해체</button>
       <br><br>
-      <button id="exitBtn">게임 종료</button>
-    </div>
+   
   `);
 
   $('.stageBtn').on('click', function () {
@@ -437,108 +459,9 @@ function goToMapScene() {
     startStage(stage);
   });
 
-  $('#exitBtn').on('click', () => {
-    if (confirm("게임을 종료할까요?")) {
-      location.reload();
-    }
-  });
 }
 
 
-function draw() {
-  if (isGameOver) return;
-
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  drawBricks();
-  drawBall();
-  drawPaddle();
-  collisionDetection();
-  checkGameClear();
-
-  // 벽 충돌 검사
-  if (ball.x + ball.dx > canvas.width - ball.radius || ball.x + ball.dx < ball.radius) {
-    ball.dx = -ball.dx;
-  }
-  if (ball.y + ball.dy < ball.radius) {
-    ball.dy = -ball.dy;
-  }
-
-  if (ball.y + ball.dy > canvas.height - ball.radius - paddle.height - 10) {
-    if (ball.x > paddle.x && ball.x < paddle.x + paddle.width) {
-      ball.dy = -ball.dy;
-
-      // 슬로우 복구 처리
-      if (ball.collidedWithPaddleOnceAfterCooler) {
-        ball.speed = ball.originalSpeed || 3;
-        ball.collidedWithPaddleOnceAfterCooler = false;
-      }
-    } else {
-      if ((GameState.barrierCount || 0) > 0) {
-        GameState.barrierCount--;
-        cancelAnimationFrame(animationId);
-        animationId = null;
-        let countdown = 3;
-        const overlay = document.createElement('div');
-        overlay.style.position = 'absolute';
-        overlay.style.top = '0';
-        overlay.style.left = '0';
-        overlay.style.width = '100%';
-        overlay.style.height = '100%';
-        overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
-        overlay.style.color = 'white';
-        overlay.style.fontSize = '80px';
-        overlay.style.display = 'flex';
-        overlay.style.alignItems = 'center';
-        overlay.style.justifyContent = 'center';
-        overlay.style.zIndex = '1000';
-        overlay.id = 'barrierOverlay';
-        document.body.appendChild(overlay);
-
-        const interval = setInterval(() => {
-          overlay.textContent = countdown;
-          countdown--;
-          if (countdown < 0) {
-            clearInterval(interval);
-            document.body.removeChild(overlay);
-
-            ball.x = canvas.width / 2;
-            ball.y = canvas.height - 30;
-            ball.dx = 2;
-            ball.dy = -2;
-            ball.speed = 3;
-
-            draw();
-          }
-        }, 1000);
-
-        return;
-      } else {
-        gameOver();
-        return;
-      }
-    }
-  }
-
-  let magnitude = Math.sqrt(ball.dx * ball.dx + ball.dy * ball.dy);
-  if (magnitude === 0) {
-    ball.dx = 1;
-    ball.dy = -1;
-    magnitude = Math.sqrt(ball.dx * ball.dx + ball.dy * ball.dy);
-  }
-  const vx = (ball.dx / magnitude) * ball.speed;
-  const vy = (ball.dy / magnitude) * ball.speed;
-
-  ball.x += vx;
-  ball.y += vy;
-
-  if (paddle.rightPressed && paddle.x < canvas.width - paddle.width) {
-    paddle.x += 5;
-  } else if (paddle.leftPressed && paddle.x > 0) {
-    paddle.x -= 5;
-  }
-
-  animationId = requestAnimationFrame(draw);
-}
 
 
 let canvas, ctx;
@@ -554,8 +477,6 @@ function startStage(stageNumber) {
   score = 0;
   GameState.hasCooler = false;
   GameState.hasCutter = false;
-  GameState.barrierCount = 0;
-  updateItemUI();
 
   comboScore = 0;
   comboCount = 0;
@@ -575,6 +496,8 @@ function startStage(stageNumber) {
   canvas = document.getElementById("gameCanvas");
   ctx = canvas.getContext("2d");
 
+  updateItemUI();
+
   initGameElements();
   draw();
 }
@@ -584,14 +507,18 @@ function initGameElements() {
   if (GameState.upgrades.includes("스피드업")) {
     speed += 1;
   }
+  const angleDeg = Math.random() * 60 + 30; // 30° ~ 90°
+  const angleRad = angleDeg * (Math.PI / 180);
+  const direction = Math.random() < 0.5 ? -1 : 1;
 
   ball = {
     x: canvas.width / 2,
     y: canvas.height - 30,
-    dx: speed,
-    dy: -speed,
+    dx: Math.cos(angleRad) * speed * direction,
+    dy: -Math.sin(angleRad) * speed,
     radius: 7,
-    speed: speed
+    speed: speed,
+    originalSpeed: speed,
   };
 
   let basePaddleWidth = 80 - GameState.selectedStage * 10;
@@ -614,7 +541,9 @@ function initGameElements() {
     type: block.type,
     status: 1,
     hitCount: 0,
-    maxHits: block.type === BLOCK_TYPES.METAL ? 3 : 1
+    maxHits: block.type === BLOCK_TYPES.METAL ? 3 : 1,
+    effectStage: null,
+    effectTimer: 0
   }));
 
   $(document).off('keydown').on('keydown', function (e) {
@@ -628,7 +557,7 @@ function initGameElements() {
   });
 }
 
-
+// ✅ 정리된 draw 함수 - 중복 제거 및 반사 보정 포함
 function draw() {
   if (isGameOver) return;
 
@@ -639,7 +568,7 @@ function draw() {
   collisionDetection();
   checkGameClear();
 
-  // 벽 충돌 검사
+  // 벽 반사
   if (ball.x + ball.dx > canvas.width - ball.radius || ball.x + ball.dx < ball.radius) {
     ball.dx = -ball.dx;
   }
@@ -647,16 +576,15 @@ function draw() {
     ball.dy = -ball.dy;
   }
 
+  // 바닥에 닿음
   if (ball.y + ball.dy > canvas.height - ball.radius - paddle.height - 10) {
     if (ball.x > paddle.x && ball.x < paddle.x + paddle.width) {
       ball.dy = -ball.dy;
-
-      // 슬로우 복구 처리
       if (ball.collidedWithPaddleOnceAfterCooler) {
         ball.speed = ball.originalSpeed || 3;
         ball.collidedWithPaddleOnceAfterCooler = false;
-          GameState.hasCooler = false;       
-         updateItemUI();  
+        GameState.hasCooler = false;
+        updateItemUI();
       }
     } else {
       if ((GameState.barrierCount || 0) > 0) {
@@ -664,6 +592,7 @@ function draw() {
         updateItemUI();
         cancelAnimationFrame(animationId);
         animationId = null;
+
         let countdown = 3;
         const overlay = document.createElement('div');
         overlay.style.position = 'absolute';
@@ -688,13 +617,22 @@ function draw() {
             clearInterval(interval);
             document.body.removeChild(overlay);
 
+            // 공과 패들 위치 초기화
             ball.x = canvas.width / 2;
             ball.y = canvas.height - 30;
-            ball.dx = 2;
-            ball.dy = -2;
-            ball.speed = 3;
 
-            draw();
+            const angleDeg = Math.random() * 60 + 30;
+            const angleRad = angleDeg * (Math.PI / 180);
+            const direction = Math.random() < 0.5 ? -1 : 1;
+            const speed = ball.speed;
+
+            ball.dx = Math.cos(angleRad) * speed * direction;
+            ball.dy = -Math.sin(angleRad) * speed;
+
+            paddle.x = (canvas.width - paddle.width) / 2;
+
+            // ✅ draw 직접 호출 대신 안전하게 루프 재개
+            animationId = requestAnimationFrame(draw);
           }
         }, 1000);
 
@@ -706,18 +644,28 @@ function draw() {
     }
   }
 
-
- let magnitude = Math.sqrt(ball.dx * ball.dx + ball.dy * ball.dy);
+  // 속도 및 반사 보정
+  let magnitude = Math.sqrt(ball.dx * ball.dx + ball.dy * ball.dy);
   if (magnitude === 0) {
     ball.dx = 1;
     ball.dy = -1;
     magnitude = Math.sqrt(ball.dx * ball.dx + ball.dy * ball.dy);
   }
-  const vx = (ball.dx / magnitude) * ball.speed;
-  const vy = (ball.dy / magnitude) * ball.speed;
 
-  ball.x += vx;
-  ball.y += vy;
+  ball.speed = Math.min(ball.speed, ball.originalSpeed || 3);
+
+  // 수직·수평 방지 보정
+  const minComponent = 0.3;
+  let dxNorm = ball.dx / magnitude;
+  let dyNorm = ball.dy / magnitude;
+  if (Math.abs(dxNorm) < minComponent) dxNorm = minComponent * Math.sign(dxNorm);
+  if (Math.abs(dyNorm) < minComponent) dyNorm = minComponent * Math.sign(dyNorm);
+  const normMag = Math.sqrt(dxNorm * dxNorm + dyNorm * dyNorm);
+  ball.dx = (dxNorm / normMag) * ball.speed;
+  ball.dy = (dyNorm / normMag) * ball.speed;
+
+  ball.x += ball.dx;
+  ball.y += ball.dy;
 
   if (paddle.rightPressed && paddle.x < canvas.width - paddle.width) {
     paddle.x += 5;
@@ -727,7 +675,6 @@ function draw() {
 
   animationId = requestAnimationFrame(draw);
 }
-
 
 function drawBall() {
   ctx.beginPath();
@@ -748,15 +695,30 @@ function drawPaddle() {
 // === drawBricks ===
 function drawBricks() {
   bricks.forEach(b => {
-    if (b.status === 1) {
+    if (b.status === 1 || (b.effectStage !== null && b.effectStage != "gone")) {
       ctx.beginPath();
       ctx.rect(b.x, b.y, 70, 20);
-      ctx.fillStyle = getColorByType(b.type, b.hitCount);
+
+      if (b.effectStage === "pending") {
+        b.effectTimer--;
+        ctx.fillStyle = "#aaf";  // 효과 색
+        if (b.effectTimer <= 0) {
+          b.effectStage = "cracking";
+        }
+      } else if (b.effectStage === "cracking") {
+        ctx.fillStyle = "#fff";  // 깨지는 순간 색
+        b.status = 0;
+        b.effectStage = "gone";
+      } else {
+        ctx.fillStyle = getColorByType(b.type, b.hitCount);
+      }
+
       ctx.fill();
       ctx.closePath();
     }
   });
 }
+
 
 
 function collisionDetection() {
@@ -797,9 +759,9 @@ function collisionDetection() {
         case BLOCK_TYPES.ITEM_CUTTER:
           handleItemCutterBlock(b);
           break;
-        case BLOCK_TYPES.ITEM_BARRIER:
-          handleItemBarrierBlock(b);
-          break;
+        // case BLOCK_TYPES.ITEM_BARRIER:
+        //   handleItemBarrierBlock(b);
+        //   break;
         case BLOCK_TYPES.ITEM_GUIDE:
           handleItemGuideBlock(b);
           break;
@@ -852,8 +814,8 @@ function gameOver() {
   });
 
   $('#exitBtn').on('click', () => {
-        location.reload();
-    
+    location.reload();
+
   });
 }
 
@@ -884,20 +846,30 @@ function showScoreResult() {
   showStarResult(stars);
 }
 
+// === [6] 별 화면 자동 이동 처리 ===
 function showStarResult(stars) {
   $('body').html(`
     <div style="text-align:center">
       <h2>스테이지 결과</h2>
       <p>별 획득: ${'★'.repeat(stars)}${'☆'.repeat(3 - stars)}</p>
-      <button id="nextBtn">다음</button>
+      <p id="autoMessage">다음 단계로 이동 중...</p>
     </div>
   `);
 
-  $('#nextBtn').on('click', () => {
-    if (stars === 0) showGameOver();
-    else goToUpgrade(stars);
-  });
+  setTimeout(() => {
+    if (stars === 0) {
+      showGameOver();
+    } else {
+      if (GameState.selectedStage >= 3) {
+        // ✅ 강화 화면 없이 바로 최종 엔딩으로
+        showEnding();
+      } else {
+        goToUpgrade(stars); // ✅ 1~2스테이지는 강화 화면
+      }
+    }
+  }, 2000);
 }
+
 
 
 // ===== UpgradeManager.js =====
@@ -907,6 +879,9 @@ function showStarResult(stars) {
 // import { showEnding } from './EndingScene.js';
 
 function goToUpgrade(stars) {
+  window.nextStageTriggered = false;
+  let upgradeLocked = false;
+
   GameState.reinforceChances += stars;
 
   $('body').html(`
@@ -917,6 +892,7 @@ function goToUpgrade(stars) {
       <select id="upgradeSelect">
         <option value="패들강화">패들 넓이 증가</option>
         <option value="보너스점수">점수 보너스</option>
+        <option value="생명">생명</option>
       </select><br><br>
       <button id="tryUpgrade">강화 시도</button>
       <button id="skipUpgrade">강화 건너뛰기</button>
@@ -924,16 +900,23 @@ function goToUpgrade(stars) {
     </div>
   `);
 
-  $('#tryUpgrade').on('click', () => {
+  $('#tryUpgrade').off('click').on('click', () => {
+    if (upgradeLocked) return;
+
     if (GameState.reinforceChances <= 0) {
       $('#resultBox').text("강화 기회가 없습니다.");
+      disableUpgradeButtons();
+      triggerNextStage();
       return;
     }
+
+    upgradeLocked = true;
 
     const option = $('#upgradeSelect').val();
     const count = GameState.upgrades.filter(x => x === option).length;
     if (count >= 3) {
       $('#resultBox').text(`${option}은 최대 3회까지만 강화 가능합니다.`);
+      upgradeLocked = false;
       return;
     }
 
@@ -943,6 +926,10 @@ function goToUpgrade(stars) {
 
     if (success) {
       GameState.upgrades.push(option);
+      if (option === "생명") {
+        GameState.barrierCount = (GameState.barrierCount || 0) + 1;
+        updateItemUI();
+      }
       $('#resultBox').text(`성공! [${option}] 강화 적용됨.`);
     } else {
       GameState.failedUpgrades.push(option);
@@ -950,12 +937,38 @@ function goToUpgrade(stars) {
     }
 
     $('#upgradeStatus').text(`강화 내역: ${summarizeUpgrades()}`);
+
+    if (GameState.reinforceChances === 0) {
+      disableUpgradeButtons();
+      triggerNextStage();
+    } else {
+      // ✅ 강화 기회가 남았으면 다시 누를 수 있게 잠금 해제
+      setTimeout(() => {
+        upgradeLocked = false;
+      }, 800);
+    }
   });
 
-  $('#skipUpgrade').on('click', () => {
-    proceedToNextStage(); // 사용자가 직접 클릭했을 때만 진행
+  $('#skipUpgrade').off('click').on('click', () => {
+    disableUpgradeButtons();
+    triggerNextStage();
   });
+
+  function disableUpgradeButtons() {
+    $('#tryUpgrade').prop('disabled', true);
+    $('#skipUpgrade').prop('disabled', true);
+  }
+
+  function triggerNextStage() {
+    if (!window.nextStageTriggered) {
+      window.nextStageTriggered = true;
+      setTimeout(() => {
+        proceedToNextStage();
+      }, 1500);
+    }
+  }
 }
+
 
 function summarizeUpgrades() {
   const summary = {};
@@ -965,12 +978,17 @@ function summarizeUpgrades() {
   return Object.entries(summary).map(([k, v]) => `${k} x${v}`).join(', ') || '없음';
 }
 
-function proceedToNextStage() {
-  GameState.selectedStage++;
+let nextStageTriggered = false;
 
-  if (GameState.selectedStage > 3) {
+function proceedToNextStage() {
+  nextStageTriggered = false;
+  if (nextStageTriggered) return;
+  nextStageTriggered = true;
+
+  if (GameState.selectedStage >= 3) {
     showEnding();
   } else {
+    GameState.selectedStage++;
     startStage(GameState.selectedStage);
   }
 }
@@ -1001,12 +1019,15 @@ function showEnding() {
     GameState.failedUpgrades = [];
     GameState.reinforceChances = 3;
 
-    goToMapScene(); // 유지
+    $('#restartBtn').on('click', () => {
+      resetGameState();
+      goToMapScene();
+    })
   });
 
   $('#exitBtn').on('click', () => {
     if (confirm("게임을 종료하고 처음으로 돌아갈까요?")) {
-      location.reload(); // 🔁 안전하고 간단
+      location.reload();
     }
   });
 }
@@ -1034,8 +1055,8 @@ function showGameOver() {
   });
 
   $('#exitBtn').on('click', () => {
-      location.reload();
-    
+    location.reload();
+
   });
 }
 
@@ -1066,16 +1087,19 @@ function handleGlassBlock(block) {
 }
 
 
-function explodeGlassChain(target) {
+function explodeGlassChain(target, delay = 0, visited = new Set()) {
   let destroyed = 0;
   bricks.forEach(b => {
-    if (b.status === 1 && b.type === BLOCK_TYPES.GLASS) {
+    const key = `${b.x},${b.y}`;
+    if (b.status === 1 && b.type === BLOCK_TYPES.GLASS && !visited.has(key)) {
       const dx = Math.abs(b.x - target.x);
       const dy = Math.abs(b.y - target.y);
       if (dx <= 80 && dy <= 40) {
         b.status = 0;
+        b.effectStage = "pending";
+        visited.add(key);
         destroyed++;
-        destroyed += explodeGlassChain(b);
+        destroyed += explodeGlassChain(b, delay + 3, visited);
       }
     }
   });
@@ -1090,10 +1114,29 @@ function handleMetalBlock(block) {
 }
 
 function handleTireBlock(block) {
-  ball.dx = (Math.random() - 0.5) * 6;
-  ball.dy = -Math.abs(ball.dy);
+  const prevAngle = Math.atan2(ball.dy, ball.dx);
+  let newAngle;
+
+  for (let i = 0; i < 10; i++) {
+    const offset = (Math.random() * 120 + 30) * (Math.PI / 180);
+    const sign = Math.random() < 0.5 ? -1 : 1;
+    newAngle = prevAngle + offset * sign;
+
+    const angleDiff = Math.abs(newAngle - prevAngle) % (2 * Math.PI);
+    if (angleDiff > Math.PI / 6) break;
+  }
+
+  // 블럭 제거는 즉시
   block.status = 0;
+
+  // 다음 프레임에서 방향 변경 (물리 충돌 이후)
+  setTimeout(() => {
+    const speed = ball.speed;
+    ball.dx = Math.cos(newAngle) * speed;
+    ball.dy = Math.sin(newAngle) * speed;
+  }, 0);
 }
+
 
 function handleFuelBlock(block) {
   const count = explodeFuelChain(block);
@@ -1173,22 +1216,38 @@ function handleItemCutterBlock(block) {
   updateItemUI();
 }
 
-
-
 function applyCutterIfAvailable(block) {
-  if (GameState.hasCutter) {
-    GameState.hasCutter = false;
-    updateItemUI();
-    block.status = 0;
-    return true;
+  if (!GameState.hasCutter) return false;
+
+  GameState.hasCutter = false;
+  updateItemUI();
+
+  switch (block.type) {
+    case BLOCK_TYPES.GLASS: handleGlassBlock(block); break;
+    case BLOCK_TYPES.FUEL: handleFuelBlock(block); break;
+    case BLOCK_TYPES.METAL:
+      block.status = 0;
+      block.hitCount = block.maxHits;
+      break;
+    case BLOCK_TYPES.TIRE: handleTireBlock(block); break;
+    case BLOCK_TYPES.LIGHT: handleLightBlock(block); break;
+    case BLOCK_TYPES.ITEM_COOLER: handleItemCoolerBlock(block); break;
+    case BLOCK_TYPES.ITEM_CUTTER: handleItemCutterBlock(block); break;
+    case BLOCK_TYPES.ITEM_GUIDE: handleItemGuideBlock(block); break;
+    case BLOCK_TYPES.NORMAL:
+    default: block.status = 0;
   }
-  return false;
+
+  return true;
 }
-function handleItemBarrierBlock(block) {
-  GameState.barrierCount = (GameState.barrierCount || 0) + 1;
-  block.status = 0;
-  updateItemUI(); 
-}
+
+
+
+// function handleItemBarrierBlock(block) {
+//   GameState.barrierCount = (GameState.barrierCount || 0) + 1;
+//   block.status = 0;
+//   updateItemUI();
+// }
 
 function handleItemGuideBlock(block) {
   block.status = 0;
@@ -1200,6 +1259,7 @@ function handleItemGuideBlock(block) {
   const startY = ball.y;
   const duration = 500;
   const startTime = Date.now();
+  const originalSpeed = ball.speed;
 
   function animateGuide() {
     const now = Date.now();
@@ -1211,10 +1271,14 @@ function handleItemGuideBlock(block) {
     if (t < 1) {
       requestAnimationFrame(animateGuide);
     } else {
-      ball.dx = 0;
-      ball.dy = -2;
-      ball.speed = 3;
+      // 무작위 각도로 발사
+      const angleDeg = Math.random() * 60 + 30; // 30~90도
+      const angleRad = angleDeg * (Math.PI / 180);
+      const direction = Math.random() < 0.5 ? -1 : 1;
 
+      ball.dx = Math.cos(angleRad) * originalSpeed * direction;
+      ball.dy = -Math.sin(angleRad) * originalSpeed;
+      ball.speed = originalSpeed;
 
       if (GameState.hasCooler) {
         GameState.hasCooler = false;
@@ -1226,9 +1290,6 @@ function handleItemGuideBlock(block) {
 
   animateGuide();
 }
-
-
-
 
 function applyScore(numBlocks = 1, baseScore = 10) {
   comboCount += numBlocks;
@@ -1290,10 +1351,10 @@ function collisionDetection() {
           handleItemCutterBlock(b);
           applyScore();
           break;
-        case BLOCK_TYPES.ITEM_BARRIER:
-          handleItemBarrierBlock(b);
-          applyScore();
-          break;
+        // case BLOCK_TYPES.ITEM_BARRIER:
+        //   handleItemBarrierBlock(b);
+        //   applyScore();
+        //   break;
         case BLOCK_TYPES.ITEM_GUIDE:
           handleItemGuideBlock(b);
           applyScore();
