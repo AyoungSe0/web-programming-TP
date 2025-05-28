@@ -53,3 +53,15 @@ button{
 	padding: 20px;
 	border-radius: 10px;
 }
+.item-status {
+  height: 30px;
+  width: 180px; /* 충분한 공간 확보 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;  /* 아이콘 사이 간격 */
+  font-size: 24px;
+  margin-bottom: 10px;
+  background-color: rgba(255, 255, 255, 0.1); /* 옵션: 배경 */
+  border-radius: 8px;
+}
