@@ -279,9 +279,9 @@ function goToStoryScene() {
 // import { goToMapScene } from './MapScene.js';
 
 const characters = [
-  { name: "야구선수", image: "야구선수.jpeg" },
-  { name: "테니스선수", image: "메카닉.jpeg" },
-  { name: "축구선수", image: "축구선수.jpeg" }
+  { name: "야구선수", image: "baseballP.png" },
+  { name: "테니스선수", image: "tennisP.png" },
+  { name: "축구선수", image: "soccerP.png" }
 ];
 const imageCache = {};
 
