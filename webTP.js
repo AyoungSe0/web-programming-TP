@@ -150,11 +150,15 @@ function showStartUI() {
   const ctx = canvas.getContext("2d");
 
   const bgImage = new Image();
-  bgImage.src = "background.png"; // 이미지 경로는 필요시 수정
+  bgImage.src = "startPage.png"; // 이미지 경로는 필요시 수정
 
   const startButtonImg = new Image();
-  startButtonImg.src = "StartButton.png";
+  startButtonImg.src = "StartBtn.png";
 
+  const startButtonHoverImg = new Image();
+  startButtonHoverImg.src = "StartBtnHover.png";
+
+  let isHoveringStartBtn = false;
 
   bgImage.onload = () => {
 
@@ -191,7 +195,23 @@ function showStartUI() {
     }
   });
 
+  function drawStartButton(ctx) {
+  const img = isHoveringStartBtn ? startButtonHoverImg : startButtonImg;
+  ctx.drawImage(img, 400, 420, 200, 60);
+}
 
+  canvas.addEventListener("mousemove", function (e) {
+  const rect = canvas.getBoundingClientRect();
+  const mx = e.clientX - rect.left;
+  const my = e.clientY - rect.top;
+
+  const hovering = mx >= 400 && mx <= 600 && my >= 420 && my <= 480;
+  if (hovering !== isHoveringStartBtn) {
+    isHoveringStartBtn = hovering;
+    ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height);
+    drawStartButton(ctx);
+  }
+});
 
 
 }
@@ -447,7 +467,7 @@ function goToMapScene() {
     <div style="text-align:center">
       <h2>스테이지 선택</h2>
       <button class="stageBtn" data-stage="1">경차 해체</button>
-      <button class="stageBtn" data-stage="2">스포츠카 해체</button>
+      <button class="stageBtn" data-stage="2">트럭 해체</button>
       <button class="stageBtn" data-stage="3">탱크 해체</button>
       <br><br>
    
