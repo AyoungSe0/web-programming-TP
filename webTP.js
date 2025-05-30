@@ -143,8 +143,6 @@ function showStartUI() {
   </div> 
   `);
 
-
-
   // 이제 canvas가 DOM에 들어왔기 때문에 여기서 접근 가능
   const canvas = document.getElementById("gameCanvas");
   const ctx = canvas.getContext("2d");
@@ -161,10 +159,8 @@ function showStartUI() {
   let isHoveringStartBtn = false;
 
   bgImage.onload = () => {
-
     ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height);
     drawStartButton(ctx, startButton);
-
   };
 
   startButtonImg.onload = () => {
@@ -196,22 +192,22 @@ function showStartUI() {
   });
 
   function drawStartButton(ctx) {
-  const img = isHoveringStartBtn ? startButtonHoverImg : startButtonImg;
-  ctx.drawImage(img, 400, 420, 200, 60);
-}
+    const img = isHoveringStartBtn ? startButtonHoverImg : startButtonImg;
+    ctx.drawImage(img, 400, 420, 200, 60);
+  }
 
   canvas.addEventListener("mousemove", function (e) {
-  const rect = canvas.getBoundingClientRect();
-  const mx = e.clientX - rect.left;
-  const my = e.clientY - rect.top;
+    const rect = canvas.getBoundingClientRect();
+    const mx = e.clientX - rect.left;
+    const my = e.clientY - rect.top;
 
-  const hovering = mx >= 400 && mx <= 600 && my >= 420 && my <= 480;
-  if (hovering !== isHoveringStartBtn) {
-    isHoveringStartBtn = hovering;
-    ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height);
-    drawStartButton(ctx);
-  }
-});
+    const hovering = mx >= 400 && mx <= 600 && my >= 420 && my <= 480;
+    if (hovering !== isHoveringStartBtn) {
+      isHoveringStartBtn = hovering;
+      ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height);
+      drawStartButton(ctx);
+    }
+  });
 
 
 }
@@ -543,7 +539,7 @@ function goToMapScene() {
       const yPos = y + yOffset;
 
       if (mx >= x && mx <= x + displayWidth &&
-          my >= yPos && my <= yPos + displayHeight) {
+        my >= yPos && my <= yPos + displayHeight) {
         return i;
       }
     }
@@ -562,9 +558,33 @@ function goToMapScene() {
     }
   });
 
-  canvas.addEventListener("dblclick", function () {
-    GameState.selectedStage = selectedIndex + 1;
-    startStage(GameState.selectedStage);
+  canvas.addEventListener("dblclick", function (e) {
+    const rect = canvas.getBoundingClientRect();
+    const mx = e.clientX - rect.left;
+    const my = e.clientY - rect.top;
+
+    // 선택된 스테이지의 위치 계산
+    const spacing = 300;
+    const startX = 80;
+    const y = 410;
+    const displayWidth = 240;
+
+    const img = stageImgs[selectedIndex];
+    const aspectRatio = img.height / img.width;
+    const displayHeight = displayWidth * aspectRatio;
+
+    const x = startX + selectedIndex * spacing;
+    const yOffset = (selectedIndex === 1) ? -10 : (selectedIndex === 2 ? 5 : 0);
+    const yPos = y + yOffset;
+
+    const within =
+      mx >= x && mx <= x + displayWidth &&
+      my >= yPos && my <= yPos + displayHeight;
+
+    if (within) {
+      GameState.selectedStage = selectedIndex + 1;
+      startStage(GameState.selectedStage);
+    }
   });
 
   $(document).on("keydown", function (e) {
@@ -1141,13 +1161,13 @@ function showEnding() {
     </div>
   `);
 
-    $('#restartBtn').on('click', () => {
-      resetGameState();
-      goToCharacterSelect(); 
-    });
+  $('#restartBtn').on('click', () => {
+    resetGameState();
+    goToCharacterSelect();
+  });
 
   $('#exitBtn').on('click', () => {
-       window.close()
+    window.close()
   });
 
 }
