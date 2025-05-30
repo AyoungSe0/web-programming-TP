@@ -463,26 +463,137 @@ function goToMapScene() {
   GameState.failedUpgrades = [];
   GameState.reinforceChances = 0;
 
+  let selectedIndex = 0;
+  const stageImages = ["stage1.png", "stage2.png", "stage3.png"];
+  const stageLabels = ["경차 해체", "트럭 해체", "탱크 해체"];
+
   $('body').html(`
-    <div style="text-align:center">
-      <h2>스테이지 선택</h2>
-      <button class="stageBtn" data-stage="1">경차 해체</button>
-      <button class="stageBtn" data-stage="2">트럭 해체</button>
-      <button class="stageBtn" data-stage="3">탱크 해체</button>
-      <br><br>
-   
+    <div style="position: relative; text-align: center;">
+      <canvas id="gameCanvas" width="1000" height="600" style="background-color:black;"></canvas>
+    </div>
   `);
 
-  $('.stageBtn').on('click', function () {
-    const stage = parseInt($(this).data('stage'));
-    GameState.selectedStage = stage;
-    startStage(stage);
+  const canvas = document.getElementById("gameCanvas");
+  const ctx = canvas.getContext("2d");
+
+  const bgImg = new Image();
+  bgImg.src = "stageBackground.png";
+
+  const arrowImg = new Image();
+  arrowImg.src = "arrow.png";
+
+  const stageImgs = stageImages.map(src => {
+    const img = new Image();
+    img.src = src;
+    return img;
   });
 
+  function drawScene() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = "white";
+    ctx.strokeStyle = "black";
+    ctx.lineWidth = 4;
+    ctx.font = "20px DungGeunMo, sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText("더블 클릭/엔터 시 스테이지 시작", canvas.width / 2, canvas.height - 10);
+
+    const spacing = 300;
+    const startX = 80;
+    const y = 410;
+    const displayWidth = 240;
+
+    for (let i = 0; i < stageImgs.length; i++) {
+      const img = stageImgs[i];
+      const aspectRatio = img.height / img.width;
+      const displayHeight = displayWidth * aspectRatio;
+      const x = startX + i * spacing;
+
+      const yOffset = (i === 1) ? -10 : (i === 2 ? 5 : 0);
+      const yPos = y + yOffset;
+
+      ctx.drawImage(img, x, yPos, displayWidth, displayHeight);
+      ctx.font = "18px DungGeunMo, sans-serif";
+      ctx.strokeText(stageLabels[i], x + displayWidth / 2, yPos + displayHeight + 25);
+      ctx.fillText(stageLabels[i], x + displayWidth / 2, yPos + displayHeight + 25);
+    }
+
+    // 화살표
+    const arrowWidth = 105;
+    const arrowHeight = 140;
+    const arrowX = startX + selectedIndex * spacing + displayWidth / 2 - arrowWidth / 2;
+    const arrowY = y - arrowHeight - 70;
+    ctx.drawImage(arrowImg, arrowX, arrowY, arrowWidth, arrowHeight);
+  }
+
+  function getSelectedIndexByMouse(mx, my) {
+    const spacing = 300;
+    const startX = 80;
+    const y = 410;
+    const displayWidth = 240;
+
+    for (let i = 0; i < stageImgs.length; i++) {
+      const img = stageImgs[i];
+      const aspectRatio = img.height / img.width;
+      const displayHeight = displayWidth * aspectRatio;
+
+      const x = startX + i * spacing;
+      const yOffset = (i === 1) ? -10 : (i === 2 ? 5 : 0);
+      const yPos = y + yOffset;
+
+      if (mx >= x && mx <= x + displayWidth &&
+          my >= yPos && my <= yPos + displayHeight) {
+        return i;
+      }
+    }
+    return -1;
+  }
+
+  canvas.addEventListener("click", function (e) {
+    const rect = canvas.getBoundingClientRect();
+    const mx = e.clientX - rect.left;
+    const my = e.clientY - rect.top;
+
+    const index = getSelectedIndexByMouse(mx, my);
+    if (index !== -1) {
+      selectedIndex = index;
+      drawScene();
+    }
+  });
+
+  canvas.addEventListener("dblclick", function () {
+    GameState.selectedStage = selectedIndex + 1;
+    startStage(GameState.selectedStage);
+  });
+
+  $(document).on("keydown", function (e) {
+    if (e.key === "Enter") {
+      GameState.selectedStage = selectedIndex + 1;
+      startStage(GameState.selectedStage);
+    } else if (e.key === "ArrowLeft") {
+      selectedIndex = (selectedIndex - 1 + stageImgs.length) % stageImgs.length;
+      drawScene();
+    } else if (e.key === "ArrowRight") {
+      selectedIndex = (selectedIndex + 1) % stageImgs.length;
+      drawScene();
+    }
+  });
+
+  let loadedCount = 0;
+  const totalImages = 2 + stageImgs.length;
+
+  function tryDrawScene() {
+    loadedCount++;
+    if (loadedCount === totalImages) {
+      drawScene();
+    }
+  }
+
+  bgImg.onload = tryDrawScene;
+  arrowImg.onload = tryDrawScene;
+  stageImgs.forEach(img => img.onload = tryDrawScene);
 }
-
-
-
 
 let canvas, ctx;
 let ball, paddle, bricks;
