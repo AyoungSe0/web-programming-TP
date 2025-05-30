@@ -156,25 +156,34 @@ function showStartUI() {
   const startButtonHoverImg = new Image();
   startButtonHoverImg.src = "StartBtnHover.png";
 
-  let isHoveringStartBtn = false;
-
-  bgImage.onload = () => {
-    ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height);
-    drawStartButton(ctx, startButton);
-  };
-
-  /////////////////////////////////////////////////////////////////////
-  // 근데 이거 왜 맨 처음에 로드하면 그쪽으로 마우스를 옮겨야 start 버튼이 생기는거지? //
-  startButtonImg.onload = () => {
-    ctx.drawImage(startButtonImg, 400, 420, 200, 60);
-  };
-
   const button = {
     x: 400,
     y: 420,
     width: 200,
     height: 60
   };
+
+
+  let isHoveringStartBtn = false;
+  let imagesLoaded = 0;
+
+  function tryDrawStartScene() {
+    if (imagesLoaded === 2) {
+      ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height);
+      ctx.drawImage(startButtonImg, button.x, button.y, button.width, button.height);
+    }
+  }
+
+  bgImage.onload = () => {
+    imagesLoaded++;
+    tryDrawStartScene();
+  };
+
+  startButtonImg.onload = () => {
+    imagesLoaded++;
+    tryDrawStartScene();
+  };
+
 
 
   canvas.addEventListener("click", function (e) {
@@ -235,8 +244,20 @@ function goToStoryScene() {
     "그 안에는 아직 살아있는 부품들이 숨 쉬고 있다.",
     "전설의 폐차 전사, 당신의 이름은?"
   ];
+
   let storyIndex = 0;
   let nickname = "";
+  let isEnteringName = false;
+  let promptBoxImageLoaded = false;
+
+  const promptBoxImage = new Image();
+  promptBoxImage.src = "pop-up.png";
+  promptBoxImage.onload = () => {
+    promptBoxImageLoaded = true;
+    if (isEnteringName) {
+      drawNameInputBox();
+    }
+  };;
 
   function drawStoryScene() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -249,16 +270,38 @@ function goToStoryScene() {
     ctx.fillText(storyText[storyIndex], canvas.width / 2, 300);
   }
 
+
+//이름 입력 받는 창 띄움
+//조합형이 적용이 안되므로 html에서 관련된 소스 불러와 사용 중
+function drawNameInputBox() {
+  drawStoryScene();
+
+  const boxWidth = promptBoxImage.width || 400;
+  const boxHeight = promptBoxImage.height || 160;
+  const boxX = (canvas.width - boxWidth) / 2;
+  const boxY = (canvas.height - boxHeight) / 2 - 40;
+
+  if (promptBoxImageLoaded) {
+    ctx.drawImage(promptBoxImage, boxX, boxY);
+  }
+
+  ctx.fillStyle = "white";
+  ctx.font = "24px DungGeunMo, sans-serif";
+  ctx.textAlign = "center";
+  ctx.fillText("당신의 이름은?", canvas.width / 2, boxY + 40);
+
+  const composed = Hangul.assemble(nickname.split(''));
+  ctx.fillText(composed + "_", canvas.width / 2, boxY + 85);
+}
+
   function advanceStory() {
     if (storyIndex < storyText.length - 1) {
       storyIndex++;
       drawStoryScene();
-    } else {
-      nickname = prompt("당신의 이름은?")?.trim() || "랄푸";
-      GameState.nickname = nickname;
-      $(document).off('keydown');
-      canvas.removeEventListener("click", advanceStory);
-      goToCharacterSelect();
+      if (storyIndex === storyText.length - 1) {
+        isEnteringName = true;
+        drawNameInputBox();
+      }
     }
   }
 
@@ -268,15 +311,33 @@ function goToStoryScene() {
   // 키보드 이벤트: Space --> 다음 / Enter --> Skip
   //앤터 입력시 스킵된다는 문구 추가 필요
   $(document).on("keydown", (e) => {
-    if (e.code === "Space") {
-      e.preventDefault();
-      advanceStory();
-    } else if (e.code === "Enter") {
-      e.preventDefault();
-      GameState.nickname = "랄푸";
-      $(document).off('keydown');
-      canvas.removeEventListener("click", advanceStory);
-      goToCharacterSelect();
+    if (!isEnteringName) {
+      if (e.code === "Space") {
+        e.preventDefault();
+        advanceStory();
+      } else if (e.code === "Enter") {
+        e.preventDefault();
+        GameState.nickname = "랄푸";
+        $(document).off("keydown");
+        canvas.removeEventListener("click", advanceStory);
+        goToCharacterSelect();
+      }
+    } else {
+      // 이름 입력 중
+      if (e.key === "Backspace") {
+        nickname = nickname.slice(0, -1);
+      } else if (e.key.length === 1 && nickname.length < 10) {
+        nickname += e.key;
+      } else if (e.key === "Enter") {
+        const composed = Hangul.assemble(nickname.split('')).trim() || "랄푸";
+        GameState.nickname = composed;
+        isEnteringName = false;
+        $(document).off("keydown");
+        canvas.removeEventListener("click", advanceStory);
+        goToCharacterSelect();
+        return;
+      }
+      drawNameInputBox();
     }
   });
 
@@ -286,52 +347,71 @@ function goToStoryScene() {
 
 
 
-// ===== CharacterSelector.js =====
-
-// import { GameState } from './GameState.js';
-// import { goToMapScene } from './MapScene.js';
 
 // ===== CharacterSelector.js =====
 
 // import { GameState } from './GameState.js';
 // import { goToMapScene } from './MapScene.js';
+
+// ===== CharacterSelector.js =====
+
+// import { GameState } from './GameState.js';
+// import { goToMapScene } from './MapScene.js';
+
+// 캐릭터 선택 화면 구현 (캔버스 기반) - 시각 효과 강화 및 배경, 말풍선 추가 버전
+// 주요 기능:
+// 1. 3개의 캐릭터를 한 화면에 표시
+// 2. 가운데 캐릭터는 컬러와 원본 크기, 좌우 캐릭터는 작고 흐리게 (양옆 배경 기준 위치 조정)
+// 3. 캐릭터마다 배경 추가 (야구장 등) → 중앙 캐릭터 뒤에만 배경을 소형으로 출력
+// 4. 호버 시 말풍선 + 설명 멘트 팝업
+// 5. 선택 애니메이션 포함, GameState 저장
 
 const characters = [
-  { name: "야구선수", image: "baseballP.png" },
-  { name: "테니스선수", image: "tennisP.png" },
-  { name: "축구선수", image: "soccerP.png" }
+  { name: "야구선수", image: "baseballP.png", bg: "baseball_bg.png", hint: "홈런을 노려라!" },
+  { name: "테니스선수", image: "tennisP.png", bg: "tennis_bg.png", hint: "강력한 서브!" },
+  { name: "축구선수", image: "soccerP.png", bg: "soccer_bg.png", hint: "골을 향해!" },
 ];
-const imageCache = {};
+
+const imageCache = {}; // 캐릭터 이미지 캐시
+let currentIndex = 0; // 현재 선택된 캐릭터 인덱스
+let selected = false; // 캐릭터가 선택되었는지 여부
+let imagesLoaded = 0; // 로딩 완료된 이미지 수
+const totalImagesToLoad = characters.length * 2; // 캐릭터 이미지 + 배경 이미지 개수
+let animating = false; // 애니메이션 상태 여부
 
 function goToCharacterSelect() {
-  $('body').html(`
-    <div style="text-align:center;">
-      <canvas id="gameCanvas" width="1000" height="600" style="background-color:black; border:none;"></canvas>
-    </div>
-  `);
-
+  // 캔버스 초기화
+  document.body.innerHTML = '<div style="text-align:center;"><canvas id="gameCanvas" width="1000" height="600" style="background-color:black; border:none;"></canvas></div>';
   const canvas = document.getElementById("gameCanvas");
   const ctx = canvas.getContext("2d");
 
-  let currentIndex = 0;
-  let selected = false;
-  let imagesLoaded = 0;
-
-  // 이미지 프리로드
-  characters.forEach(char => {
+  // 이미지 로딩
+  characters.forEach((char) => {
     const img = new Image();
     img.src = char.image;
     img.onload = () => {
       imageCache[char.name] = img;
       imagesLoaded++;
-      if (imagesLoaded === characters.length) {
-        drawCharacterScene(ctx, canvas, currentIndex, GameState.nickname, characters, imageCache);
-        canvas.addEventListener("click", onClick);
-        $(document).on("keydown", onKeyDown);
-      }
+      if (imagesLoaded === totalImagesToLoad) startCharacterSelectScene();
+    };
+
+    const bg = new Image();
+    bg.src = char.bg;
+    bg.onload = () => {
+      char.bgImage = bg;
+      imagesLoaded++;
+      if (imagesLoaded === totalImagesToLoad) startCharacterSelectScene();
     };
   });
 
+  function startCharacterSelectScene() {
+    drawCharacterScene();
+    canvas.addEventListener("mousemove", onHover);
+    canvas.addEventListener("click", onClick);
+    $(document).on("keydown", onKeyDown);
+  }
+
+  // 캐릭터 선택 시 호출
   function selectCharacter() {
     if (selected) return;
     selected = true;
@@ -341,90 +421,146 @@ function goToCharacterSelect() {
     goToMapScene();
   }
 
+  // 전체 화면 그리기 함수
+  function drawCharacterScene(hoveredIndex = -1) {
+    const char = characters[currentIndex];
+
+    // 배경 검정색 초기화
+    ctx.fillStyle = "black";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // 중앙 배경 출력
+    if (char.bgImage && char.bgImage.complete) {
+      const bgW = 500;
+      const bgH = 280;
+      const bgX = (canvas.width - bgW) / 2;
+      const bgY = (canvas.height - bgH) / 2 - 20;
+      ctx.drawImage(char.bgImage, bgX, bgY, bgW, bgH);
+    }
+
+    // 상단 안내 텍스트 출력
+    ctx.fillStyle = "white";
+    ctx.textAlign = "center";
+    ctx.font = "28px DungGeunMo, sans-serif";
+    ctx.fillText("캐릭터 선택", canvas.width / 2, 50);
+    ctx.font = "20px DungGeunMo, sans-serif";
+    ctx.fillText(`${GameState.nickname}님 환영합니다!`, canvas.width / 2, 80);
+
+    // 캐릭터 3명 그리기 (좌/중앙/우)
+    const positions = [-350, 0, 350];
+    const scales = [0.7, 1.0, 0.7];
+    const alphas = [0.4, 1.0, 0.4];
+
+    for (let i = 0; i < 3; i++) {
+      const index = (currentIndex - 1 + i + characters.length) % characters.length;
+      const char = characters[index];
+      const img = imageCache[char.name];
+      if (!img) continue;
+
+      // 캐릭터 이미지 위치 및 투명도/스케일 조정
+      ctx.save();
+      ctx.translate(canvas.width / 2 + positions[i], canvas.height / 2 - 30);
+      ctx.scale(scales[i], scales[i]);
+      ctx.globalAlpha = alphas[i];
+      ctx.drawImage(img, -100, -100, 200, 200);
+      ctx.restore();
+
+      // 중앙 캐릭터 이름 출력 (외곽선 포함)
+      if (i === 1) {
+        ctx.font = "bold 36px DungGeunMo, sans-serif";
+        ctx.lineWidth = 4;
+        ctx.strokeStyle = "black";
+        ctx.strokeText(char.name, canvas.width / 2, canvas.height / 2 + 90); // 살짝 위로 이동
+        ctx.fillStyle = "white";
+        ctx.fillText(char.name, canvas.width / 2, canvas.height / 2 + 90);
+      }
+    }
+
+    // 양쪽 화살표 출력
+    ctx.font = "48px DungGeunMo, sans-serif";
+    ctx.fillText("⬅️", 60, canvas.height / 2 + 10);
+    ctx.fillText("➡️", canvas.width - 60, canvas.height / 2 + 10);
+
+    // 선택 버튼 출력 (조금 아래로 이동)
+    ctx.fillStyle = "#000";
+    ctx.fillRect(canvas.width / 2 - 100, canvas.height / 2 + 140, 200, 60);
+    ctx.strokeStyle = "white";
+    ctx.lineWidth = 2;
+    ctx.strokeRect(canvas.width / 2 - 100, canvas.height / 2 + 140, 200, 60);
+    ctx.fillStyle = "white";
+    ctx.font = "bold 24px DungGeunMo, sans-serif";
+    ctx.fillText("선택", canvas.width / 2, canvas.height / 2 + 175);
+
+    // 하단 안내 메시지
+    ctx.font = "18px DungGeunMo, sans-serif";
+    ctx.fillText("← → 키 or 마우스로 이동, Enter 또는 선택 클릭", canvas.width / 2, 570);
+
+    // 말풍선 텍스트 표시 (호버 시)
+    if (hoveredIndex !== -1) {
+      const char = characters[hoveredIndex];
+      const hint = char.hint;
+      ctx.fillStyle = "white";
+      ctx.fillRect(canvas.width / 2 - 100, 110, 200, 50);
+      ctx.strokeStyle = "black";
+      ctx.strokeRect(canvas.width / 2 - 100, 110, 200, 50);
+      ctx.fillStyle = "black";
+      ctx.font = "18px DungGeunMo, sans-serif";
+      ctx.fillText(hint, canvas.width / 2, 140);
+    }
+  }
+
+  // 클릭 이벤트 처리
   function onClick(e) {
+    if (animating) return;
     const rect = canvas.getBoundingClientRect();
     const mx = e.clientX - rect.left;
     const my = e.clientY - rect.top;
 
-    // 왼쪽 버튼
-    if (mx >= canvas.width / 2 - 250 && mx <= canvas.width / 2 - 150 && my >= 340 && my <= 420) {
+    // 왼쪽 화살표 클릭
+    if (mx <= 120 && my >= canvas.height / 2 - 50 && my <= canvas.height / 2 + 50) {
       currentIndex = (currentIndex - 1 + characters.length) % characters.length;
-      drawCharacterScene(ctx, canvas, currentIndex, GameState.nickname, characters, imageCache);
+      drawCharacterScene();
     }
-
-    // 오른쪽 버튼
-    if (mx >= canvas.width / 2 + 150 && mx <= canvas.width / 2 + 250 && my >= 340 && my <= 420) {
+    // 오른쪽 화살표 클릭
+    else if (mx >= canvas.width - 120 && my >= canvas.height / 2 - 50 && my <= canvas.height / 2 + 50) {
       currentIndex = (currentIndex + 1) % characters.length;
-      drawCharacterScene(ctx, canvas, currentIndex, GameState.nickname, characters, imageCache);
+      drawCharacterScene();
     }
-
-    // 선택 버튼
-    if (mx >= canvas.width / 2 - 100 && mx <= canvas.width / 2 + 100 && my >= 460 && my <= 520) {
+    // 선택 버튼 클릭
+    else if (mx >= canvas.width / 2 - 100 && mx <= canvas.width / 2 + 100 && my >= canvas.height / 2 + 140 && my <= canvas.height / 2 + 200) {
       selectCharacter();
     }
   }
 
+  // 키보드 이벤트 처리
   function onKeyDown(e) {
+    if (animating) return;
     if (e.key === "ArrowLeft") {
       currentIndex = (currentIndex - 1 + characters.length) % characters.length;
-      drawCharacterScene(ctx, canvas, currentIndex, GameState.nickname, characters, imageCache);
+      drawCharacterScene();
     } else if (e.key === "ArrowRight") {
       currentIndex = (currentIndex + 1) % characters.length;
-      drawCharacterScene(ctx, canvas, currentIndex, GameState.nickname, characters, imageCache);
+      drawCharacterScene();
     } else if (e.key === "Enter") {
       selectCharacter();
     }
   }
-}
 
-function drawCharacterScene(ctx, canvas, currentIndex, nickname, characters, imageCache) {
-  const char = characters[currentIndex];
-  const img = imageCache[char.name];
+  // 마우스 hover 시 말풍선 표시 여부 판단
+  function onHover(e) {
+    const rect = canvas.getBoundingClientRect();
+    const mx = e.clientX - rect.left;
+    const my = e.clientY - rect.top;
 
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.fillStyle = "black";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  ctx.fillStyle = "white";
-  ctx.textAlign = "center";
-
-  // 타이틀
-  ctx.font = "28px DungGeunMo, sans-serif";
-  ctx.fillText("캐릭터 선택", canvas.width / 2, 80);
-
-  // 환영 메시지
-  ctx.font = "20px DungGeunMo, sans-serif";
-  ctx.fillText(`${nickname}님 환영합니다!`, canvas.width / 2, 120);
-
-  // 캐릭터 이미지
-  if (img && img.complete) {
-    const imgW = 200, imgH = 200;
-    ctx.drawImage(img, canvas.width / 2 - imgW / 2, 150, imgW, imgH);
+    if (
+      mx >= canvas.width / 2 - 100 && mx <= canvas.width / 2 + 100 &&
+      my >= canvas.height / 2 - 100 && my <= canvas.height / 2 + 100
+    ) {
+      drawCharacterScene(currentIndex);
+    } else {
+      drawCharacterScene(-1);
+    }
   }
-
-  // 캐릭터 이름
-  ctx.font = "bold 36px DungGeunMo, sans-serif";
-  ctx.fillText(char.name, canvas.width / 2, 380);
-
-  // 좌우 화살표
-  ctx.font = "48px DungGeunMo, sans-serif";
-  ctx.fillText("⬅️", canvas.width / 2 - 200, 400);
-  ctx.fillText("➡️", canvas.width / 2 + 200, 400);
-
-  // 선택 버튼 텍스트
-  ctx.fillStyle = "#000";
-  ctx.fillRect(canvas.width / 2 - 100, 460, 200, 60);
-  // ctx.strokeStyle = "white";
-  ctx.lineWidth = 2;
-  ctx.strokeRect(canvas.width / 2 - 100, 460, 200, 60);
-
-  ctx.fillStyle = "white";
-  ctx.font = "bold 24px DungGeunMo, sans-serif";
-  ctx.fillText("선택", canvas.width / 2, 490);
-
-  // 안내 메시지
-  ctx.font = "18px DungGeunMo, sans-serif";
-  ctx.fillText("← → 키 or 마우스로 이동, Enter 또는 선택 클릭", canvas.width / 2, 550);
 }
 
 
