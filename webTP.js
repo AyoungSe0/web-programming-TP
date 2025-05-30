@@ -942,7 +942,7 @@ function goToUpgrade(stars) {
       disableUpgradeButtons();
       triggerNextStage();
     } else {
-      // ✅ 강화 기회가 남았으면 다시 누를 수 있게 잠금 해제
+      // 강화 기회가 남았으면 다시 누를 수 있게 잠금 해제
       setTimeout(() => {
         upgradeLocked = false;
       }, 800);
@@ -1010,28 +1010,16 @@ function showEnding() {
     </div>
   `);
 
-  $('#restartBtn').on('click', () => {
-    GameState.score = 0;
-    GameState.comboScore = 0;
-    GameState.comboCount = 0;
-    GameState.selectedStage = 1;
-    GameState.upgrades = [];
-    GameState.failedUpgrades = [];
-    GameState.reinforceChances = 3;
-
     $('#restartBtn').on('click', () => {
       resetGameState();
-      goToMapScene();
-    })
-  });
+      goToCharacterSelect(); 
+    });
 
   $('#exitBtn').on('click', () => {
-    if (confirm("게임을 종료하고 처음으로 돌아갈까요?")) {
-      location.reload();
-    }
+       window.close()
   });
-}
 
+}
 function showGameOver() {
   $('body').html(`
     <div style="text-align:center">
