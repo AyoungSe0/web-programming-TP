@@ -163,6 +163,8 @@ function showStartUI() {
     drawStartButton(ctx, startButton);
   };
 
+  /////////////////////////////////////////////////////////////////////
+  // 근데 이거 왜 맨 처음에 로드하면 그쪽으로 마우스를 옮겨야 start 버튼이 생기는거지? //
   startButtonImg.onload = () => {
     ctx.drawImage(startButtonImg, 400, 420, 200, 60);
   };
@@ -624,6 +626,9 @@ let comboTimer = null;
 let isGameOver = false;
 let animationId = null;
 
+const backgroundImg = new Image();
+backgroundImg.src = "stage.png";
+
 function startStage(stageNumber) {
   score = 0;
   GameState.hasCooler = false;
@@ -640,7 +645,7 @@ function startStage(stageNumber) {
         / 콤보 횟수: <span id="combo">0</span>
       </div>
       <div class="item-status" id="itemStatusArea"></div>
-      <canvas id="gameCanvas" width="500" height="600"></canvas>
+      <canvas id="gameCanvas" width="1000" height="600"></canvas>
     </div>
   `);
 
@@ -711,8 +716,15 @@ function initGameElements() {
 // ✅ 정리된 draw 함수 - 중복 제거 및 반사 보정 포함
 function draw() {
   if (isGameOver) return;
-
+  
   ctx.clearRect(0, 0, canvas.width, canvas.height);
+  if (backgroundImg.complete) {
+    ctx.drawImage(backgroundImg, 0, 0, canvas.width, canvas.height);
+  } else {
+    ctx.fillStyle = "#000";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  }
+
   drawBricks();
   drawBall();
   drawPaddle();
