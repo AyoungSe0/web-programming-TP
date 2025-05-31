@@ -1286,7 +1286,6 @@ function showStageResultPopup(starCount) {
         goToUpgradePopup(starCount); // 강화 팝업 호출
       }
     }
-    popup.appendChild(nextBtn);
 
     const selectBtn = document.createElement('img');
     selectBtn.src = 'toStageBtn.png';
@@ -1299,6 +1298,7 @@ function showStageResultPopup(starCount) {
       goToMapScene();
     };
     popup.appendChild(selectBtn);
+    popup.appendChild(nextBtn);
   }
 
   document.body.appendChild(popup);
