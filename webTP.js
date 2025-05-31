@@ -1092,8 +1092,13 @@ function checkGameClear() {
 // - 기존 캔버스는 그대로 유지하고 위에 HTML 요소로 팝업을 띄움
 // - 실패 시 자동으로 3초 후 스테이지 선택 화면으로 이동
 
+// 게임 결과 팝업 UI 표시 함수
+// - 게임이 끝난 후 호출됨
+// - 획득한 별 개수에 따라 star 이미지 출력
+// - '다음 스테이지'와 '스테이지 선택' 버튼은 이미지로 대체됨
+// - 실패 시 자동으로 3초 후 스테이지 선택 화면으로 이동
+
 function showStageResultPopup(starCount) {
-  // 팝업을 감싸는 div 생성
   const popup = document.createElement('div');
   popup.id = 'resultPopup';
   popup.style.position = 'absolute';
@@ -1134,11 +1139,12 @@ function showStageResultPopup(starCount) {
       goToMapScene();
     }, 3000);
   } else {
-    const nextBtn = document.createElement('button');
-    nextBtn.textContent = '다음 스테이지';
+    const nextBtn = document.createElement('img');
+    nextBtn.src = 'toNextBtn.png';
+    nextBtn.alt = '다음 스테이지';
     nextBtn.style.margin = '10px';
-    nextBtn.style.padding = '8px 16px';
-    nextBtn.style.fontSize = '16px';
+    nextBtn.style.cursor = 'pointer';
+    nextBtn.style.width = '160px';
     nextBtn.onclick = () => {
       document.body.removeChild(popup);
       GameState.selectedStage++;
@@ -1150,11 +1156,12 @@ function showStageResultPopup(starCount) {
     };
     popup.appendChild(nextBtn);
 
-    const selectBtn = document.createElement('button');
-    selectBtn.textContent = '스테이지 선택';
+    const selectBtn = document.createElement('img');
+    selectBtn.src = 'toStageBtn.png';
+    selectBtn.alt = '스테이지 선택';
     selectBtn.style.margin = '10px';
-    selectBtn.style.padding = '8px 16px';
-    selectBtn.style.fontSize = '16px';
+    selectBtn.style.cursor = 'pointer';
+    selectBtn.style.width = '160px';
     selectBtn.onclick = () => {
       document.body.removeChild(popup);
       goToMapScene();
