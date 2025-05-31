@@ -568,7 +568,7 @@ function goToCharacterSelect() {
     }
   }
 
-  // 마우스 hover 시 말풍선 표시 여부 판단
+  // 마우스 hover 시 말풍선 표시 여부 판단 & 선택 hover 판단
   function onHover(e) {
     const rect = canvas.getBoundingClientRect();
     const mx = e.clientX - rect.left;
