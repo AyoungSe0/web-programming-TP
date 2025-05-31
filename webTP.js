@@ -1085,89 +1085,119 @@ function checkGameClear() {
 
 
 
+// 게임 결과 팝업 UI 표시 함수
+// - 게임이 끝난 후 호출됨
+// - 획득한 별 개수에 따라 star 이미지 출력
+// - '다음 스테이지'와 '스테이지 선택' 버튼 포함
+// - 기존 캔버스는 그대로 유지하고 위에 HTML 요소로 팝업을 띄움
+// - 실패 시 자동으로 3초 후 스테이지 선택 화면으로 이동
+
+function showStageResultPopup(starCount) {
+  // 팝업을 감싸는 div 생성
+  const popup = document.createElement('div');
+  popup.id = 'resultPopup';
+  popup.style.position = 'absolute';
+  popup.style.top = '50%';
+  popup.style.left = '50%';
+  popup.style.transform = 'translate(-50%, -50%)';
+  popup.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
+  popup.style.padding = '30px';
+  popup.style.border = '2px solid white';
+  popup.style.borderRadius = '12px';
+  popup.style.textAlign = 'center';
+  popup.style.color = 'white';
+  popup.style.zIndex = '1000';
+
+  // ⭐ 별 이미지 추가
+  const starImg = document.createElement('img');
+  starImg.src = `star${starCount}.png`;
+  starImg.alt = `별 ${starCount}개`;
+  starImg.style.width = '150px';
+  popup.appendChild(starImg);
+
+  // 점수 또는 안내 메시지 출력
+  const msg = document.createElement('p');
+  msg.textContent = `획득한 별: ${starCount}개`;
+  msg.style.fontFamily = 'DungGeunMo, sans-serif';
+  msg.style.fontSize = '22px';
+  popup.appendChild(msg);
+
+  if (starCount === 0) {
+    const failMsg = document.createElement('p');
+    failMsg.textContent = '게임 실패! 곧 스테이지 선택 화면으로 이동합니다.';
+    failMsg.style.fontSize = '18px';
+    failMsg.style.marginTop = '10px';
+    popup.appendChild(failMsg);
+
+    setTimeout(() => {
+      if (document.body.contains(popup)) document.body.removeChild(popup);
+      goToMapScene();
+    }, 3000);
+  } else {
+    const nextBtn = document.createElement('button');
+    nextBtn.textContent = '다음 스테이지';
+    nextBtn.style.margin = '10px';
+    nextBtn.style.padding = '8px 16px';
+    nextBtn.style.fontSize = '16px';
+    nextBtn.onclick = () => {
+      document.body.removeChild(popup);
+      GameState.selectedStage++;
+      if (GameState.selectedStage > 3) {
+        showEnding(); // ✅ 최종 스테이지 이후 엔딩 호출
+      } else {
+        startStage(GameState.selectedStage); // 다음 스테이지 시작
+      }
+    };
+    popup.appendChild(nextBtn);
+
+    const selectBtn = document.createElement('button');
+    selectBtn.textContent = '스테이지 선택';
+    selectBtn.style.margin = '10px';
+    selectBtn.style.padding = '8px 16px';
+    selectBtn.style.fontSize = '16px';
+    selectBtn.onclick = () => {
+      document.body.removeChild(popup);
+      goToMapScene();
+    };
+    popup.appendChild(selectBtn);
+  }
+
+  document.body.appendChild(popup);
+}
+
+// 게임 클리어 체크 함수
+function checkGameClear() {
+  const cleared = bricks.every(b => b.status === 0);
+  if (cleared) {
+    endGame();
+  }
+}
+
+// 게임 종료 처리 함수 (성공 시)
+function endGame() {
+  cancelAnimationFrame(animationId);
+  isGameOver = true;
+  GameState.score = score;
+  GameState.comboScore = comboScore;
+  const total = GameState.score + GameState.comboScore;
+  let stars = 0;
+  if (total >= 300) stars = 3;
+  else if (total >= 200) stars = 2;
+  else if (total >= 100) stars = 1;
+  showStageResultPopup(stars);
+}
+
+// 게임 종료 처리 함수 (실패 시)
 function gameOver() {
   cancelAnimationFrame(animationId);
   isGameOver = true;
   GameState.score = score + comboScore;
   $(document).off('keydown');
   $(document).off('keyup');
-
-  $('body').html(`
-    <div style="text-align:center">
-      <h2>GAME OVER</h2>
-      <button id="retryBtn">레벨 선택으로</button>
-      <button id="exitBtn">게임 종료</button>
-    </div>
-  `);
-
-  $('#retryBtn').on('click', () => {
-    GameState.score = 0;
-    GameState.comboScore = 0;
-    GameState.comboCount = 0;
-    GameState.selectedStage = 1;
-    GameState.upgrades = [];
-    GameState.failedUpgrades = [];
-    GameState.reinforceChances = 3;
-
-    goToMapScene();
-  });
-
-  $('#exitBtn').on('click', () => {
-    location.reload();
-
-  });
-}
-
-function endGame() {
-  cancelAnimationFrame(animationId);
-  isGameOver = true;
-  GameState.score = score;
-  GameState.comboScore = comboScore;
-  $(document).off('keydown');
-  $(document).off('keyup');
-  showScoreResult();
+  showStageResultPopup(0);
 }
 
 
-// ===== ScoreManager.js =====
-
-// import { goToUpgrade } from './UpgradeManager.js';
-// import { showGameOver } from './EndingScene.js';
-// import { GameState } from './GameState.js';
-
-function showScoreResult() {
-  const total = GameState.score + GameState.comboScore;
-  let stars = 0;
-  if (total >= 300) stars = 3;
-  else if (total >= 200) stars = 2;
-  else if (total >= 100) stars = 1;
-
-  showStarResult(stars);
-}
-
-// === [6] 별 화면 자동 이동 처리 ===
-function showStarResult(stars) {
-  $('body').html(`
-    <div style="text-align:center">
-      <h2>스테이지 결과</h2>
-      <p>별 획득: ${'★'.repeat(stars)}${'☆'.repeat(3 - stars)}</p>
-      <p id="autoMessage">다음 단계로 이동 중...</p>
-    </div>
-  `);
-
-  setTimeout(() => {
-    if (stars === 0) {
-      showGameOver();
-    } else {
-      if (GameState.selectedStage >= 3) {
-        // ✅ 강화 화면 없이 바로 최종 엔딩으로
-        showEnding();
-      } else {
-        goToUpgrade(stars); // ✅ 1~2스테이지는 강화 화면
-      }
-    }
-  }, 2000);
-}
 
 
 
