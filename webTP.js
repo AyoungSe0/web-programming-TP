@@ -1183,12 +1183,6 @@ function checkGameClear() {
 // - 기존 캔버스는 그대로 유지하고 위에 HTML 요소로 팝업을 띄움
 // - 실패 시 자동으로 3초 후 스테이지 선택 화면으로 이동
 
-// 게임 결과 팝업 UI 표시 함수
-// - 게임이 끝난 후 호출됨
-// - 획득한 별 개수에 따라 star 이미지 출력
-// - '다음 스테이지'와 '스테이지 선택' 버튼은 이미지로 대체됨
-// - 실패 시 자동으로 3초 후 스테이지 선택 화면으로 이동
-
 function showStageResultPopup(starCount) {
   const popup = document.createElement('div');
   popup.id = 'resultPopup';
@@ -1240,9 +1234,9 @@ function showStageResultPopup(starCount) {
       document.body.removeChild(popup);
       GameState.selectedStage++;
       if (GameState.selectedStage > 3) {
-        showEnding(); // ✅ 최종 스테이지 이후 엔딩 호출
+        showEnding();
       } else {
-        startStage(GameState.selectedStage); // 다음 스테이지 시작
+        goToUpgrade(starCount); // ⭐ 강화창 이동 로직 복원
       }
     };
     popup.appendChild(nextBtn);
