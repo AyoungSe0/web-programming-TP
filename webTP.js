@@ -588,7 +588,7 @@ function goToStoryScene2() {
   bubble.src = "story.png";
 
   const storyLines = [
-    { speaker: "아버지", text: `${GameState.nickname}아... 우리 약속했지 않냐.` },
+    { speaker: "아버지", text: `${GameState.nickname}... 우리 약속했지 않냐.` },
     { speaker: "아버지", text: "이제 아빠도 나이를 계속 먹어. 근육도 다 빠져서 일을 못해~" },
     { speaker: "아버지", text: "이제 운동은 그만 하고 아빠 폐차장 사업을 물려 받으렴." },
     { speaker: GameState.nickname, text: "(그래... 이제는 더 늦기 전에 폐차장으로 가야해.)" },
