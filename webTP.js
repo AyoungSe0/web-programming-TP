@@ -99,6 +99,8 @@ const GameState = {
   score: 0,
   comboScore: 0,
   comboCount: 0,
+  totalScore: 0,
+  totalComboScore: 0,
   upgrades: [],
   failedUpgrades: [],
   reinforceChances: 3,
@@ -1224,6 +1226,8 @@ function showStageResultPopup(starCount) {
       goToMapScene();
     }, 3000);
   } else {
+
+
     const nextBtn = document.createElement('img');
     nextBtn.src = 'toNextBtn.png';
     nextBtn.alt = '다음 스테이지';
@@ -1232,13 +1236,12 @@ function showStageResultPopup(starCount) {
     nextBtn.style.width = '160px';
     nextBtn.onclick = () => {
       document.body.removeChild(popup);
-      GameState.selectedStage++;
-      if (GameState.selectedStage > 3) {
+      if (GameState.selectedStage >= 3) {
         showEnding();
       } else {
-        goToUpgrade(starCount); // ⭐ 강화창 이동 로직 복원
+        goToUpgrade(starCount);
       }
-    };
+    }
     popup.appendChild(nextBtn);
 
     const selectBtn = document.createElement('img');
@@ -1269,13 +1272,22 @@ function checkGameClear() {
 function endGame() {
   cancelAnimationFrame(animationId);
   isGameOver = true;
-  GameState.score = score;
-  GameState.comboScore = comboScore;
-  const total = GameState.score + GameState.comboScore;
+
+  const stageScore = score;
+  const stageCombo = comboScore;
+  const total = stageScore + stageCombo;
+
+  GameState.totalScore += stageScore;
+  GameState.totalComboScore += stageCombo;
+
   let stars = 0;
   if (total >= 300) stars = 3;
   else if (total >= 200) stars = 2;
   else if (total >= 100) stars = 1;
+
+  GameState.score = stageScore;
+  GameState.comboScore = stageCombo
+
   showStageResultPopup(stars);
 }
 
@@ -1381,14 +1393,14 @@ function goToUpgrade(stars) {
   }
 
   function triggerNextStage() {
-    if (!window.nextStageTriggered) {
+    setTimeout(() => {
+      proceedToNextStage();
       window.nextStageTriggered = true;
-      setTimeout(() => {
-        proceedToNextStage();
-      }, 1500);
-    }
+    }, 1000);
   }
+
 }
+
 
 
 function summarizeUpgrades() {
@@ -1399,12 +1411,10 @@ function summarizeUpgrades() {
   return Object.entries(summary).map(([k, v]) => `${k} x${v}`).join(', ') || '없음';
 }
 
-let nextStageTriggered = false;
 
 function proceedToNextStage() {
-  nextStageTriggered = false;
-  if (nextStageTriggered) return;
-  nextStageTriggered = true;
+  if (window.nextStageTriggered) return;
+  window.nextStageTriggered = true;
 
   if (GameState.selectedStage >= 3) {
     showEnding();
@@ -1413,6 +1423,8 @@ function proceedToNextStage() {
     startStage(GameState.selectedStage);
   }
 }
+
+
 
 
 // ===== EndingScene.js =====
@@ -1424,7 +1436,7 @@ function showEnding() {
   $('body').html(`
     <div style="text-align:center">
       <h2>최종 엔딩</h2>
-      <p>${GameState.nickname}님의 총 점수: ${GameState.score + GameState.comboScore}</p>
+      <p>${GameState.nickname}님의 총 점수: ${GameState.totalScore + GameState.totalComboScore}</p>
       <p>강화 성공: ${GameState.upgrades.join(', ') || "없음"}</p>
       <button id="restartBtn">게임 다시 시작</button>
       <button id="exitBtn">게임 종료</button>
