@@ -108,6 +108,7 @@ const GameState = {
     bgm: true,
     sfx: true,
     cursor: true,
+    bgm:true,
   },
   mapVisitedOnce: false
 };
@@ -141,7 +142,8 @@ function showStartUI() {
   $('body').html(`
   <div style="text-align:center; position: relative;">
       <canvas id="gameCanvas" width="1000" height="600"
-              style="background-color: black; border: none;"></canvas>
+      style="background-color: black; border: none;"></canvas>
+      <audio id="bgm" src="audio/opening.mp3" autoplay loop muted></audio>
   </div> 
   `);
 
@@ -1818,3 +1820,28 @@ function explodeGlassChain(target, depth = 0, visited = new Set()) {
         }
       });
     }
+
+function playBGM() {
+  const bgm = document.getElementById("bgm");
+  if (bgm) {
+    bgm.muted = false; // 크롬 제한 우회
+    if (GameState.settings.bgm) {
+      bgm.play();
+    }
+  }
+}
+
+function stopBGM() {
+  const bgm = document.getElementById("bgm");
+  if (bgm) {
+    bgm.pause();
+    bgm.currentTime = 0;
+  }
+}
+
+
+window.addEventListener('DOMContentLoaded', () => {
+  document.body.addEventListener('click', () => {
+    playBGM();
+  }, { once: true }); // 딱 1번만 실행
+});
