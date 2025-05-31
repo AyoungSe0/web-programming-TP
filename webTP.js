@@ -271,28 +271,28 @@ function goToStoryScene() {
   }
 
 
-//이름 입력 받는 창 띄움
-//조합형이 적용이 안되므로 html에서 관련된 소스 불러와 사용 중
-function drawNameInputBox() {
-  drawStoryScene();
+  //이름 입력 받는 창 띄움
+  //조합형이 적용이 안되므로 html에서 관련된 소스 불러와 사용 중
+  function drawNameInputBox() {
+    drawStoryScene();
 
-  const boxWidth = promptBoxImage.width || 400;
-  const boxHeight = promptBoxImage.height || 160;
-  const boxX = (canvas.width - boxWidth) / 2;
-  const boxY = (canvas.height - boxHeight) / 2 - 40;
+    const boxWidth = promptBoxImage.width || 400;
+    const boxHeight = promptBoxImage.height || 160;
+    const boxX = (canvas.width - boxWidth) / 2;
+    const boxY = (canvas.height - boxHeight) / 2 - 40;
 
-  if (promptBoxImageLoaded) {
-    ctx.drawImage(promptBoxImage, boxX, boxY);
+    if (promptBoxImageLoaded) {
+      ctx.drawImage(promptBoxImage, boxX, boxY);
+    }
+
+    ctx.fillStyle = "white";
+    ctx.font = "24px DungGeunMo, sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText("당신의 이름은?", canvas.width / 2, boxY + 40);
+
+    const composed = Hangul.assemble(nickname.split(''));
+    ctx.fillText(composed + "_", canvas.width / 2, boxY + 85);
   }
-
-  ctx.fillStyle = "white";
-  ctx.font = "24px DungGeunMo, sans-serif";
-  ctx.textAlign = "center";
-  ctx.fillText("당신의 이름은?", canvas.width / 2, boxY + 40);
-
-  const composed = Hangul.assemble(nickname.split(''));
-  ctx.fillText(composed + "_", canvas.width / 2, boxY + 85);
-}
 
   function advanceStory() {
     if (storyIndex < storyText.length - 1) {
@@ -563,12 +563,18 @@ function goToCharacterSelect() {
   }
 }
 
-
+//==========스토리==========
 function goToStoryScene2() {
   $('body').html(`
+    <style>
+      canvas, #skipBtn {
+        cursor: url("cursor.png") 16 16, auto !important;
+      }
+    </style>
+
     <div style="text-align:center; position:relative;">
       <canvas id="gameCanvas" width="1000" height="600" style="background-color:black; border:none;"></canvas>
-      <img id="skipBtn" src="skipBtn.png" style="position:absolute; top:20px; right:20px; width:80px; cursor:pointer; z-index:10;">
+      <img id="skipBtn" src="skipBtn.png" style="position:absolute; top:20px; right:20px; width:50px; z-index:10;">
     </div>
   `);
 
@@ -582,11 +588,13 @@ function goToStoryScene2() {
   bubble.src = "story.png";
 
   const storyLines = [
-    `${GameState.nickname}아... 우리 약속했지 않냐`,
-    "이제 운동은 그만 하고 아빠 폐차장 사업을 물려 받으렴.",
-    "어쩌구저쩌구",
-    "해보자!",
-    
+    { speaker: "아버지", text: `${GameState.nickname}아... 우리 약속했지 않냐.` },
+    { speaker: "아버지", text: "이제 아빠도 나이를 계속 먹어. 근육도 다 빠져서 일을 못해~" },
+    { speaker: "아버지", text: "이제 운동은 그만 하고 아빠 폐차장 사업을 물려 받으렴." },
+    { speaker: GameState.nickname, text: "(그래... 이제는 더 늦기 전에 폐차장으로 가야해.)" },
+    { speaker: GameState.nickname, text: "네 아버지. 해볼게요!" },
+    { speaker: "아버지", text: "그래그래. 비록 운동에서는 못했지만, 폐차 업계에서는 꼭 정상에 오르길 바란다." },
+    { speaker: GameState.nickname, text: "네!!! 아버지!!!!" }
   ];
   let currentLine = 0;
 
@@ -598,12 +606,20 @@ function goToStoryScene2() {
     const bh = 140;
     const bx = (canvas.width - bw) / 2;
     const by = canvas.height - bh - 30;
-    if (bubble.complete) ctx.drawImage(bubble, bx, by, bw, bh);
+
+    if (bubble.complete)
+      ctx.drawImage(bubble, bx, by, bw, bh);
+
+    const current = storyLines[currentLine];
 
     ctx.fillStyle = "black";
-    ctx.font = "24px DungGeunMo, sans-serif";
+    ctx.font = "16px DungGeunMo, sans-serif";
+    ctx.textAlign = "left";
+    ctx.fillText(current.speaker, bx + 20, by + 26);
+
+    ctx.font = "18px DungGeunMo, sans-serif";
     ctx.textAlign = "center";
-    ctx.fillText(storyLines[currentLine], canvas.width / 2, by + 80);
+    ctx.fillText(current.text, canvas.width / 2, by + 80);
   }
 
   bg.onload = drawScene;
@@ -618,9 +634,20 @@ function goToStoryScene2() {
     }
   }
 
-  canvas.addEventListener("click", advanceStory);
-  $(document).on("keydown", function (e) {
-    if (e.key === "Enter") advanceStory();
+  canvas.addEventListener("click", function (e) {
+    const rect = canvas.getBoundingClientRect();
+    const mx = e.clientX - rect.left;
+    const my = e.clientY - rect.top;
+
+    const bw = 900;
+    const bh = 140;
+    const bx = (canvas.width - bw) / 2;
+    const by = canvas.height - bh - 30;
+
+    // 말풍선 영역 안일 때
+    if (mx >= bx && mx <= bx + bw && my >= by && my <= by + bh) {
+      advanceStory();
+    }
   });
 
   $('#skipBtn').on('click', () => {
@@ -916,7 +943,7 @@ function initGameElements() {
 // ✅ 정리된 draw 함수 - 중복 제거 및 반사 보정 포함
 function draw() {
   if (isGameOver) return;
-  
+
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   if (backgroundImg.complete) {
     ctx.drawImage(backgroundImg, 0, 0, canvas.width, canvas.height);
