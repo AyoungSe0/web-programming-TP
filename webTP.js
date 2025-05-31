@@ -374,14 +374,19 @@ const characters = [
   { name: "축구선수", image: "soccerP.png", bg: "soccer_bg.png", hint: "골을 향해!" },
 ];
 
-const imageCache = {}; // 캐릭터 이미지 캐시
+let imageCache = {}; // 캐릭터 이미지 캐시
 let currentIndex = 0; // 현재 선택된 캐릭터 인덱스
 let selected = false; // 캐릭터가 선택되었는지 여부
 let imagesLoaded = 0; // 로딩 완료된 이미지 수
-const totalImagesToLoad = characters.length * 2; // 캐릭터 이미지 + 배경 이미지 개수
+let totalImagesToLoad = characters.length * 2; // 캐릭터 이미지 + 배경 이미지 개수
 let animating = false; // 애니메이션 상태 여부
 
 function goToCharacterSelect() {
+//이미지 로딩 초기화
+  imagesLoaded = 0;
+  totalImagesToLoad = characters.length * 2;
+  imageCache = {};
+  selected = false;
   // 캔버스 초기화
   document.body.innerHTML = '<div style="text-align:center;"><canvas id="gameCanvas" width="1000" height="600" style="background-color:black; border:none;"></canvas></div>';
   const canvas = document.getElementById("gameCanvas");
