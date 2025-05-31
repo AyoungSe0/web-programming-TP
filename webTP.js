@@ -1356,6 +1356,16 @@ function showStageResultPopup(starCount) {
     popup.appendChild(selectBtn);
     popup.appendChild(restartBtn);
     popup.appendChild(nextBtn);
+     setTimeout(() => {
+      if (document.body.contains(popup)) {
+        document.body.removeChild(popup);
+        if (GameState.selectedStage >= 3) {
+          showEnding();
+        } else {
+          goToUpgradePopup(starCount);
+        }
+      }
+    }, 5000); // 5초 후 자동 진행
   }
 
   document.body.appendChild(popup);
