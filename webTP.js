@@ -418,7 +418,7 @@ function goToCharacterSelect() {
     GameState.selectedCharacter = characters[currentIndex];
     canvas.removeEventListener("click", onClick);
     $(document).off("keydown", onKeyDown);
-    goToMapScene();
+    goToStoryScene2();
   }
 
   // 전체 화면 그리기 함수
@@ -564,6 +564,70 @@ function goToCharacterSelect() {
 }
 
 
+function goToStoryScene2() {
+  $('body').html(`
+    <div style="text-align:center; position:relative;">
+      <canvas id="gameCanvas" width="1000" height="600" style="background-color:black; border:none;"></canvas>
+      <img id="skipBtn" src="skipBtn.png" style="position:absolute; top:20px; right:20px; width:80px; cursor:pointer; z-index:10;">
+    </div>
+  `);
+
+  const canvas = document.getElementById("gameCanvas");
+  const ctx = canvas.getContext("2d");
+
+  const bg = new Image();
+  bg.src = "StoryPage.png";
+
+  const bubble = new Image();
+  bubble.src = "story.png";
+
+  const storyLines = [
+    `${GameState.nickname}아... 우리 약속했지 않냐`,
+    "이제 운동은 그만 하고 아빠 폐차장 사업을 물려 받으렴.",
+    "어쩌구저쩌구",
+    "해보자!",
+    
+  ];
+  let currentLine = 0;
+
+  function drawScene() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    if (bg.complete) ctx.drawImage(bg, 0, 0, canvas.width, canvas.height);
+
+    const bw = 900;
+    const bh = 140;
+    const bx = (canvas.width - bw) / 2;
+    const by = canvas.height - bh - 30;
+    if (bubble.complete) ctx.drawImage(bubble, bx, by, bw, bh);
+
+    ctx.fillStyle = "black";
+    ctx.font = "24px DungGeunMo, sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText(storyLines[currentLine], canvas.width / 2, by + 80);
+  }
+
+  bg.onload = drawScene;
+  bubble.onload = drawScene;
+
+  function advanceStory() {
+    if (currentLine < storyLines.length - 1) {
+      currentLine++;
+      drawScene();
+    } else {
+      goToMapScene();  // 모든 대사 끝나면 맵 씬으로 이동
+    }
+  }
+
+  canvas.addEventListener("click", advanceStory);
+  $(document).on("keydown", function (e) {
+    if (e.key === "Enter") advanceStory();
+  });
+
+  $('#skipBtn').on('click', () => {
+    $(document).off("keydown");
+    goToMapScene();
+  });
+}
 
 
 // ===== MapScene.js =====
