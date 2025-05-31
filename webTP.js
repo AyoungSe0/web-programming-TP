@@ -1235,21 +1235,21 @@ function drawBricks() {
       } else {
 
 
-        const nextBtn = document.createElement('img');
-        nextBtn.src = 'toNextBtn.png';
-        nextBtn.alt = '다음 스테이지';
-        nextBtn.style.margin = '10px';
-        nextBtn.style.cursor = 'pointer';
-        nextBtn.style.width = '160px';
-        nextBtn.onclick = () => {
-          document.body.removeChild(popup);
-          if (GameState.selectedStage >= 3) {
-            showEnding();
-          } else {
-            goToUpgrade(starCount);
-          }
-        }
-        popup.appendChild(nextBtn);
+    const nextBtn = document.createElement('img');
+    nextBtn.src = 'toNextBtn.png';
+    nextBtn.alt = '다음 스테이지';
+    nextBtn.style.margin = '10px';
+    nextBtn.style.cursor = 'pointer';
+    nextBtn.style.width = '160px';
+    nextBtn.onclick = () => {
+      document.body.removeChild(popup);
+      if (GameState.selectedStage >= 3) {
+        showEnding();
+      } else {
+        goToUpgradePopup(starCount); // 강화 팝업 호출
+      }
+    }
+    popup.appendChild(nextBtn);
 
         const selectBtn = document.createElement('img');
         selectBtn.src = 'toStageBtn.png';
@@ -1311,118 +1311,124 @@ function drawBricks() {
     // import { startStage } from './GameStage.js';
     // import { showEnding } from './EndingScene.js';
 
-    function goToUpgrade(stars) {
-      window.nextStageTriggered = false;
-      let upgradeLocked = false;
+function goToUpgradePopup(stars) {
+  GameState.reinforceChances += stars;
 
-      GameState.reinforceChances += stars;
+  const popup = document.createElement('div');
+  popup.id = 'upgradePopup';
+  popup.style.position = 'absolute';
+  popup.style.top = '50%';
+  popup.style.left = '50%';
+  popup.style.transform = 'translate(-50%, -50%)';
+  popup.style.backgroundColor = 'rgba(0, 0, 0, 0.95)';
+  popup.style.padding = '30px';
+  popup.style.border = '2px solid white';
+  popup.style.borderRadius = '12px';
+  popup.style.textAlign = 'center';
+  popup.style.color = 'white';
+  popup.style.zIndex = '2000';
 
-      $('body').html(`
-    <div style="text-align:center">
-      <h2>강화 화면</h2>
-      <div id="upgradeStatus">강화 내역: ${summarizeUpgrades()}</div>
-      <p>현재 강화 기회: <span id="chanceDisplay">${GameState.reinforceChances}</span>회</p>
-      <select id="upgradeSelect">
-        <option value="패들강화">패들 넓이 증가</option>
-        <option value="보너스점수">점수 보너스</option>
-        <option value="생명">생명</option>
-      </select><br><br>
-      <button id="tryUpgrade">강화 시도</button>
-      <button id="skipUpgrade">강화 건너뛰기</button>
-      <div id="resultBox" style="margin-top:15px;font-weight:bold;"></div>
-    </div>
-  `);
+  popup.innerHTML = `
+    <h2>강화 화면</h2>
+    <div id="upgradeStatus">강화 내역: ${summarizeUpgrades()}</div>
+    <p>현재 강화 기회: <span id="chanceDisplay">${GameState.reinforceChances}</span>회</p>
+    <select id="upgradeSelect">
+      <option value="패들강화">패들 넓이 증가</option>
+      <option value="보너스점수">점수 보너스</option>
+      <option value="생명">생명</option>
+    </select><br><br>
+    <button id="tryUpgrade">강화 시도</button>
+    <button id="skipUpgrade">강화 건너뛰기</button>
+    <div id="resultBox" style="margin-top:15px;font-weight:bold;"></div>
+    <div id="countdownBox" style="margin-top:15px; font-size:18px;"></div>
+  `;
 
-      $('#tryUpgrade').off('click').on('click', () => {
-        if (upgradeLocked) return;
+  document.body.appendChild(popup);
 
-        if (GameState.reinforceChances <= 0) {
-          $('#resultBox').text("강화 기회가 없습니다.");
-          disableUpgradeButtons();
-          triggerNextStage();
-          return;
-        }
+  let locked = false;
 
-        upgradeLocked = true;
+  document.getElementById('tryUpgrade').onclick = () => {
+    if (locked) return;
+    if (GameState.reinforceChances <= 0) return;
 
-        const option = $('#upgradeSelect').val();
-        const count = GameState.upgrades.filter(x => x === option).length;
-        if (count >= 3) {
-          $('#resultBox').text(`${option}은 최대 3회까지만 강화 가능합니다.`);
-          upgradeLocked = false;
-          return;
-        }
+    locked = true;
+    const option = document.getElementById('upgradeSelect').value;
+    const count = GameState.upgrades.filter(x => x === option).length;
 
-        const success = Math.random() < 0.6;
-        GameState.reinforceChances--;
-        $('#chanceDisplay').text(GameState.reinforceChances);
-
-        if (success) {
-          GameState.upgrades.push(option);
-          if (option === "생명") {
-            GameState.barrierCount = (GameState.barrierCount || 0) + 1;
-            updateItemUI();
-          }
-          $('#resultBox').text(`성공! [${option}] 강화 적용됨.`);
-        } else {
-          GameState.failedUpgrades.push(option);
-          $('#resultBox').text(`실패! [${option}] 강화되지 않았습니다.`);
-        }
-
-        $('#upgradeStatus').text(`강화 내역: ${summarizeUpgrades()}`);
-
-        if (GameState.reinforceChances === 0) {
-          disableUpgradeButtons();
-          triggerNextStage();
-        } else {
-          // 강화 기회가 남았으면 다시 누를 수 있게 잠금 해제
-          setTimeout(() => {
-            upgradeLocked = false;
-          }, 800);
-        }
-      });
-
-      $('#skipUpgrade').off('click').on('click', () => {
-        disableUpgradeButtons();
-        triggerNextStage();
-      });
-
-      function disableUpgradeButtons() {
-        $('#tryUpgrade').prop('disabled', true);
-        $('#skipUpgrade').prop('disabled', true);
-      }
-
-      function triggerNextStage() {
-        setTimeout(() => {
-          proceedToNextStage();
-          window.nextStageTriggered = true;
-        }, 1000);
-      }
-
+    if (count >= 3) {
+      document.getElementById('resultBox').innerText = `${option}은 최대 3회까지만 강화 가능합니다.`;
+      locked = false;
+      return;
     }
 
+    const success = Math.random() < 0.6;
+    GameState.reinforceChances--;
+    document.getElementById('chanceDisplay').innerText = GameState.reinforceChances;
 
-
-    function summarizeUpgrades() {
-      const summary = {};
-      GameState.upgrades.forEach(up => {
-        summary[up] = (summary[up] || 0) + 1;
-      });
-      return Object.entries(summary).map(([k, v]) => `${k} x${v}`).join(', ') || '없음';
-    }
-
-
-    function proceedToNextStage() {
-      if (window.nextStageTriggered) return;
-      window.nextStageTriggered = true;
-
-      if (GameState.selectedStage >= 3) {
-        showEnding();
-      } else {
-        GameState.selectedStage++;
-        startStage(GameState.selectedStage);
+    if (success) {
+      GameState.upgrades.push(option);
+      if (option === "생명") {
+        GameState.barrierCount = (GameState.barrierCount || 0) + 1;
+        updateItemUI();
       }
+      document.getElementById('resultBox').innerText = `성공! [${option}] 강화 적용됨.`;
+    } else {
+      GameState.failedUpgrades.push(option);
+      document.getElementById('resultBox').innerText = `실패! [${option}] 강화되지 않았습니다.`;
     }
+
+    document.getElementById('upgradeStatus').innerText = `강화 내역: ${summarizeUpgrades()}`;
+
+    locked = false;
+    if (GameState.reinforceChances === 0) {
+      document.getElementById('tryUpgrade').disabled = true;
+      document.getElementById('skipUpgrade').disabled = true;
+      startCountdownAndNext();
+    }
+  };
+
+  document.getElementById('skipUpgrade').onclick = () => {
+    document.getElementById('tryUpgrade').disabled = true;
+    document.getElementById('skipUpgrade').disabled = true;
+    startCountdownAndNext();
+  };
+
+  // 카운트다운 표시 후 다음 스테이지로 이동
+  function startCountdownAndNext() {
+    let timeLeft = 3;
+    const countdown = document.getElementById('countdownBox');
+    countdown.innerText = `다음 스테이지로 이동까지 ${timeLeft}초...`;
+    const timer = setInterval(() => {
+      timeLeft--;
+      countdown.innerText = `다음 스테이지로 이동까지 ${timeLeft}초...`;
+      if (timeLeft <= 0) {
+        clearInterval(timer);
+        document.body.removeChild(popup);
+        proceedToNextStage();
+      }
+    }, 1000);
+  }
+}
+
+// 강화 내역 요약 텍스트 생성
+function summarizeUpgrades() {
+  const summary = {};
+  GameState.upgrades.forEach(up => {
+    summary[up] = (summary[up] || 0) + 1;
+  });
+  return Object.entries(summary).map(([k, v]) => `${k} x${v}`).join(', ') || '없음';
+}
+
+// 다음 스테이지로 진행
+function proceedToNextStage() {
+  if (GameState.selectedStage >= 3) {
+    showEnding();
+  } else {
+    GameState.selectedStage++;
+    startStage(GameState.selectedStage);
+  }
+}
+
 
 
 
