@@ -1250,6 +1250,10 @@ function showStageResultPopup(starCount) {
   popup.style.textAlign = 'center';
   popup.style.color = 'white';
   popup.style.zIndex = '1000';
+///////////////////////////////////////
+  const currentScore = GameState.score;
+  const currentComboScore = GameState.comboScore;
+///////////////////////////////////////
 
   // ⭐ 별 이미지 추가
   const starImg = document.createElement('img');
@@ -1319,7 +1323,38 @@ function showStageResultPopup(starCount) {
     selectBtn.addEventListener('mouseleave', () => {
       selectBtn.src = 'toStageBtn.png';
     });
+
+///////////////////////////////////////
+    // 다시 시작 버튼 추가
+    const restartBtn = document.createElement('img');
+    restartBtn.src = 'restartBtn.png';
+    restartBtn.alt = '다시 도전';
+    restartBtn.style.margin = '10px';
+    restartBtn.style.cursor = 'pointer';
+    restartBtn.style.height = '40px';
+    restartBtn.onclick = () => {
+      document.body.removeChild(popup);
+
+      // 방금 플레이 점수 반영 취소
+      GameState.totalScore -= currentScore;
+      GameState.totalComboScore -= currentComboScore;
+      GameState.score = 0;
+      GameState.comboScore = 0;
+
+      startStage(GameState.selectedStage);  // 현재 스테이지 다시 시작
+    };
+
+    // hover 시 이미지 변경
+    restartBtn.addEventListener('mouseenter', () => {
+      restartBtn.src = 'HrestartBtn.png';
+    });
+    restartBtn.addEventListener('mouseleave', () => {
+      restartBtn.src = 'restartBtn.png';
+    });
+///////////////////////////////////////
+
     popup.appendChild(selectBtn);
+    popup.appendChild(restartBtn);
     popup.appendChild(nextBtn);
   }
 
