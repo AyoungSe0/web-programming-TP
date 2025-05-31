@@ -244,9 +244,9 @@ function goToStoryScene() {
   const ctx = canvas.getContext("2d");
 
   const storyText = [
-    "폐차장에 버려진 고물차들...",
-    "그 안에는 아직 살아있는 부품들이 숨 쉬고 있다.",
-    "전설의 폐차 전사, 당신의 이름은?"
+    "평생을 운동 선수로 살아온 당신...",
+    "안타깝게도 눈에 띄는 성적을 보이지는 못했다.",
+    "당신의 이름은?"
   ];
 
   let storyIndex = 0;
@@ -261,7 +261,10 @@ function goToStoryScene() {
     if (isEnteringName) {
       drawNameInputBox();
     }
-  };;
+      document.fonts.ready.then(() => {
+    drawStoryScene();
+  });
+  };
 
   function drawStoryScene() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
