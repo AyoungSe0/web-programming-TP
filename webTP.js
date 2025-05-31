@@ -1270,14 +1270,13 @@ function showStageResultPopup(starCount) {
       goToMapScene();
     }, 3000);
   } else {
-
-
     const nextBtn = document.createElement('img');
     nextBtn.src = 'toNextBtn.png';
     nextBtn.alt = '다음 스테이지';
     nextBtn.style.margin = '10px';
     nextBtn.style.cursor = 'pointer';
-    nextBtn.style.width = '160px';
+    //nextBtn.style.width = '160px';
+    nextBtn.style.height = '40px';
     nextBtn.onclick = () => {
       document.body.removeChild(popup);
       if (GameState.selectedStage >= 3) {
@@ -1286,17 +1285,33 @@ function showStageResultPopup(starCount) {
         goToUpgradePopup(starCount); // 강화 팝업 호출
       }
     }
+    // hover 시 이미지 변경
+    nextBtn.addEventListener('mouseenter', () => {
+      nextBtn.src = 'HtoNextBtn.png';
+    });
+    nextBtn.addEventListener('mouseleave', () => {
+      nextBtn.src = 'toNextBtn.png';
+    });
 
     const selectBtn = document.createElement('img');
     selectBtn.src = 'toStageBtn.png';
     selectBtn.alt = '스테이지 선택';
     selectBtn.style.margin = '10px';
     selectBtn.style.cursor = 'pointer';
-    selectBtn.style.width = '160px';
+    //selectBtn.style.width = '160px';
+    selectBtn.style.height = '40px';
     selectBtn.onclick = () => {
       document.body.removeChild(popup);
       goToMapScene();
     };
+
+    // hover 시 이미지 변경
+    selectBtn.addEventListener('mouseenter', () => {
+      selectBtn.src = 'HtoStageBtn.png';
+    });
+    selectBtn.addEventListener('mouseleave', () => {
+      selectBtn.src = 'toStageBtn.png';
+    });
     popup.appendChild(selectBtn);
     popup.appendChild(nextBtn);
   }
