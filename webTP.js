@@ -1103,6 +1103,7 @@ function drawBricks() {
         if (b.effectTimer <= 0) {
           b.status = 0;
           b.effectStage = "gone";
+          delete b.ignoreCollision; 
         }
       } else {
         ctx.fillStyle = getColorByType(b.type, b.hitCount);
@@ -1754,6 +1755,7 @@ function explodeGlassChain(target, depth = 0, visited = new Set()) {
       bricks.forEach(b => {
         if (b.status === 1 &&
           ball.x > b.x && ball.x < b.x + 70 &&
+          !b.ignoreCollision &&
           ball.y > b.y && ball.y < b.y + 20) {
 
           // 고출력 커터 효과 우선 적용
