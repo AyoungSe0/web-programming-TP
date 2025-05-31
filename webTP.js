@@ -692,6 +692,13 @@ function goToStoryScene2() {
     $(document).off("keydown");
     goToMapScene();
   });
+
+  $(document).on("keydown", function (e) {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      advanceStory();
+    }
+  });
 }
 
 
