@@ -108,7 +108,7 @@ const GameState = {
     bgm: true,
     sfx: true,
     cursor: true,
-    bgm:true,
+    bgm: true,
   },
   mapVisitedOnce: false
 };
@@ -261,9 +261,9 @@ function goToStoryScene() {
     if (isEnteringName) {
       drawNameInputBox();
     }
-      document.fonts.ready.then(() => {
-    drawStoryScene();
-  });
+    document.fonts.ready.then(() => {
+      drawStoryScene();
+    });
   };
 
   function drawStoryScene() {
@@ -387,11 +387,13 @@ let totalImagesToLoad = characters.length * 2; // 캐릭터 이미지 + 배경 �
 let animating = false; // 애니메이션 상태 여부
 
 function goToCharacterSelect() {
-//이미지 로딩 초기화
+  //이미지 로딩 초기화
   imagesLoaded = 0;
   totalImagesToLoad = characters.length * 2;
   imageCache = {};
   selected = false;
+  let isHoveringSelect = false;
+  let lastHoveredIndex = -1;
   // 캔버스 초기화
   document.body.innerHTML = '<div style="text-align:center;"><canvas id="gameCanvas" width="1000" height="600" style="background-color:black; border:none;"></canvas></div>';
   const canvas = document.getElementById("gameCanvas");
@@ -494,17 +496,25 @@ function goToCharacterSelect() {
     ctx.fillText("➡️", canvas.width - 60, canvas.height / 2 + 10);
 
     // 선택 버튼 출력 (조금 아래로 이동)
-    ctx.fillStyle = "#000";
-    ctx.fillRect(canvas.width / 2 - 100, canvas.height / 2 + 140, 200, 60);
-    ctx.strokeStyle = "white";
-    ctx.lineWidth = 2;
-    ctx.strokeRect(canvas.width / 2 - 100, canvas.height / 2 + 140, 200, 60);
-    ctx.fillStyle = "white";
+    if (isHoveringSelect) {
+      ctx.fillStyle = "white";
+      ctx.fillRect(canvas.width / 2 - 100, canvas.height / 2 + 140, 200, 60);
+      ctx.strokeStyle = "black";
+      ctx.strokeRect(canvas.width / 2 - 100, canvas.height / 2 + 140, 200, 60);
+      ctx.fillStyle = "black";
+    } else {
+      ctx.fillStyle = "black";
+      ctx.fillRect(canvas.width / 2 - 100, canvas.height / 2 + 140, 200, 60);
+      ctx.strokeStyle = "white";
+      ctx.strokeRect(canvas.width / 2 - 100, canvas.height / 2 + 140, 200, 60);
+      ctx.fillStyle = "white";
+    }
     ctx.font = "bold 24px DungGeunMo, sans-serif";
     ctx.fillText("선택", canvas.width / 2, canvas.height / 2 + 175);
 
     // 하단 안내 메시지
     ctx.font = "18px DungGeunMo, sans-serif";
+    ctx.fillStyle = "white";
     ctx.fillText("← → 키 or 마우스로 이동, Enter 또는 선택 클릭", canvas.width / 2, 570);
 
     // 말풍선 텍스트 표시 (호버 시)
@@ -564,13 +574,29 @@ function goToCharacterSelect() {
     const mx = e.clientX - rect.left;
     const my = e.clientY - rect.top;
 
-    if (
+    const inSelectBox =
       mx >= canvas.width / 2 - 100 && mx <= canvas.width / 2 + 100 &&
-      my >= canvas.height / 2 - 100 && my <= canvas.height / 2 + 100
-    ) {
-      drawCharacterScene(currentIndex);
-    } else {
-      drawCharacterScene(-1);
+      my >= canvas.height / 2 + 140 && my <= canvas.height / 2 + 200;
+
+    const inCharacter =
+      mx >= canvas.width / 2 - 100 && mx <= canvas.width / 2 + 100 &&
+      my >= canvas.height / 2 - 100 && my <= canvas.height / 2 + 100;
+
+    let needRedraw = false;
+
+    if (inSelectBox !== isHoveringSelect) {
+      isHoveringSelect = inSelectBox;
+      needRedraw = true;
+    }
+
+    const hovered = inCharacter ? currentIndex : -1;
+    if (hovered !== lastHoveredIndex) {
+      lastHoveredIndex = hovered;
+      needRedraw = true;
+    }
+
+    if (needRedraw) {
+      drawCharacterScene(lastHoveredIndex);
     }
   }
 }
@@ -1113,7 +1139,7 @@ function drawBricks() {
         if (b.effectTimer <= 0) {
           b.status = 0;
           b.effectStage = "gone";
-          delete b.ignoreCollision; 
+          delete b.ignoreCollision;
         }
       } else {
         ctx.fillStyle = getColorByType(b.type, b.hitCount);
@@ -1127,123 +1153,123 @@ function drawBricks() {
 
 
 
-    function collisionDetection() {
-      bricks.forEach(b => {
-        if (b.status === 1 &&
-          b.effectStage === null && 
-          ball.x > b.x && ball.x < b.x + 70 &&
-          ball.y > b.y && ball.y < b.y + 20) {
+function collisionDetection() {
+  bricks.forEach(b => {
+    if (b.status === 1 &&
+      b.effectStage === null &&
+      ball.x > b.x && ball.x < b.x + 70 &&
+      ball.y > b.y && ball.y < b.y + 20) {
 
-          // 고출력 커터 효과 우선 적용
-          if (applyCutterIfAvailable(b)) {
-            ball.dy = -ball.dy;
-            score += 10;
-            return;
-          }
-
-          switch (b.type) {
-            case BLOCK_TYPES.NORMAL:
-              handleNormalBlock(b);
-              break;
-            case BLOCK_TYPES.METAL:
-              handleMetalBlock(b);
-              break;
-            case BLOCK_TYPES.GLASS:
-              handleGlassBlock(b);
-              break;
-            case BLOCK_TYPES.FUEL:
-              handleFuelBlock(b);
-              break;
-            case BLOCK_TYPES.TIRE:
-              handleTireBlock(b);
-              break;
-            case BLOCK_TYPES.LIGHT:
-              handleLightBlock(b);
-              break;
-            case BLOCK_TYPES.ITEM_COOLER:
-              handleItemCoolerBlock(b);
-              break;
-            case BLOCK_TYPES.ITEM_CUTTER:
-              handleItemCutterBlock(b);
-              break;
-            // case BLOCK_TYPES.ITEM_BARRIER:
-            //   handleItemBarrierBlock(b);
-            //   break;
-            case BLOCK_TYPES.ITEM_GUIDE:
-              handleItemGuideBlock(b);
-              break;
-            default:
-              b.status = 0;
-          }
-
-          ball.dy = -ball.dy;
-          score += 10;
-        }
-      });
-    }
-
-
-
-    function checkGameClear() {
-      const cleared = bricks.every(b =>
-        b.status === 0 && (b.effectStage === null || b.effectStage === "gone")
-      );
-      if (cleared) {
-        endGame();
+      // 고출력 커터 효과 우선 적용
+      if (applyCutterIfAvailable(b)) {
+        ball.dy = -ball.dy;
+        score += 10;
+        return;
       }
+
+      switch (b.type) {
+        case BLOCK_TYPES.NORMAL:
+          handleNormalBlock(b);
+          break;
+        case BLOCK_TYPES.METAL:
+          handleMetalBlock(b);
+          break;
+        case BLOCK_TYPES.GLASS:
+          handleGlassBlock(b);
+          break;
+        case BLOCK_TYPES.FUEL:
+          handleFuelBlock(b);
+          break;
+        case BLOCK_TYPES.TIRE:
+          handleTireBlock(b);
+          break;
+        case BLOCK_TYPES.LIGHT:
+          handleLightBlock(b);
+          break;
+        case BLOCK_TYPES.ITEM_COOLER:
+          handleItemCoolerBlock(b);
+          break;
+        case BLOCK_TYPES.ITEM_CUTTER:
+          handleItemCutterBlock(b);
+          break;
+        // case BLOCK_TYPES.ITEM_BARRIER:
+        //   handleItemBarrierBlock(b);
+        //   break;
+        case BLOCK_TYPES.ITEM_GUIDE:
+          handleItemGuideBlock(b);
+          break;
+        default:
+          b.status = 0;
+      }
+
+      ball.dy = -ball.dy;
+      score += 10;
     }
+  });
+}
+
+
+
+function checkGameClear() {
+  const cleared = bricks.every(b =>
+    b.status === 0 && (b.effectStage === null || b.effectStage === "gone")
+  );
+  if (cleared) {
+    endGame();
+  }
+}
 
 
 
 
-    // 게임 결과 팝업 UI 표시 함수
-    // - 게임이 끝난 후 호출됨
-    // - 획득한 별 개수에 따라 star 이미지 출력
-    // - '다음 스테이지'와 '스테이지 선택' 버튼 포함
-    // - 기존 캔버스는 그대로 유지하고 위에 HTML 요소로 팝업을 띄움
-    // - 실패 시 자동으로 3초 후 스테이지 선택 화면으로 이동
+// 게임 결과 팝업 UI 표시 함수
+// - 게임이 끝난 후 호출됨
+// - 획득한 별 개수에 따라 star 이미지 출력
+// - '다음 스테이지'와 '스테이지 선택' 버튼 포함
+// - 기존 캔버스는 그대로 유지하고 위에 HTML 요소로 팝업을 띄움
+// - 실패 시 자동으로 3초 후 스테이지 선택 화면으로 이동
 
-    function showStageResultPopup(starCount) {
-      const popup = document.createElement('div');
-      popup.id = 'resultPopup';
-      popup.style.position = 'absolute';
-      popup.style.top = '50%';
-      popup.style.left = '50%';
-      popup.style.transform = 'translate(-50%, -50%)';
-      popup.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
-      popup.style.padding = '30px';
-      popup.style.border = '2px solid white';
-      popup.style.borderRadius = '12px';
-      popup.style.textAlign = 'center';
-      popup.style.color = 'white';
-      popup.style.zIndex = '1000';
+function showStageResultPopup(starCount) {
+  const popup = document.createElement('div');
+  popup.id = 'resultPopup';
+  popup.style.position = 'absolute';
+  popup.style.top = '50%';
+  popup.style.left = '50%';
+  popup.style.transform = 'translate(-50%, -50%)';
+  popup.style.backgroundColor = 'rgba(0, 0, 0, 0.9)';
+  popup.style.padding = '30px';
+  popup.style.border = '2px solid white';
+  popup.style.borderRadius = '12px';
+  popup.style.textAlign = 'center';
+  popup.style.color = 'white';
+  popup.style.zIndex = '1000';
 
-      // ⭐ 별 이미지 추가
-      const starImg = document.createElement('img');
-      starImg.src = `star${starCount}.png`;
-      starImg.alt = `별 ${starCount}개`;
-      starImg.style.width = '150px';
-      popup.appendChild(starImg);
+  // ⭐ 별 이미지 추가
+  const starImg = document.createElement('img');
+  starImg.src = `star${starCount}.png`;
+  starImg.alt = `별 ${starCount}개`;
+  starImg.style.width = '150px';
+  popup.appendChild(starImg);
 
-      // 점수 또는 안내 메시지 출력
-      const msg = document.createElement('p');
-      msg.textContent = `획득한 별: ${starCount}개`;
-      msg.style.fontFamily = 'DungGeunMo, sans-serif';
-      msg.style.fontSize = '22px';
-      popup.appendChild(msg);
+  // 점수 또는 안내 메시지 출력
+  const msg = document.createElement('p');
+  msg.textContent = `획득한 별: ${starCount}개`;
+  msg.style.fontFamily = 'DungGeunMo, sans-serif';
+  msg.style.fontSize = '22px';
+  popup.appendChild(msg);
 
-      if (starCount === 0) {
-        const failMsg = document.createElement('p');
-        failMsg.textContent = '게임 실패! 곧 스테이지 선택 화면으로 이동합니다.';
-        failMsg.style.fontSize = '18px';
-        failMsg.style.marginTop = '10px';
-        popup.appendChild(failMsg);
+  if (starCount === 0) {
+    const failMsg = document.createElement('p');
+    failMsg.textContent = '게임 실패! 곧 스테이지 선택 화면으로 이동합니다.';
+    failMsg.style.fontSize = '18px';
+    failMsg.style.marginTop = '10px';
+    popup.appendChild(failMsg);
 
-        setTimeout(() => {
-          if (document.body.contains(popup)) document.body.removeChild(popup);
-          goToMapScene();
-        }, 3000);
-      } else {
+    setTimeout(() => {
+      if (document.body.contains(popup)) document.body.removeChild(popup);
+      goToMapScene();
+    }, 3000);
+  } else {
 
 
     const nextBtn = document.createElement('img');
@@ -1262,65 +1288,65 @@ function drawBricks() {
     }
     popup.appendChild(nextBtn);
 
-        const selectBtn = document.createElement('img');
-        selectBtn.src = 'toStageBtn.png';
-        selectBtn.alt = '스테이지 선택';
-        selectBtn.style.margin = '10px';
-        selectBtn.style.cursor = 'pointer';
-        selectBtn.style.width = '160px';
-        selectBtn.onclick = () => {
-          document.body.removeChild(popup);
-          goToMapScene();
-        };
-        popup.appendChild(selectBtn);
-      }
+    const selectBtn = document.createElement('img');
+    selectBtn.src = 'toStageBtn.png';
+    selectBtn.alt = '스테이지 선택';
+    selectBtn.style.margin = '10px';
+    selectBtn.style.cursor = 'pointer';
+    selectBtn.style.width = '160px';
+    selectBtn.onclick = () => {
+      document.body.removeChild(popup);
+      goToMapScene();
+    };
+    popup.appendChild(selectBtn);
+  }
 
-      document.body.appendChild(popup);
-    }
-
-
-    // 게임 종료 처리 함수 (성공 시)
-    function endGame() {
-      cancelAnimationFrame(animationId);
-      isGameOver = true;
-
-      const stageScore = score;
-      const stageCombo = comboScore;
-      const total = stageScore + stageCombo;
-
-      GameState.totalScore += stageScore;
-      GameState.totalComboScore += stageCombo;
-
-      let stars = 0;
-      if (total >= 300) stars = 3;
-      else if (total >= 200) stars = 2;
-      else if (total >= 100) stars = 1;
-
-      GameState.score = stageScore;
-      GameState.comboScore = stageCombo
-
-      showStageResultPopup(stars);
-    }
-
-    // 게임 종료 처리 함수 (실패 시)
-    function gameOver() {
-      cancelAnimationFrame(animationId);
-      isGameOver = true;
-      GameState.score = score + comboScore;
-      $(document).off('keydown');
-      $(document).off('keyup');
-      showStageResultPopup(0);
-    }
+  document.body.appendChild(popup);
+}
 
 
+// 게임 종료 처리 함수 (성공 시)
+function endGame() {
+  cancelAnimationFrame(animationId);
+  isGameOver = true;
+
+  const stageScore = score;
+  const stageCombo = comboScore;
+  const total = stageScore + stageCombo;
+
+  GameState.totalScore += stageScore;
+  GameState.totalComboScore += stageCombo;
+
+  let stars = 0;
+  if (total >= 300) stars = 3;
+  else if (total >= 200) stars = 2;
+  else if (total >= 100) stars = 1;
+
+  GameState.score = stageScore;
+  GameState.comboScore = stageCombo
+
+  showStageResultPopup(stars);
+}
+
+// 게임 종료 처리 함수 (실패 시)
+function gameOver() {
+  cancelAnimationFrame(animationId);
+  isGameOver = true;
+  GameState.score = score + comboScore;
+  $(document).off('keydown');
+  $(document).off('keyup');
+  showStageResultPopup(0);
+}
 
 
 
-    // ===== UpgradeManager.js =====
 
-    // import { GameState } from './GameState.js';
-    // import { startStage } from './GameStage.js';
-    // import { showEnding } from './EndingScene.js';
+
+// ===== UpgradeManager.js =====
+
+// import { GameState } from './GameState.js';
+// import { startStage } from './GameStage.js';
+// import { showEnding } from './EndingScene.js';
 
 function goToUpgradePopup(stars) {
   GameState.reinforceChances += stars;
@@ -1444,13 +1470,13 @@ function proceedToNextStage() {
 
 
 
-    // ===== EndingScene.js =====
+// ===== EndingScene.js =====
 
-    // import { GameState } from './GameState.js';
-    // import { goToMapScene } from './MapScene.js';
+// import { GameState } from './GameState.js';
+// import { goToMapScene } from './MapScene.js';
 
-    function showEnding() {
-      $('body').html(`
+function showEnding() {
+  $('body').html(`
     <div style="text-align:center">
       <h2>최종 엔딩</h2>
       <p>${GameState.nickname}님의 총 점수: ${GameState.totalScore + GameState.totalComboScore}</p>
@@ -1460,18 +1486,18 @@ function proceedToNextStage() {
     </div>
   `);
 
-      $('#restartBtn').on('click', () => {
-        resetGameState();
-        goToCharacterSelect();
-      });
+  $('#restartBtn').on('click', () => {
+    resetGameState();
+    goToCharacterSelect();
+  });
 
-      $('#exitBtn').on('click', () => {
-        window.close()
-      });
+  $('#exitBtn').on('click', () => {
+    window.close()
+  });
 
-    }
-    function showGameOver() {
-      $('body').html(`
+}
+function showGameOver() {
+  $('body').html(`
     <div style="text-align:center">
       <h2>GAME OVER</h2>
       <p>다시 도전해보세요!</p>
@@ -1480,45 +1506,45 @@ function proceedToNextStage() {
     </div>
   `);
 
-      $('#retryBtn').on('click', () => {
-        GameState.score = 0;
-        GameState.comboScore = 0;
-        GameState.comboCount = 0;
-        GameState.selectedStage = 1;
-        GameState.upgrades = [];
-        GameState.failedUpgrades = [];
-        GameState.reinforceChances = 3;
+  $('#retryBtn').on('click', () => {
+    GameState.score = 0;
+    GameState.comboScore = 0;
+    GameState.comboCount = 0;
+    GameState.selectedStage = 1;
+    GameState.upgrades = [];
+    GameState.failedUpgrades = [];
+    GameState.reinforceChances = 3;
 
-        goToMapScene();
-      });
+    goToMapScene();
+  });
 
-      $('#exitBtn').on('click', () => {
-        location.reload();
+  $('#exitBtn').on('click', () => {
+    location.reload();
 
-      });
-    }
-
-
-    // ===== Settings.js =====
-
-    // import { GameState } from './GameState.js';
-
-    function toggleBGM() {
-      GameState.settings.bgm = !GameState.settings.bgm;
-    }
+  });
+}
 
 
-    // ===== webTP.js =====
+// ===== Settings.js =====
 
-    // import { showStartUI } from './GameStartUI.js';
+// import { GameState } from './GameState.js';
 
-    $(document).ready(() => {
-      showStartUI();
-    });
+function toggleBGM() {
+  GameState.settings.bgm = !GameState.settings.bgm;
+}
 
-    function handleNormalBlock(block) {
-      block.status = 0;
-    }
+
+// ===== webTP.js =====
+
+// import { showStartUI } from './GameStartUI.js';
+
+$(document).ready(() => {
+  showStartUI();
+});
+
+function handleNormalBlock(block) {
+  block.status = 0;
+}
 
 function handleGlassBlock(block) {
   block.effectStage = "cracking";
@@ -1560,269 +1586,269 @@ function explodeGlassChain(target, depth = 0, visited = new Set()) {
 
 
 
-    function handleMetalBlock(block) {
-      block.hitCount++;
-      if (block.hitCount >= block.maxHits) {
-        block.status = 0;
-      }
-    }
+function handleMetalBlock(block) {
+  block.hitCount++;
+  if (block.hitCount >= block.maxHits) {
+    block.status = 0;
+  }
+}
 
-    function handleTireBlock(block) {
-      const prevAngle = Math.atan2(ball.dy, ball.dx);
-      let newAngle;
+function handleTireBlock(block) {
+  const prevAngle = Math.atan2(ball.dy, ball.dx);
+  let newAngle;
 
-      for (let i = 0; i < 10; i++) {
-        const offset = (Math.random() * 120 + 30) * (Math.PI / 180);
-        const sign = Math.random() < 0.5 ? -1 : 1;
-        newAngle = prevAngle + offset * sign;
+  for (let i = 0; i < 10; i++) {
+    const offset = (Math.random() * 120 + 30) * (Math.PI / 180);
+    const sign = Math.random() < 0.5 ? -1 : 1;
+    newAngle = prevAngle + offset * sign;
 
-        const angleDiff = Math.abs(newAngle - prevAngle) % (2 * Math.PI);
-        if (angleDiff > Math.PI / 6) break;
-      }
+    const angleDiff = Math.abs(newAngle - prevAngle) % (2 * Math.PI);
+    if (angleDiff > Math.PI / 6) break;
+  }
 
-      // 블럭 제거는 즉시
-      block.status = 0;
+  // 블럭 제거는 즉시
+  block.status = 0;
 
-      // 다음 프레임에서 방향 변경 (물리 충돌 이후)
-      setTimeout(() => {
-        const speed = ball.speed;
-        ball.dx = Math.cos(newAngle) * speed;
-        ball.dy = Math.sin(newAngle) * speed;
-      }, 0);
-    }
+  // 다음 프레임에서 방향 변경 (물리 충돌 이후)
+  setTimeout(() => {
+    const speed = ball.speed;
+    ball.dx = Math.cos(newAngle) * speed;
+    ball.dy = Math.sin(newAngle) * speed;
+  }, 0);
+}
 
 
-    function handleFuelBlock(block) {
-      const count = explodeFuelChain(block);
-      applyScore(count, 15);
-    }
+function handleFuelBlock(block) {
+  const count = explodeFuelChain(block);
+  applyScore(count, 15);
+}
 
-    function explodeFuelChain(center) {
-      let destroyed = 0;
-      bricks.forEach(b => {
-        if (b.status === 1) {
-          const dx = Math.abs(b.x - center.x);
-          const dy = Math.abs(b.y - center.y);
-          if (dx <= 80 && dy <= 40) {
-            if (b.type === BLOCK_TYPES.METAL) {
-              b.hitCount++;
-              if (b.hitCount >= b.maxHits) {
-                b.status = 0;
-                destroyed++;
-              }
-            } else {
-              b.status = 0;
-              destroyed++;
-
-              if (b.type === BLOCK_TYPES.FUEL) {
-                destroyed += explodeFuelChain(b);
-              }
-              if (b.type === BLOCK_TYPES.GLASS) {
-                destroyed += explodeGlassChain(b);
-              }
-            }
-          }
-        }
-      });
-      return destroyed;
-    }
-
-    function destroySurroundingBlocks(center) {
-      bricks.forEach(b => {
-        if (b.status === 1) {
-          const dx = Math.abs(b.x - center.x);
-          const dy = Math.abs(b.y - center.y);
-          if (dx <= 80 && dy <= 40) {
+function explodeFuelChain(center) {
+  let destroyed = 0;
+  bricks.forEach(b => {
+    if (b.status === 1) {
+      const dx = Math.abs(b.x - center.x);
+      const dy = Math.abs(b.y - center.y);
+      if (dx <= 80 && dy <= 40) {
+        if (b.type === BLOCK_TYPES.METAL) {
+          b.hitCount++;
+          if (b.hitCount >= b.maxHits) {
             b.status = 0;
+            destroyed++;
           }
-        }
-      });
-    }
-    function handleLightBlock(block) {
-      flashScreen();
-      block.status = 0;
-    }
-
-    function flashScreen() {
-      document.body.style.backgroundColor = "black";
-      setTimeout(() => {
-        document.body.style.backgroundColor = "white";
-        setTimeout(() => {
-          document.body.style.backgroundColor = "#f0f0f0";
-        }, 100);
-      }, 100);
-    }
-    function handleItemCoolerBlock(block) {
-      if (!GameState.hasCooler) {
-        ball.originalSpeed = ball.speed;
-        ball.speed = Math.max(1, ball.speed - 1);
-        ball.collidedWithPaddleOnceAfterCooler = true;
-        GameState.hasCooler = true;
-      }
-      block.status = 0;
-      updateItemUI();
-    }
-
-
-    function handleItemCutterBlock(block) {
-      GameState.hasCutter = true;
-      block.status = 0;
-      updateItemUI();
-    }
-
-    function applyCutterIfAvailable(block) {
-      if (!GameState.hasCutter) return false;
-
-      GameState.hasCutter = false;
-      updateItemUI();
-
-      switch (block.type) {
-        case BLOCK_TYPES.GLASS: handleGlassBlock(block); break;
-        case BLOCK_TYPES.FUEL: handleFuelBlock(block); break;
-        case BLOCK_TYPES.METAL:
-          block.status = 0;
-          block.hitCount = block.maxHits;
-          break;
-        case BLOCK_TYPES.TIRE: handleTireBlock(block); break;
-        case BLOCK_TYPES.LIGHT: handleLightBlock(block); break;
-        case BLOCK_TYPES.ITEM_COOLER: handleItemCoolerBlock(block); break;
-        case BLOCK_TYPES.ITEM_CUTTER: handleItemCutterBlock(block); break;
-        case BLOCK_TYPES.ITEM_GUIDE: handleItemGuideBlock(block); break;
-        case BLOCK_TYPES.NORMAL:
-        default: block.status = 0;
-      }
-
-      return true;
-    }
-
-
-
-    // function handleItemBarrierBlock(block) {
-    //   GameState.barrierCount = (GameState.barrierCount || 0) + 1;
-    //   block.status = 0;
-    //   updateItemUI();
-    // }
-
-    function handleItemGuideBlock(block) {
-      block.status = 0;
-      updateItemUI();
-
-      const targetX = paddle.x + paddle.width / 2;
-      const targetY = canvas.height - paddle.height - 20 - ball.radius;
-      const startX = ball.x;
-      const startY = ball.y;
-      const duration = 500;
-      const startTime = Date.now();
-      const originalSpeed = ball.speed;
-
-      function animateGuide() {
-        const now = Date.now();
-        const t = Math.min((now - startTime) / duration, 1);
-        const ease = t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
-        ball.x = startX + (targetX - startX) * ease;
-        ball.y = startY + (targetY - startY) * ease;
-
-        if (t < 1) {
-          requestAnimationFrame(animateGuide);
         } else {
-          // 무작위 각도로 발사
-          const angleDeg = Math.random() * 60 + 30; // 30~90도
-          const angleRad = angleDeg * (Math.PI / 180);
-          const direction = Math.random() < 0.5 ? -1 : 1;
+          b.status = 0;
+          destroyed++;
 
-          ball.dx = Math.cos(angleRad) * originalSpeed * direction;
-          ball.dy = -Math.sin(angleRad) * originalSpeed;
-          ball.speed = originalSpeed;
-
-          if (GameState.hasCooler) {
-            GameState.hasCooler = false;
-            ball.collidedWithPaddleOnceAfterCooler = false;
-            updateItemUI();
+          if (b.type === BLOCK_TYPES.FUEL) {
+            destroyed += explodeFuelChain(b);
+          }
+          if (b.type === BLOCK_TYPES.GLASS) {
+            destroyed += explodeGlassChain(b);
           }
         }
       }
-
-      animateGuide();
     }
+  });
+  return destroyed;
+}
 
-    function applyScore(numBlocks = 1, baseScore = 10) {
-      comboCount += numBlocks;
-      comboScore += comboCount * 5;
-      score += baseScore * numBlocks;
-
-      $('#score').text(score + comboScore);
-      $('#combo').text(comboCount);
-
-      if (comboTimer) clearTimeout(comboTimer);
-      comboTimer = setTimeout(() => {
-        comboCount = 0;
-        $('#combo').text("0");
-      }, 1500);
+function destroySurroundingBlocks(center) {
+  bricks.forEach(b => {
+    if (b.status === 1) {
+      const dx = Math.abs(b.x - center.x);
+      const dy = Math.abs(b.y - center.y);
+      if (dx <= 80 && dy <= 40) {
+        b.status = 0;
+      }
     }
+  });
+}
+function handleLightBlock(block) {
+  flashScreen();
+  block.status = 0;
+}
+
+function flashScreen() {
+  document.body.style.backgroundColor = "black";
+  setTimeout(() => {
+    document.body.style.backgroundColor = "white";
+    setTimeout(() => {
+      document.body.style.backgroundColor = "#f0f0f0";
+    }, 100);
+  }, 100);
+}
+function handleItemCoolerBlock(block) {
+  if (!GameState.hasCooler) {
+    ball.originalSpeed = ball.speed;
+    ball.speed = Math.max(1, ball.speed - 1);
+    ball.collidedWithPaddleOnceAfterCooler = true;
+    GameState.hasCooler = true;
+  }
+  block.status = 0;
+  updateItemUI();
+}
 
 
-    function collisionDetection() {
-      bricks.forEach(b => {
-        if (b.status === 1 &&
-          ball.x > b.x && ball.x < b.x + 70 &&
-          !b.ignoreCollision &&
-          ball.y > b.y && ball.y < b.y + 20) {
+function handleItemCutterBlock(block) {
+  GameState.hasCutter = true;
+  block.status = 0;
+  updateItemUI();
+}
 
-          // 고출력 커터 효과 우선 적용
-          if (applyCutterIfAvailable(b)) {
-            applyScore();
-            ball.dy = -ball.dy;
-            return;
-          }
+function applyCutterIfAvailable(block) {
+  if (!GameState.hasCutter) return false;
 
-          switch (b.type) {
-            case BLOCK_TYPES.NORMAL:
-              handleNormalBlock(b);
-              applyScore();
-              break;
-            case BLOCK_TYPES.METAL:
-              handleMetalBlock(b);
-              applyScore();
-              break;
-            case BLOCK_TYPES.GLASS:
-              handleGlassBlock(b);
-              break;
-            case BLOCK_TYPES.FUEL:
-              handleFuelBlock(b);
-              break;
-            case BLOCK_TYPES.TIRE:
-              handleTireBlock(b);
-              applyScore(1, 20);
-              break;
-            case BLOCK_TYPES.LIGHT:
-              handleLightBlock(b);
-              applyScore(1, 10);
-              break;
-            case BLOCK_TYPES.ITEM_COOLER:
-              handleItemCoolerBlock(b);
-              applyScore();
-              break;
-            case BLOCK_TYPES.ITEM_CUTTER:
-              handleItemCutterBlock(b);
-              applyScore();
-              break;
-            // case BLOCK_TYPES.ITEM_BARRIER:
-            //   handleItemBarrierBlock(b);
-            //   applyScore();
-            //   break;
-            case BLOCK_TYPES.ITEM_GUIDE:
-              handleItemGuideBlock(b);
-              applyScore();
-              break;
-            default:
-              b.status = 0;
-              applyScore();
-          }
+  GameState.hasCutter = false;
+  updateItemUI();
 
-          ball.dy = -ball.dy;
-        }
-      });
+  switch (block.type) {
+    case BLOCK_TYPES.GLASS: handleGlassBlock(block); break;
+    case BLOCK_TYPES.FUEL: handleFuelBlock(block); break;
+    case BLOCK_TYPES.METAL:
+      block.status = 0;
+      block.hitCount = block.maxHits;
+      break;
+    case BLOCK_TYPES.TIRE: handleTireBlock(block); break;
+    case BLOCK_TYPES.LIGHT: handleLightBlock(block); break;
+    case BLOCK_TYPES.ITEM_COOLER: handleItemCoolerBlock(block); break;
+    case BLOCK_TYPES.ITEM_CUTTER: handleItemCutterBlock(block); break;
+    case BLOCK_TYPES.ITEM_GUIDE: handleItemGuideBlock(block); break;
+    case BLOCK_TYPES.NORMAL:
+    default: block.status = 0;
+  }
+
+  return true;
+}
+
+
+
+// function handleItemBarrierBlock(block) {
+//   GameState.barrierCount = (GameState.barrierCount || 0) + 1;
+//   block.status = 0;
+//   updateItemUI();
+// }
+
+function handleItemGuideBlock(block) {
+  block.status = 0;
+  updateItemUI();
+
+  const targetX = paddle.x + paddle.width / 2;
+  const targetY = canvas.height - paddle.height - 20 - ball.radius;
+  const startX = ball.x;
+  const startY = ball.y;
+  const duration = 500;
+  const startTime = Date.now();
+  const originalSpeed = ball.speed;
+
+  function animateGuide() {
+    const now = Date.now();
+    const t = Math.min((now - startTime) / duration, 1);
+    const ease = t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+    ball.x = startX + (targetX - startX) * ease;
+    ball.y = startY + (targetY - startY) * ease;
+
+    if (t < 1) {
+      requestAnimationFrame(animateGuide);
+    } else {
+      // 무작위 각도로 발사
+      const angleDeg = Math.random() * 60 + 30; // 30~90도
+      const angleRad = angleDeg * (Math.PI / 180);
+      const direction = Math.random() < 0.5 ? -1 : 1;
+
+      ball.dx = Math.cos(angleRad) * originalSpeed * direction;
+      ball.dy = -Math.sin(angleRad) * originalSpeed;
+      ball.speed = originalSpeed;
+
+      if (GameState.hasCooler) {
+        GameState.hasCooler = false;
+        ball.collidedWithPaddleOnceAfterCooler = false;
+        updateItemUI();
+      }
     }
+  }
+
+  animateGuide();
+}
+
+function applyScore(numBlocks = 1, baseScore = 10) {
+  comboCount += numBlocks;
+  comboScore += comboCount * 5;
+  score += baseScore * numBlocks;
+
+  $('#score').text(score + comboScore);
+  $('#combo').text(comboCount);
+
+  if (comboTimer) clearTimeout(comboTimer);
+  comboTimer = setTimeout(() => {
+    comboCount = 0;
+    $('#combo').text("0");
+  }, 1500);
+}
+
+
+function collisionDetection() {
+  bricks.forEach(b => {
+    if (b.status === 1 &&
+      ball.x > b.x && ball.x < b.x + 70 &&
+      !b.ignoreCollision &&
+      ball.y > b.y && ball.y < b.y + 20) {
+
+      // 고출력 커터 효과 우선 적용
+      if (applyCutterIfAvailable(b)) {
+        applyScore();
+        ball.dy = -ball.dy;
+        return;
+      }
+
+      switch (b.type) {
+        case BLOCK_TYPES.NORMAL:
+          handleNormalBlock(b);
+          applyScore();
+          break;
+        case BLOCK_TYPES.METAL:
+          handleMetalBlock(b);
+          applyScore();
+          break;
+        case BLOCK_TYPES.GLASS:
+          handleGlassBlock(b);
+          break;
+        case BLOCK_TYPES.FUEL:
+          handleFuelBlock(b);
+          break;
+        case BLOCK_TYPES.TIRE:
+          handleTireBlock(b);
+          applyScore(1, 20);
+          break;
+        case BLOCK_TYPES.LIGHT:
+          handleLightBlock(b);
+          applyScore(1, 10);
+          break;
+        case BLOCK_TYPES.ITEM_COOLER:
+          handleItemCoolerBlock(b);
+          applyScore();
+          break;
+        case BLOCK_TYPES.ITEM_CUTTER:
+          handleItemCutterBlock(b);
+          applyScore();
+          break;
+        // case BLOCK_TYPES.ITEM_BARRIER:
+        //   handleItemBarrierBlock(b);
+        //   applyScore();
+        //   break;
+        case BLOCK_TYPES.ITEM_GUIDE:
+          handleItemGuideBlock(b);
+          applyScore();
+          break;
+        default:
+          b.status = 0;
+          applyScore();
+      }
+
+      ball.dy = -ball.dy;
+    }
+  });
+}
 
 function playBGM() {
   const bgm = document.getElementById("bgm");
