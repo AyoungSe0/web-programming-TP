@@ -117,6 +117,8 @@ function resetGameState() {
   GameState.score = 0;
   GameState.comboScore = 0;
   GameState.comboCount = 0;
+  GameState.totalComboScore=0;
+  GameState.totalScore=0;
   GameState.selectedStage = 1;
   GameState.upgrades = [];
   GameState.failedUpgrades = [];
@@ -1330,6 +1332,7 @@ function showStageResultPopup(starCount) {
 
     setTimeout(() => {
       if (document.body.contains(popup)) document.body.removeChild(popup);
+      resetGameState();
       goToMapScene();
     }, 3000);
   } else {
