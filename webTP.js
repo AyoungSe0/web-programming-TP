@@ -1074,7 +1074,7 @@ function draw() {
   const tolerance = 10;
   if (ball.y + ball.dy > canvas.height - ball.radius - paddle.height - 10) {
     if (ball.x + ball.radius >= paddle.x - tolerance &&
-      ball.x - ball.radius <= paddle.x + paddle.width + tolerance) {
+    ball.x - ball.radius <= paddle.x + paddle.width + tolerance) {
       ball.dy = -ball.dy;
       if (ball.collidedWithPaddleOnceAfterCooler) {
         ball.speed = ball.originalSpeed || 3;
@@ -1513,6 +1513,7 @@ function gameOver() {
 // import { startStage } from './GameStage.js';
 // import { showEnding } from './EndingScene.js';
 
+// ✅ 캔버스 기반 강화 UI 전체 구성 (선택, 버튼, 결과 표시 포함)
 function goToUpgradePopup(stars) {
   GameState.reinforceChances += stars;
 
@@ -1534,85 +1535,159 @@ function goToUpgradePopup(stars) {
     <h2>강화 화면</h2>
     <div id="upgradeStatus">강화 내역: ${summarizeUpgrades()}</div>
     <p>현재 강화 기회: <span id="chanceDisplay">${GameState.reinforceChances}</span>회</p>
-    <select id="upgradeSelect">
-      <option value="패들강화">패들 넓이 증가</option>
-      <option value="보너스점수">점수 보너스</option>
-      <option value="생명">생명</option>
-    </select><br><br>
-    <button id="tryUpgrade">강화 시도</button>
-    <button id="skipUpgrade">강화 건너뛰기</button>
-    <div id="resultBox" style="margin-top:15px;font-weight:bold;"></div>
-    <div id="countdownBox" style="margin-top:15px; font-size:18px;"></div>
+    <canvas id="upgradeCanvas" width="400" height="250" style="border:1px solid white; background:black; margin-top: 15px;"></canvas>
   `;
 
   document.body.appendChild(popup);
 
-  let locked = false;
+  setTimeout(() => {
+    const canvas = document.getElementById("upgradeCanvas");
+    const ctx = canvas.getContext("2d");
+    setupUpgradeCanvas(canvas, ctx, popup);
+  }, 50);
+}
 
-  document.getElementById('tryUpgrade').onclick = () => {
-    if (locked) return;
+function setupUpgradeCanvas(canvas, ctx, popup) {
+  const options = ["패들강화", "보너스점수", "생명"];
+  let selectedIndex = 0;
+  let resultText = "";
+  let animationFrame = 0;
+  let animTimer = 0;
+
+  const buttons = [
+    { label: "강화 시도", x: 40, y: 170, w: 120, h: 40, hover: false },
+    { label: "건너뛰기", x: 240, y: 170, w: 120, h: 40, hover: false }
+  ];
+
+  canvas.addEventListener("mousemove", (e) => {
+    const rect = canvas.getBoundingClientRect();
+    const mx = e.clientX - rect.left;
+    const my = e.clientY - rect.top;
+
+    buttons.forEach(btn => {
+      btn.hover = mx >= btn.x && mx <= btn.x + btn.w &&
+                  my >= btn.y && my <= btn.y + btn.h;
+    });
+
+    drawUI();
+  });
+
+  canvas.addEventListener("click", (e) => {
+    const rect = canvas.getBoundingClientRect();
+    const mx = e.clientX - rect.left;
+    const my = e.clientY - rect.top;
+
+    options.forEach((opt, i) => {
+      const x = 40 + i * 120;
+      if (mx >= x && mx <= x + 100 && my >= 30 && my <= 60) {
+        selectedIndex = i;
+        drawUI();
+      }
+    });
+
+    if (mx >= buttons[0].x && mx <= buttons[0].x + buttons[0].w &&
+        my >= buttons[0].y && my <= buttons[0].y + buttons[0].h) {
+      tryUpgrade(options[selectedIndex]);
+    }
+
+    if (mx >= buttons[1].x && mx <= buttons[1].x + buttons[1].w &&
+        my >= buttons[1].y && my <= buttons[1].y + buttons[1].h) {
+      document.body.removeChild(popup);
+      proceedToNextStage();
+    }
+  });
+
+  function drawUI() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.font = "16px DungGeunMo, sans-serif";
+    ctx.textAlign = "center";
+
+    options.forEach((opt, i) => {
+      const x = 40 + i * 120;
+      const isSelected = i === selectedIndex;
+      ctx.fillStyle = isSelected ? "#fff" : "#333";
+      ctx.fillRect(x, 30, 100, 30);
+      ctx.strokeStyle = "#888";
+      ctx.strokeRect(x, 30, 100, 30);
+      ctx.fillStyle = isSelected ? "#000" : "#fff";
+      ctx.fillText(opt, x + 50, 50);
+    });
+
+    buttons.forEach(btn => {
+      ctx.fillStyle = btn.hover ? "#fff" : "#111";
+      ctx.fillRect(btn.x, btn.y, btn.w, btn.h);
+      ctx.strokeStyle = "#fff";
+      ctx.strokeRect(btn.x, btn.y, btn.w, btn.h);
+      ctx.fillStyle = btn.hover ? "#000" : "#fff";
+      ctx.fillText(btn.label, btn.x + btn.w / 2, btn.y + btn.h / 2 + 6);
+    });
+
+    if (resultText) {
+      ctx.font = "bold 20px DungGeunMo, sans-serif";
+      ctx.fillStyle = animationFrame % 2 === 0 ? "#ff0" : "#f00";
+      ctx.fillText(resultText, canvas.width / 2, 130);
+    }
+  }
+
+  function tryUpgrade(option) {
     if (GameState.reinforceChances <= 0) return;
 
-    locked = true;
-    const option = document.getElementById('upgradeSelect').value;
     const count = GameState.upgrades.filter(x => x === option).length;
 
     if (count >= 3) {
-      document.getElementById('resultBox').innerText = `${option}은 최대 3회까지만 강화 가능합니다.`;
-      locked = false;
+      resultText = `${option} 최대 강화`;
+      drawUI();
       return;
     }
 
-    const success = Math.random() < 0.6;
     GameState.reinforceChances--;
-    document.getElementById('chanceDisplay').innerText = GameState.reinforceChances;
+    document.getElementById("chanceDisplay").innerText = GameState.reinforceChances;
+
+    const success = Math.random() < 0.6;
 
     if (success) {
       GameState.upgrades.push(option);
+
       if (option === "생명") {
         GameState.barrierCount = (GameState.barrierCount || 0) + 1;
         updateItemUI();
       }
-      document.getElementById('resultBox').innerText = `성공! [${option}] 강화 적용됨.`;
+
+      resultText = `${option} 강화 성공!`;
     } else {
       GameState.failedUpgrades.push(option);
-      document.getElementById('resultBox').innerText = `실패! [${option}] 강화되지 않았습니다.`;
+      resultText = `${option} 강화 실패...`;
     }
 
-    document.getElementById('upgradeStatus').innerText = `강화 내역: ${summarizeUpgrades()}`;
+    const upgradeStatus = document.getElementById("upgradeStatus");
+    if (upgradeStatus) {
+      upgradeStatus.innerText = `강화 내역: ${summarizeUpgrades()}`;
+    }
 
-    locked = false;
+    animTimer = 30;
+    animateResult();
+
     if (GameState.reinforceChances === 0) {
-      document.getElementById('tryUpgrade').disabled = true;
-      document.getElementById('skipUpgrade').disabled = true;
-      startCountdownAndNext();
-    }
-  };
-
-  document.getElementById('skipUpgrade').onclick = () => {
-    document.getElementById('tryUpgrade').disabled = true;
-    document.getElementById('skipUpgrade').disabled = true;
-    startCountdownAndNext();
-  };
-
-  // 카운트다운 표시 후 다음 스테이지로 이동
-  function startCountdownAndNext() {
-    let timeLeft = 3;
-    const countdown = document.getElementById('countdownBox');
-    countdown.innerText = `다음 스테이지로 이동까지 ${timeLeft}초...`;
-    const timer = setInterval(() => {
-      timeLeft--;
-      countdown.innerText = `다음 스테이지로 이동까지 ${timeLeft}초...`;
-      if (timeLeft <= 0) {
-        clearInterval(timer);
+      setTimeout(() => {
         document.body.removeChild(popup);
         proceedToNextStage();
-      }
-    }, 1000);
+      }, 2000);
+    }
   }
+
+  function animateResult() {
+    if (animTimer-- <= 0) {
+      drawUI();
+      return;
+    }
+    animationFrame++;
+    drawUI();
+    requestAnimationFrame(animateResult);
+  }
+
+  drawUI();
 }
 
-// 강화 내역 요약 텍스트 생성
 function summarizeUpgrades() {
   const summary = {};
   GameState.upgrades.forEach(up => {
@@ -1621,7 +1696,6 @@ function summarizeUpgrades() {
   return Object.entries(summary).map(([k, v]) => `${k} x${v}`).join(', ') || '없음';
 }
 
-// 다음 스테이지로 진행
 function proceedToNextStage() {
   if (GameState.selectedStage >= 3) {
     showEnding();
@@ -1630,6 +1704,7 @@ function proceedToNextStage() {
     startStage(GameState.selectedStage);
   }
 }
+
 
 
 
