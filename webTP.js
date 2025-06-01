@@ -117,8 +117,8 @@ function resetGameState() {
   GameState.score = 0;
   GameState.comboScore = 0;
   GameState.comboCount = 0;
-  GameState.totalComboScore=0;
-  GameState.totalScore=0;
+  GameState.totalComboScore = 0;
+  GameState.totalScore = 0;
   GameState.selectedStage = 1;
   GameState.upgrades = [];
   GameState.failedUpgrades = [];
@@ -990,41 +990,58 @@ function initGameElements() {
     img: info.img
   };
 
+  const paddleUpgradeCount = GameState.upgrades.filter(x => x === "패들강화").length;
+  const paddleLevel = Math.min(1 + paddleUpgradeCount, 3);
 
-let basePaddleWidth = 80 - GameState.selectedStage * 10;
-const paddleUpgradeCount = GameState.upgrades.filter(x => x === "패들강화").length;
-basePaddleWidth += 20 * paddleUpgradeCount;
+  const base = GameState.selectedCharacter?.name || "야구선수";
+  const prefix = base === "야구선수" ? "b" :
+    base === "축구선수" ? "s" :
+      base === "테니스선수" ? "t" : "b";
+
+  const paddleImgName = `paddles/${prefix}Paddle${paddleLevel}.png`;
+
+  const paddleImg = new Image();
+  paddleImg.src = paddleImgName;
+
+  paddle = {
+    width: 100, // 임시값
+    height: 20,
+    x: (canvas.width - 100) / 2,
+    rightPressed: false,
+    leftPressed: false,
+    img: paddleImg
+  };
+
+  paddleImg.onload = () => {
+    paddle.height = 12;  // 고정된 기존 paddle 높이
+    const scale = paddle.height / paddleImg.height;  // 비율 유지
+    paddle.width = paddleImg.width * scale;          // 비율에 따라 너비 조정
+    paddle.x = (canvas.width - paddle.width) / 2;    // 가운데 정렬
+    paddle.y = canvas.height - paddle.height - 10;
+  };
 
 
-paddle = {
-  height: 12,
-  width: basePaddleWidth,
-  x: (canvas.width - basePaddleWidth) / 2,
-  rightPressed: false,
-  leftPressed: false
-};
+  const layout = levelBlockLayouts[GameState.selectedStage];
+  bricks = layout.map(block => ({
+    x: block.x,
+    y: block.y,
+    type: block.type,
+    status: 1,
+    hitCount: 0,
+    maxHits: block.type === BLOCK_TYPES.METAL ? 3 : 1,
+    effectStage: null,
+    effectTimer: 0
+  }));
 
-const layout = levelBlockLayouts[GameState.selectedStage];
-bricks = layout.map(block => ({
-  x: block.x,
-  y: block.y,
-  type: block.type,
-  status: 1,
-  hitCount: 0,
-  maxHits: block.type === BLOCK_TYPES.METAL ? 3 : 1,
-  effectStage: null,
-  effectTimer: 0
-}));
+  $(document).off('keydown').on('keydown', function (e) {
+    if (e.key === "ArrowRight") paddle.rightPressed = true;
+    if (e.key === "ArrowLeft") paddle.leftPressed = true;
+  });
 
-$(document).off('keydown').on('keydown', function (e) {
-  if (e.key === "ArrowRight") paddle.rightPressed = true;
-  if (e.key === "ArrowLeft") paddle.leftPressed = true;
-});
-
-$(document).on('keyup', function (e) {
-  if (e.key === "ArrowRight") paddle.rightPressed = false;
-  if (e.key === "ArrowLeft") paddle.leftPressed = false;
-});
+  $(document).on('keyup', function (e) {
+    if (e.key === "ArrowRight") paddle.rightPressed = false;
+    if (e.key === "ArrowLeft") paddle.leftPressed = false;
+  });
 }
 
 // ✅ 정리된 draw 함수 - 중복 제거 및 반사 보정 포함
@@ -1172,11 +1189,17 @@ function drawBall() {
 
 
 function drawPaddle() {
-  ctx.beginPath();
-  ctx.rect(paddle.x, canvas.height - paddle.height - 10, paddle.width, paddle.height);
-  ctx.fillStyle = "#fff";
-  ctx.fill();
-  ctx.closePath();
+  if (paddle.img?.complete) {
+    ctx.drawImage(paddle.img, paddle.x, paddle.y, paddle.width, paddle.height);
+  } else {
+    ctx.fillStyle = "#fff";
+    ctx.fillRect(
+      paddle.x,
+      canvas.height - paddle.height - 10,
+      paddle.width,
+      paddle.height
+    );
+  }
 }
 
 function drawBricks() {
