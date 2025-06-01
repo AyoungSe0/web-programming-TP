@@ -1576,7 +1576,11 @@ function showEnding() {
   canvas.addEventListener("click", handleEndingPopupClick);
   canvas.addEventListener("mousemove", handleEndingMouseMove);
 
-  initPixelFireEffect();
+  const bg = new Image();
+  bg.src = "mergedEnding.png"; // 너가 제공한 배경 이미지
+  bg.onload = () => {
+    startFinalScene(bg);
+  };
 }
 
 // 버튼 상태
@@ -1585,80 +1589,86 @@ let endingButtons = [
   { id: "exitBtn", text: "게임 종료", x: 0, y: 0, w: 160, h: 40, hover: false }
 ];
 
-// 픽셀 파티클
+// 파티클 상태
 let fireParticles = [];
-let fireAnimationId = null;
+let fireAnimId = null;
 
-function initPixelFireEffect() {
+function startFinalScene(bgImage) {
   const palette = ['#ff0044', '#ffaa00', '#00eaff', '#44ff00', '#ffffff', '#ffcc00'];
 
   setInterval(() => {
-    for (let i = 0; i < 8; i++) {
+    for (let i = 0; i < 6; i++) {
       const canvas = document.getElementById("gameCanvas");
       const x = Math.random() * canvas.width;
       const y = -10;
-      const speedY = Math.random() * 2 + 1;
-      const size = Math.floor(Math.random() * 3 + 2); // 2~4px
+      const speedY = Math.random() * 1.5 + 0.5;
+      const size = Math.floor(Math.random() * 3 + 2); // 2~4
       const color = palette[Math.floor(Math.random() * palette.length)];
       fireParticles.push({ x, y, speedY, size, color });
     }
-  }, 100);
+  }, 120);
 
-  animatePixelFire();
+  animateScene(bgImage);
 }
 
-function animatePixelFire() {
+function animateScene(bgImage) {
   const canvas = document.getElementById("gameCanvas");
   const ctx = canvas.getContext("2d");
+
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  // 파티클 그리기
+  // 1. 배경 이미지
+  ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height);
+
+  // 2. 파티클
   fireParticles.forEach(p => {
     p.y += p.speedY;
     ctx.fillStyle = p.color;
     ctx.fillRect(Math.floor(p.x), Math.floor(p.y), p.size, p.size);
   });
-
   fireParticles = fireParticles.filter(p => p.y < canvas.height + 10);
 
-  drawGameEndingPopup(ctx);
-  fireAnimationId = requestAnimationFrame(animatePixelFire);
+  // 3. 점수/결과 텍스트 + 버튼
+  drawGameEndingOverlay(ctx);
+
+  fireAnimId = requestAnimationFrame(() => animateScene(bgImage));
 }
 
-function drawGameEndingPopup(ctx) {
+function drawGameEndingOverlay(ctx) {
+  const canvas = ctx.canvas;
+
+  const nickname = GameState.nickname || "플레이어";
+  const totalScore = GameState.totalScore + GameState.totalComboScore;
+  const upgrades = GameState.upgrades.length > 0 ? GameState.upgrades.join(", ") : "없음";
+
+  ctx.textAlign = "center";
+  ctx.lineWidth = 4;
+  ctx.font = "24px DungGeunMo, sans-serif";
+
+  // 점수 텍스트 (GAME CLEAR 바로 아래 위치)
+  const scoreY = 320;
+  const upgradesY = 360;
+
+  ctx.strokeStyle = "black";
+  ctx.fillStyle = "yellow";
+  ctx.strokeText(`${nickname}님의 총 점수: ${totalScore}`, canvas.width / 2, scoreY);
+  ctx.fillText(`${nickname}님의 총 점수: ${totalScore}`, canvas.width / 2, scoreY);
+
+  ctx.strokeText(`강화 내역: ${upgrades}`, canvas.width / 2, upgradesY);
+  ctx.fillText(`강화 내역: ${upgrades}`, canvas.width / 2, upgradesY);
+
+  drawButtons(ctx);
+}
+
+function drawButtons(ctx) {
   const canvas = ctx.canvas;
   const width = canvas.width;
-  const height = canvas.height;
-
-  const popupW = 600;
-  const popupH = 400;
-  const popupX = (width - popupW) / 2;
-  const popupY = (height - popupH) / 2;
-
-  ctx.fillStyle = "#111";
-  ctx.fillRect(popupX, popupY, popupW, popupH);
-  ctx.strokeStyle = "#fff";
-  ctx.lineWidth = 4;
-  ctx.strokeRect(popupX, popupY, popupW, popupH);
-
-  ctx.fillStyle = "white";
-  ctx.font = "32px DungGeunMo, sans-serif";
-  ctx.textAlign = "center";
-  ctx.fillText("🏁 최종 엔딩", width / 2, popupY + 60);
-
-  ctx.font = "24px DungGeunMo, sans-serif";
-  ctx.fillText(`${GameState.nickname}님의 점수`, width / 2, popupY + 120);
-  ctx.fillText(`총 점수: ${GameState.totalScore + GameState.totalComboScore}`, width / 2, popupY + 160);
-
-  ctx.fillText("강화 내역", width / 2, popupY + 220);
-  const upgrades = GameState.upgrades.length > 0 ? GameState.upgrades.join(", ") : "없음";
-  ctx.fillText(upgrades, width / 2, popupY + 260);
 
   const btnWidth = 160;
   const spacing = 20;
   const totalWidth = btnWidth * 2 + spacing;
   const startX = (width - totalWidth) / 2;
-  const btnY = popupY + 310;
+  const btnY = 500;
 
   endingButtons[0].x = startX;
   endingButtons[0].y = btnY;
@@ -1666,7 +1676,7 @@ function drawGameEndingPopup(ctx) {
   endingButtons[1].y = btnY;
 
   endingButtons.forEach(btn => {
-    ctx.fillStyle = btn.hover ? "#fff" : "#333";
+    ctx.fillStyle = btn.hover ? "#fff" : "#111";
     ctx.fillRect(btn.x, btn.y, btn.w, btn.h);
     ctx.strokeStyle = "#fff";
     ctx.strokeRect(btn.x, btn.y, btn.w, btn.h);
@@ -1694,7 +1704,7 @@ function handleEndingMouseMove(e) {
 
   if (needsRedraw) {
     const ctx = canvas.getContext("2d");
-    drawGameEndingPopup(ctx);
+    drawGameEndingOverlay(ctx);
   }
 }
 
@@ -1709,7 +1719,7 @@ function handleEndingPopupClick(e) {
       mx >= btn.x && mx <= btn.x + btn.w &&
       my >= btn.y && my <= btn.y + btn.h
     ) {
-      cancelAnimationFrame(fireAnimationId);
+      cancelAnimationFrame(fireAnimId);
       canvas.removeEventListener("click", handleEndingPopupClick);
       canvas.removeEventListener("mousemove", handleEndingMouseMove);
 
@@ -1722,6 +1732,8 @@ function handleEndingPopupClick(e) {
     }
   }
 }
+
+
 
 
 
