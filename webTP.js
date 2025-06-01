@@ -1279,6 +1279,8 @@ function showStageResultPopup(starCount) {
     failMsg.style.marginTop = '10px';
     popup.appendChild(failMsg);
 
+    document.body.appendChild(popup);
+    
     setTimeout(() => {
       if (document.body.contains(popup)) document.body.removeChild(popup);
       goToMapScene();
