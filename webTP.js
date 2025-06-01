@@ -1568,51 +1568,171 @@ function proceedToNextStage() {
 function showEnding() {
   $('body').html(`
     <div style="text-align:center">
-      <h2>최종 엔딩</h2>
-      <p>${GameState.nickname}님의 총 점수: ${GameState.totalScore + GameState.totalComboScore}</p>
-      <p>강화 성공: ${GameState.upgrades.join(', ') || "없음"}</p>
-      <button id="restartBtn">게임 다시 시작</button>
-      <button id="exitBtn">게임 종료</button>
+      <canvas id="gameCanvas" width="1000" height="600" style="background:black;"></canvas>
     </div>
   `);
 
-  $('#restartBtn').on('click', () => {
-    resetGameState();
-    goToCharacterSelect();
-  });
+  const canvas = document.getElementById("gameCanvas");
+  const ctx = canvas.getContext("2d");
 
-  $('#exitBtn').on('click', () => {
-    window.close()
-  });
+  canvas.addEventListener("click", handleEndingPopupClick);
+  canvas.addEventListener("mousemove", handleEndingMouseMove);
 
+  initFireworkEffect();
 }
-function showGameOver() {
-  $('body').html(`
-    <div style="text-align:center">
-      <h2>GAME OVER</h2>
-      <p>다시 도전해보세요!</p>
-      <button id="retryBtn">게임 다시 시작</button>
-      <button id="exitBtn">게임 종료</button>
-    </div>
-  `);
 
-  $('#retryBtn').on('click', () => {
-    GameState.score = 0;
-    GameState.comboScore = 0;
-    GameState.comboCount = 0;
-    GameState.selectedStage = 1;
-    GameState.upgrades = [];
-    GameState.failedUpgrades = [];
-    GameState.reinforceChances = 3;
+// === 버튼 정보 ===
+let endingButtons = [
+  { id: "restartBtn", text: "다시 시작", x: 0, y: 0, w: 160, h: 40, hover: false },
+  { id: "exitBtn", text: "게임 종료", x: 0, y: 0, w: 160, h: 40, hover: false }
+];
 
-    goToMapScene();
+// === 폭죽 파티클 ===
+let fireParticles = [];
+let fireworkAnimationId = null;
+
+function initFireworkEffect() {
+  // 주기적으로 파티클 생성
+  setInterval(() => {
+    for (let i = 0; i < 4; i++) {
+      const canvas = document.getElementById("gameCanvas");
+      const x = Math.random() * canvas.width;
+      const y = -10;
+      const speedY = Math.random() * 2 + 1;
+      const color = `hsl(${Math.random() * 360}, 100%, 70%)`;
+      const size = Math.random() * 3 + 2;
+      fireParticles.push({ x, y, speedY, color, size });
+    }
+  }, 100);
+
+  animateEndingScene();
+}
+
+function animateEndingScene() {
+  const canvas = document.getElementById("gameCanvas");
+  const ctx = canvas.getContext("2d");
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // 파티클 갱신
+  fireParticles.forEach(p => {
+    p.y += p.speedY;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+    ctx.fillStyle = p.color;
+    ctx.fill();
   });
 
-  $('#exitBtn').on('click', () => {
-    location.reload();
+  // 삭제
+  fireParticles = fireParticles.filter(p => p.y < canvas.height);
 
+  // 팝업 UI 그리기
+  drawGameEndingPopup(ctx);
+
+  // 재귀 호출
+  fireworkAnimationId = requestAnimationFrame(animateEndingScene);
+}
+
+function drawGameEndingPopup(ctx) {
+  const canvas = ctx.canvas;
+  const width = canvas.width;
+  const height = canvas.height;
+
+  const popupW = 600;
+  const popupH = 400;
+  const popupX = (width - popupW) / 2;
+  const popupY = (height - popupH) / 2;
+
+  // 배경 박스
+  ctx.fillStyle = "#111";
+  ctx.fillRect(popupX, popupY, popupW, popupH);
+  ctx.strokeStyle = "#fff";
+  ctx.lineWidth = 4;
+  ctx.strokeRect(popupX, popupY, popupW, popupH);
+
+  // 텍스트
+  ctx.fillStyle = "white";
+  ctx.font = "32px DungGeunMo, sans-serif";
+  ctx.textAlign = "center";
+  ctx.fillText("🏁 최종 엔딩", width / 2, popupY + 60);
+
+  ctx.font = "24px DungGeunMo, sans-serif";
+  ctx.fillText(`${GameState.nickname}님의 점수`, width / 2, popupY + 120);
+  ctx.fillText(`총 점수: ${GameState.totalScore + GameState.totalComboScore}`, width / 2, popupY + 160);
+
+  ctx.fillText("강화 내역", width / 2, popupY + 220);
+  const upgrades = GameState.upgrades.length > 0 ? GameState.upgrades.join(", ") : "없음";
+  ctx.fillText(upgrades, width / 2, popupY + 260);
+
+  // 버튼
+  const btnWidth = 160;
+  const spacing = 20;
+  const totalWidth = btnWidth * 2 + spacing;
+  const startX = (width - totalWidth) / 2;
+  const btnY = popupY + 310;
+
+  endingButtons[0].x = startX;
+  endingButtons[0].y = btnY;
+  endingButtons[1].x = startX + btnWidth + spacing;
+  endingButtons[1].y = btnY;
+
+  // 버튼 그리기
+  endingButtons.forEach(btn => {
+    ctx.fillStyle = btn.hover ? "#fff" : "#333";
+    ctx.fillRect(btn.x, btn.y, btn.w, btn.h);
+
+    ctx.strokeStyle = "#fff";
+    ctx.strokeRect(btn.x, btn.y, btn.w, btn.h);
+
+    ctx.fillStyle = btn.hover ? "#000" : "#fff";
+    ctx.font = "20px DungGeunMo, sans-serif";
+    ctx.fillText(btn.text, btn.x + btn.w / 2, btn.y + btn.h / 2 + 6);
   });
 }
+
+function handleEndingMouseMove(e) {
+  const canvas = document.getElementById("gameCanvas");
+  const rect = canvas.getBoundingClientRect();
+  const mx = e.clientX - rect.left;
+  const my = e.clientY - rect.top;
+
+  let needRedraw = false;
+  endingButtons.forEach(btn => {
+    const inside = mx >= btn.x && mx <= btn.x + btn.w && my >= btn.y && my <= btn.y + btn.h;
+    if (btn.hover !== inside) {
+      btn.hover = inside;
+      needRedraw = true;
+    }
+  });
+}
+
+function handleEndingPopupClick(e) {
+  const canvas = document.getElementById("gameCanvas");
+  const rect = canvas.getBoundingClientRect();
+  const mx = e.clientX - rect.left;
+  const my = e.clientY - rect.top;
+
+  for (const btn of endingButtons) {
+    if (
+      mx >= btn.x && mx <= btn.x + btn.w &&
+      my >= btn.y && my <= btn.y + btn.h
+    ) {
+      cancelAnimationFrame(fireworkAnimationId);
+      canvas.removeEventListener("click", handleEndingPopupClick);
+      canvas.removeEventListener("mousemove", handleEndingMouseMove);
+
+      if (btn.id === "restartBtn") {
+        resetGameState();
+        goToCharacterSelect();
+      } else if (btn.id === "exitBtn") {
+        window.close();
+      }
+    }
+  }
+}
+
+
+
 
 
 // ===== Settings.js =====
