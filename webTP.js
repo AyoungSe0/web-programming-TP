@@ -942,7 +942,7 @@ const ballInfoMap = {
       return img;
     })(),
     radius: 14,
-    speedFactor: 1.2
+    speedFactor: 1.0
   },
   "축구선수": {
     img: (() => {
@@ -951,7 +951,7 @@ const ballInfoMap = {
       return img;
     })(),
     radius: 18,
-    speedFactor: 1.0
+    speedFactor: 0.8
   },
   "테니스선수": {
     img: (() => {
@@ -960,7 +960,7 @@ const ballInfoMap = {
       return img;
     })(),
     radius: 12,
-    speedFactor: 0.8
+    speedFactor: 1.2
   }
 };
 
