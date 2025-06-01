@@ -1573,35 +1573,35 @@ function showEnding() {
   `);
 
   const canvas = document.getElementById("gameCanvas");
-  const ctx = canvas.getContext("2d");
-
   canvas.addEventListener("click", handleEndingPopupClick);
   canvas.addEventListener("mousemove", handleEndingMouseMove);
 
   initFireworkEffect();
 }
 
-// === 버튼 정보 ===
+// 버튼 상태
 let endingButtons = [
   { id: "restartBtn", text: "다시 시작", x: 0, y: 0, w: 160, h: 40, hover: false },
   { id: "exitBtn", text: "게임 종료", x: 0, y: 0, w: 160, h: 40, hover: false }
 ];
 
-// === 폭죽 파티클 ===
+// 파티클 상태
 let fireParticles = [];
 let fireworkAnimationId = null;
 
 function initFireworkEffect() {
-  // 주기적으로 파티클 생성
   setInterval(() => {
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < 5; i++) {
       const canvas = document.getElementById("gameCanvas");
       const x = Math.random() * canvas.width;
       const y = -10;
       const speedY = Math.random() * 2 + 1;
+      const size = Math.random() * 4 + 2;
       const color = `hsl(${Math.random() * 360}, 100%, 70%)`;
-      const size = Math.random() * 3 + 2;
-      fireParticles.push({ x, y, speedY, color, size });
+      const angle = Math.random() * Math.PI;
+      const angleSpeed = (Math.random() - 0.5) * 0.1;
+
+      fireParticles.push({ x, y, speedY, size, color, angle, angleSpeed });
     }
   }, 100);
 
@@ -1611,25 +1611,24 @@ function initFireworkEffect() {
 function animateEndingScene() {
   const canvas = document.getElementById("gameCanvas");
   const ctx = canvas.getContext("2d");
-
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  // 파티클 갱신
+  // 파티클 애니메이션
   fireParticles.forEach(p => {
     p.y += p.speedY;
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+    p.angle += p.angleSpeed;
+
+    ctx.save();
+    ctx.translate(p.x, p.y);
+    ctx.rotate(p.angle);
     ctx.fillStyle = p.color;
-    ctx.fill();
+    ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.5); // 직사각형
+    ctx.restore();
   });
 
-  // 삭제
-  fireParticles = fireParticles.filter(p => p.y < canvas.height);
-
-  // 팝업 UI 그리기
+  fireParticles = fireParticles.filter(p => p.y < canvas.height + 50);
   drawGameEndingPopup(ctx);
 
-  // 재귀 호출
   fireworkAnimationId = requestAnimationFrame(animateEndingScene);
 }
 
@@ -1643,14 +1642,14 @@ function drawGameEndingPopup(ctx) {
   const popupX = (width - popupW) / 2;
   const popupY = (height - popupH) / 2;
 
-  // 배경 박스
+  // 팝업 배경
   ctx.fillStyle = "#111";
   ctx.fillRect(popupX, popupY, popupW, popupH);
   ctx.strokeStyle = "#fff";
   ctx.lineWidth = 4;
   ctx.strokeRect(popupX, popupY, popupW, popupH);
 
-  // 텍스트
+  // 텍스트 출력
   ctx.fillStyle = "white";
   ctx.font = "32px DungGeunMo, sans-serif";
   ctx.textAlign = "center";
@@ -1664,7 +1663,7 @@ function drawGameEndingPopup(ctx) {
   const upgrades = GameState.upgrades.length > 0 ? GameState.upgrades.join(", ") : "없음";
   ctx.fillText(upgrades, width / 2, popupY + 260);
 
-  // 버튼
+  // 버튼 위치 계산
   const btnWidth = 160;
   const spacing = 20;
   const totalWidth = btnWidth * 2 + spacing;
@@ -1696,14 +1695,21 @@ function handleEndingMouseMove(e) {
   const mx = e.clientX - rect.left;
   const my = e.clientY - rect.top;
 
-  let needRedraw = false;
+  let needsRedraw = false;
+
   endingButtons.forEach(btn => {
     const inside = mx >= btn.x && mx <= btn.x + btn.w && my >= btn.y && my <= btn.y + btn.h;
     if (btn.hover !== inside) {
       btn.hover = inside;
-      needRedraw = true;
+      needsRedraw = true;
     }
   });
+
+  if (needsRedraw) {
+    // 단순히 redraw만 필요할 때
+    const ctx = canvas.getContext("2d");
+    drawGameEndingPopup(ctx);
+  }
 }
 
 function handleEndingPopupClick(e) {
@@ -1730,6 +1736,7 @@ function handleEndingPopupClick(e) {
     }
   }
 }
+
 
 
 
