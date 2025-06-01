@@ -1576,7 +1576,7 @@ function showEnding() {
   canvas.addEventListener("click", handleEndingPopupClick);
   canvas.addEventListener("mousemove", handleEndingMouseMove);
 
-  initFireworkEffect();
+  initPixelFireEffect();
 }
 
 // 버튼 상태
@@ -1585,51 +1585,44 @@ let endingButtons = [
   { id: "exitBtn", text: "게임 종료", x: 0, y: 0, w: 160, h: 40, hover: false }
 ];
 
-// 파티클 상태
+// 픽셀 파티클
 let fireParticles = [];
-let fireworkAnimationId = null;
+let fireAnimationId = null;
 
-function initFireworkEffect() {
+function initPixelFireEffect() {
+  const palette = ['#ff0044', '#ffaa00', '#00eaff', '#44ff00', '#ffffff', '#ffcc00'];
+
   setInterval(() => {
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < 8; i++) {
       const canvas = document.getElementById("gameCanvas");
       const x = Math.random() * canvas.width;
       const y = -10;
       const speedY = Math.random() * 2 + 1;
-      const size = Math.random() * 4 + 2;
-      const color = `hsl(${Math.random() * 360}, 100%, 70%)`;
-      const angle = Math.random() * Math.PI;
-      const angleSpeed = (Math.random() - 0.5) * 0.1;
-
-      fireParticles.push({ x, y, speedY, size, color, angle, angleSpeed });
+      const size = Math.floor(Math.random() * 3 + 2); // 2~4px
+      const color = palette[Math.floor(Math.random() * palette.length)];
+      fireParticles.push({ x, y, speedY, size, color });
     }
   }, 100);
 
-  animateEndingScene();
+  animatePixelFire();
 }
 
-function animateEndingScene() {
+function animatePixelFire() {
   const canvas = document.getElementById("gameCanvas");
   const ctx = canvas.getContext("2d");
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  // 파티클 애니메이션
+  // 파티클 그리기
   fireParticles.forEach(p => {
     p.y += p.speedY;
-    p.angle += p.angleSpeed;
-
-    ctx.save();
-    ctx.translate(p.x, p.y);
-    ctx.rotate(p.angle);
     ctx.fillStyle = p.color;
-    ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.5); // 직사각형
-    ctx.restore();
+    ctx.fillRect(Math.floor(p.x), Math.floor(p.y), p.size, p.size);
   });
 
-  fireParticles = fireParticles.filter(p => p.y < canvas.height + 50);
-  drawGameEndingPopup(ctx);
+  fireParticles = fireParticles.filter(p => p.y < canvas.height + 10);
 
-  fireworkAnimationId = requestAnimationFrame(animateEndingScene);
+  drawGameEndingPopup(ctx);
+  fireAnimationId = requestAnimationFrame(animatePixelFire);
 }
 
 function drawGameEndingPopup(ctx) {
@@ -1642,14 +1635,12 @@ function drawGameEndingPopup(ctx) {
   const popupX = (width - popupW) / 2;
   const popupY = (height - popupH) / 2;
 
-  // 팝업 배경
   ctx.fillStyle = "#111";
   ctx.fillRect(popupX, popupY, popupW, popupH);
   ctx.strokeStyle = "#fff";
   ctx.lineWidth = 4;
   ctx.strokeRect(popupX, popupY, popupW, popupH);
 
-  // 텍스트 출력
   ctx.fillStyle = "white";
   ctx.font = "32px DungGeunMo, sans-serif";
   ctx.textAlign = "center";
@@ -1663,7 +1654,6 @@ function drawGameEndingPopup(ctx) {
   const upgrades = GameState.upgrades.length > 0 ? GameState.upgrades.join(", ") : "없음";
   ctx.fillText(upgrades, width / 2, popupY + 260);
 
-  // 버튼 위치 계산
   const btnWidth = 160;
   const spacing = 20;
   const totalWidth = btnWidth * 2 + spacing;
@@ -1675,14 +1665,11 @@ function drawGameEndingPopup(ctx) {
   endingButtons[1].x = startX + btnWidth + spacing;
   endingButtons[1].y = btnY;
 
-  // 버튼 그리기
   endingButtons.forEach(btn => {
     ctx.fillStyle = btn.hover ? "#fff" : "#333";
     ctx.fillRect(btn.x, btn.y, btn.w, btn.h);
-
     ctx.strokeStyle = "#fff";
     ctx.strokeRect(btn.x, btn.y, btn.w, btn.h);
-
     ctx.fillStyle = btn.hover ? "#000" : "#fff";
     ctx.font = "20px DungGeunMo, sans-serif";
     ctx.fillText(btn.text, btn.x + btn.w / 2, btn.y + btn.h / 2 + 6);
@@ -1706,7 +1693,6 @@ function handleEndingMouseMove(e) {
   });
 
   if (needsRedraw) {
-    // 단순히 redraw만 필요할 때
     const ctx = canvas.getContext("2d");
     drawGameEndingPopup(ctx);
   }
@@ -1723,7 +1709,7 @@ function handleEndingPopupClick(e) {
       mx >= btn.x && mx <= btn.x + btn.w &&
       my >= btn.y && my <= btn.y + btn.h
     ) {
-      cancelAnimationFrame(fireworkAnimationId);
+      cancelAnimationFrame(fireAnimationId);
       canvas.removeEventListener("click", handleEndingPopupClick);
       canvas.removeEventListener("mousemove", handleEndingMouseMove);
 
@@ -1736,6 +1722,7 @@ function handleEndingPopupClick(e) {
     }
   }
 }
+
 
 
 
