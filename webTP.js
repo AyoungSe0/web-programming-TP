@@ -235,8 +235,11 @@ function showStartUI() {
 
 function goToStoryScene() {
   $('body').html(`
-    <div style="text-align:center;">
+    <div style="text-align:center;position:relative;">
       <canvas id="gameCanvas" width="1000" height="600" style="background-color:black; border:none;"></canvas>
+      <img id="skipBtn_w" src="skip_btn_w.png"  
+      style="position:absolute; 
+      top:20px; right:20px; width:50px; z-index:10;">
     </div>
   `);
 
@@ -315,19 +318,13 @@ function goToStoryScene() {
   // 마우스 클릭 --> 다음 대사
   canvas.addEventListener("click", advanceStory);
 
-  // 키보드 이벤트: Space --> 다음 / Enter --> Skip
+  // 키보드 이벤트: Space,Enter --> 다음 / skipBtn_w --> Skip
   //앤터 입력시 스킵된다는 문구 추가 필요
   $(document).on("keydown", (e) => {
     if (!isEnteringName) {
-      if (e.code === "Space") {
+      if (e.code === "Space" || e.code === "Enter") {
         e.preventDefault();
         advanceStory();
-      } else if (e.code === "Enter") {
-        e.preventDefault();
-        GameState.nickname = "랄푸";
-        $(document).off("keydown");
-        canvas.removeEventListener("click", advanceStory);
-        goToCharacterSelect();
       }
     } else {
       // 이름 입력 중
@@ -347,8 +344,14 @@ function goToStoryScene() {
       drawNameInputBox();
     }
   });
-
   drawStoryScene();
+
+  $('#skipBtn_w').on('click', () => {
+    GameState.nickname = "랄푸";
+    $(document).off("keydown");
+    canvas.removeEventListener("click", advanceStory);
+    goToCharacterSelect();
+  });
 }
 
 
@@ -694,7 +697,7 @@ function goToStoryScene2() {
   });
 
   $(document).on("keydown", function (e) {
-    if (e.key === "Enter") {
+    if (e.code === "Enter"||e.code==="Space") {
       e.preventDefault();
       advanceStory();
     }
@@ -1390,67 +1393,67 @@ function showStageResultPopup(starCount) {
 }
 
 
-  // 게임 종료 처리 함수 (성공 시)
-  function endGame() {
-    cancelAnimationFrame(animationId);
-    isGameOver = true;
+// 게임 종료 처리 함수 (성공 시)
+function endGame() {
+  cancelAnimationFrame(animationId);
+  isGameOver = true;
 
-    const stageScore = score;
-    const stageCombo = comboScore;
-    const total = stageScore + stageCombo;
+  const stageScore = score;
+  const stageCombo = comboScore;
+  const total = stageScore + stageCombo;
 
-    GameState.totalScore += stageScore;
-    GameState.totalComboScore += stageCombo;
+  GameState.totalScore += stageScore;
+  GameState.totalComboScore += stageCombo;
 
-    let stars = 0;
-    if (total >= 300) stars = 3;
-    else if (total >= 200) stars = 2;
-    else if (total >= 100) stars = 1;
+  let stars = 0;
+  if (total >= 300) stars = 3;
+  else if (total >= 200) stars = 2;
+  else if (total >= 100) stars = 1;
 
-    GameState.score = stageScore;
-    GameState.comboScore = stageCombo
+  GameState.score = stageScore;
+  GameState.comboScore = stageCombo
 
-    showStageResultPopup(stars);
-  }
+  showStageResultPopup(stars);
+}
 
-  // 게임 종료 처리 함수 (실패 시)
-  function gameOver() {
-    cancelAnimationFrame(animationId);
-    isGameOver = true;
-    GameState.score = score + comboScore;
-    $(document).off('keydown');
-    $(document).off('keyup');
-    showStageResultPopup(0);
-  }
-
-
+// 게임 종료 처리 함수 (실패 시)
+function gameOver() {
+  cancelAnimationFrame(animationId);
+  isGameOver = true;
+  GameState.score = score + comboScore;
+  $(document).off('keydown');
+  $(document).off('keyup');
+  showStageResultPopup(0);
+}
 
 
 
-  // ===== UpgradeManager.js =====
 
-  // import { GameState } from './GameState.js';
-  // import { startStage } from './GameStage.js';
-  // import { showEnding } from './EndingScene.js';
 
-  function goToUpgradePopup(stars) {
-    GameState.reinforceChances += stars;
+// ===== UpgradeManager.js =====
 
-    const popup = document.createElement('div');
-    popup.id = 'upgradePopup';
-    popup.style.position = 'absolute';
-    popup.style.top = '50%';
-    popup.style.left = '50%';
-    popup.style.transform = 'translate(-50%, -50%)';
-    popup.style.backgroundColor = 'rgba(0, 0, 0, 0.95)';
-    popup.style.padding = '30px';
-    popup.style.border = '2px solid white';
-    popup.style.borderRadius = '12px';
-    popup.style.textAlign = 'center';
-    popup.style.color = 'white';
-    popup.style.zIndex = '2000';
+// import { GameState } from './GameState.js';
+// import { startStage } from './GameStage.js';
+// import { showEnding } from './EndingScene.js';
 
-    popup.innerHTML = `
+function goToUpgradePopup(stars) {
+  GameState.reinforceChances += stars;
+
+  const popup = document.createElement('div');
+  popup.id = 'upgradePopup';
+  popup.style.position = 'absolute';
+  popup.style.top = '50%';
+  popup.style.left = '50%';
+  popup.style.transform = 'translate(-50%, -50%)';
+  popup.style.backgroundColor = 'rgba(0, 0, 0, 0.95)';
+  popup.style.padding = '30px';
+  popup.style.border = '2px solid white';
+  popup.style.borderRadius = '12px';
+  popup.style.textAlign = 'center';
+  popup.style.color = 'white';
+  popup.style.zIndex = '2000';
+
+  popup.innerHTML = `
     <h2>강화 화면</h2>
     <div id="upgradeStatus">강화 내역: ${summarizeUpgrades()}</div>
     <p>현재 강화 기회: <span id="chanceDisplay">${GameState.reinforceChances}</span>회</p>
@@ -1465,103 +1468,103 @@ function showStageResultPopup(starCount) {
     <div id="countdownBox" style="margin-top:15px; font-size:18px;"></div>
   `;
 
-    document.body.appendChild(popup);
+  document.body.appendChild(popup);
 
-    let locked = false;
+  let locked = false;
 
-    document.getElementById('tryUpgrade').onclick = () => {
-      if (locked) return;
-      if (GameState.reinforceChances <= 0) return;
+  document.getElementById('tryUpgrade').onclick = () => {
+    if (locked) return;
+    if (GameState.reinforceChances <= 0) return;
 
-      locked = true;
-      const option = document.getElementById('upgradeSelect').value;
-      const count = GameState.upgrades.filter(x => x === option).length;
+    locked = true;
+    const option = document.getElementById('upgradeSelect').value;
+    const count = GameState.upgrades.filter(x => x === option).length;
 
-      if (count >= 3) {
-        document.getElementById('resultBox').innerText = `${option}은 최대 3회까지만 강화 가능합니다.`;
-        locked = false;
-        return;
-      }
-
-      const success = Math.random() < 0.6;
-      GameState.reinforceChances--;
-      document.getElementById('chanceDisplay').innerText = GameState.reinforceChances;
-
-      if (success) {
-        GameState.upgrades.push(option);
-        if (option === "생명") {
-          GameState.barrierCount = (GameState.barrierCount || 0) + 1;
-          updateItemUI();
-        }
-        document.getElementById('resultBox').innerText = `성공! [${option}] 강화 적용됨.`;
-      } else {
-        GameState.failedUpgrades.push(option);
-        document.getElementById('resultBox').innerText = `실패! [${option}] 강화되지 않았습니다.`;
-      }
-
-      document.getElementById('upgradeStatus').innerText = `강화 내역: ${summarizeUpgrades()}`;
-
+    if (count >= 3) {
+      document.getElementById('resultBox').innerText = `${option}은 최대 3회까지만 강화 가능합니다.`;
       locked = false;
-      if (GameState.reinforceChances === 0) {
-        document.getElementById('tryUpgrade').disabled = true;
-        document.getElementById('skipUpgrade').disabled = true;
-        startCountdownAndNext();
-      }
-    };
+      return;
+    }
 
-    document.getElementById('skipUpgrade').onclick = () => {
+    const success = Math.random() < 0.6;
+    GameState.reinforceChances--;
+    document.getElementById('chanceDisplay').innerText = GameState.reinforceChances;
+
+    if (success) {
+      GameState.upgrades.push(option);
+      if (option === "생명") {
+        GameState.barrierCount = (GameState.barrierCount || 0) + 1;
+        updateItemUI();
+      }
+      document.getElementById('resultBox').innerText = `성공! [${option}] 강화 적용됨.`;
+    } else {
+      GameState.failedUpgrades.push(option);
+      document.getElementById('resultBox').innerText = `실패! [${option}] 강화되지 않았습니다.`;
+    }
+
+    document.getElementById('upgradeStatus').innerText = `강화 내역: ${summarizeUpgrades()}`;
+
+    locked = false;
+    if (GameState.reinforceChances === 0) {
       document.getElementById('tryUpgrade').disabled = true;
       document.getElementById('skipUpgrade').disabled = true;
       startCountdownAndNext();
-    };
+    }
+  };
 
-    // 카운트다운 표시 후 다음 스테이지로 이동
-    function startCountdownAndNext() {
-      let timeLeft = 3;
-      const countdown = document.getElementById('countdownBox');
+  document.getElementById('skipUpgrade').onclick = () => {
+    document.getElementById('tryUpgrade').disabled = true;
+    document.getElementById('skipUpgrade').disabled = true;
+    startCountdownAndNext();
+  };
+
+  // 카운트다운 표시 후 다음 스테이지로 이동
+  function startCountdownAndNext() {
+    let timeLeft = 3;
+    const countdown = document.getElementById('countdownBox');
+    countdown.innerText = `다음 스테이지로 이동까지 ${timeLeft}초...`;
+    const timer = setInterval(() => {
+      timeLeft--;
       countdown.innerText = `다음 스테이지로 이동까지 ${timeLeft}초...`;
-      const timer = setInterval(() => {
-        timeLeft--;
-        countdown.innerText = `다음 스테이지로 이동까지 ${timeLeft}초...`;
-        if (timeLeft <= 0) {
-          clearInterval(timer);
-          document.body.removeChild(popup);
-          proceedToNextStage();
-        }
-      }, 1000);
-    }
+      if (timeLeft <= 0) {
+        clearInterval(timer);
+        document.body.removeChild(popup);
+        proceedToNextStage();
+      }
+    }, 1000);
   }
+}
 
-  // 강화 내역 요약 텍스트 생성
-  function summarizeUpgrades() {
-    const summary = {};
-    GameState.upgrades.forEach(up => {
-      summary[up] = (summary[up] || 0) + 1;
-    });
-    return Object.entries(summary).map(([k, v]) => `${k} x${v}`).join(', ') || '없음';
+// 강화 내역 요약 텍스트 생성
+function summarizeUpgrades() {
+  const summary = {};
+  GameState.upgrades.forEach(up => {
+    summary[up] = (summary[up] || 0) + 1;
+  });
+  return Object.entries(summary).map(([k, v]) => `${k} x${v}`).join(', ') || '없음';
+}
+
+// 다음 스테이지로 진행
+function proceedToNextStage() {
+  if (GameState.selectedStage >= 3) {
+    showEnding();
+  } else {
+    GameState.selectedStage++;
+    startStage(GameState.selectedStage);
   }
-
-  // 다음 스테이지로 진행
-  function proceedToNextStage() {
-    if (GameState.selectedStage >= 3) {
-      showEnding();
-    } else {
-      GameState.selectedStage++;
-      startStage(GameState.selectedStage);
-    }
-  }
+}
 
 
 
 
 
-  // ===== EndingScene.js =====
+// ===== EndingScene.js =====
 
-  // import { GameState } from './GameState.js';
-  // import { goToMapScene } from './MapScene.js';
+// import { GameState } from './GameState.js';
+// import { goToMapScene } from './MapScene.js';
 
-  function showEnding() {
-    $('body').html(`
+function showEnding() {
+  $('body').html(`
     <div style="text-align:center">
       <h2>최종 엔딩</h2>
       <p>${GameState.nickname}님의 총 점수: ${GameState.totalScore + GameState.totalComboScore}</p>
@@ -1571,18 +1574,18 @@ function showStageResultPopup(starCount) {
     </div>
   `);
 
-    $('#restartBtn').on('click', () => {
-      resetGameState();
-      goToCharacterSelect();
-    });
+  $('#restartBtn').on('click', () => {
+    resetGameState();
+    goToCharacterSelect();
+  });
 
-    $('#exitBtn').on('click', () => {
-      window.close()
-    });
+  $('#exitBtn').on('click', () => {
+    window.close()
+  });
 
-  }
-  function showGameOver() {
-    $('body').html(`
+}
+function showGameOver() {
+  $('body').html(`
     <div style="text-align:center">
       <h2>GAME OVER</h2>
       <p>다시 도전해보세요!</p>
@@ -1591,375 +1594,375 @@ function showStageResultPopup(starCount) {
     </div>
   `);
 
-    $('#retryBtn').on('click', () => {
-      GameState.score = 0;
-      GameState.comboScore = 0;
-      GameState.comboCount = 0;
-      GameState.selectedStage = 1;
-      GameState.upgrades = [];
-      GameState.failedUpgrades = [];
-      GameState.reinforceChances = 3;
+  $('#retryBtn').on('click', () => {
+    GameState.score = 0;
+    GameState.comboScore = 0;
+    GameState.comboCount = 0;
+    GameState.selectedStage = 1;
+    GameState.upgrades = [];
+    GameState.failedUpgrades = [];
+    GameState.reinforceChances = 3;
 
-      goToMapScene();
-    });
-
-    $('#exitBtn').on('click', () => {
-      location.reload();
-
-    });
-  }
-
-
-  // ===== Settings.js =====
-
-  // import { GameState } from './GameState.js';
-
-  function toggleBGM() {
-    GameState.settings.bgm = !GameState.settings.bgm;
-  }
-
-
-  // ===== webTP.js =====
-
-  // import { showStartUI } from './GameStartUI.js';
-
-  $(document).ready(() => {
-    showStartUI();
+    goToMapScene();
   });
 
-  function handleNormalBlock(block) {
-    block.status = 0;
-  }
+  $('#exitBtn').on('click', () => {
+    location.reload();
 
-  function handleGlassBlock(block) {
-    block.effectStage = "cracking";
-    block.effectTimer = 3;
-    block.ignoreCollision = true;  // ✅ 공과의 충돌 무시
-    const visited = new Set();
-    visited.add(`${block.x},${block.y}`);
-    const count = explodeGlassChain(block, 1, visited);
-    applyScore(count + 1, 10);
-  }
+  });
+}
 
 
-  function explodeGlassChain(target, depth = 0, visited = new Set()) {
-    let destroyed = 0;
-    bricks.forEach(b => {
-      const key = `${b.x},${b.y}`;
-      if (
-        b.status === 1 &&
-        b.type === BLOCK_TYPES.GLASS &&
-        !visited.has(key)
-      ) {
-        const dx = Math.abs(b.x - target.x);
-        const dy = Math.abs(b.y - target.y);
+// ===== Settings.js =====
 
-        if (dx <= 80 && dy <= 40) {
-          visited.add(key);
-          b.effectStage = "pending";
-          b.effectTimer = 2 + depth; // ✅ 빠르고 순차적인 이펙트
-          b.ignoreCollision = true;
-          destroyed++;
+// import { GameState } from './GameState.js';
 
-          // 다음 깊이 탐색
-          destroyed += explodeGlassChain(b, depth + 1, visited);
-        }
+function toggleBGM() {
+  GameState.settings.bgm = !GameState.settings.bgm;
+}
+
+
+// ===== webTP.js =====
+
+// import { showStartUI } from './GameStartUI.js';
+
+$(document).ready(() => {
+  showStartUI();
+});
+
+function handleNormalBlock(block) {
+  block.status = 0;
+}
+
+function handleGlassBlock(block) {
+  block.effectStage = "cracking";
+  block.effectTimer = 3;
+  block.ignoreCollision = true;  // ✅ 공과의 충돌 무시
+  const visited = new Set();
+  visited.add(`${block.x},${block.y}`);
+  const count = explodeGlassChain(block, 1, visited);
+  applyScore(count + 1, 10);
+}
+
+
+function explodeGlassChain(target, depth = 0, visited = new Set()) {
+  let destroyed = 0;
+  bricks.forEach(b => {
+    const key = `${b.x},${b.y}`;
+    if (
+      b.status === 1 &&
+      b.type === BLOCK_TYPES.GLASS &&
+      !visited.has(key)
+    ) {
+      const dx = Math.abs(b.x - target.x);
+      const dy = Math.abs(b.y - target.y);
+
+      if (dx <= 80 && dy <= 40) {
+        visited.add(key);
+        b.effectStage = "pending";
+        b.effectTimer = 2 + depth; // ✅ 빠르고 순차적인 이펙트
+        b.ignoreCollision = true;
+        destroyed++;
+
+        // 다음 깊이 탐색
+        destroyed += explodeGlassChain(b, depth + 1, visited);
       }
-    });
-    return destroyed;
-  }
-
-
-
-  function handleMetalBlock(block) {
-    block.hitCount++;
-    if (block.hitCount >= block.maxHits) {
-      block.status = 0;
     }
-  }
+  });
+  return destroyed;
+}
 
-  function handleTireBlock(block) {
-    const prevAngle = Math.atan2(ball.dy, ball.dx);
-    let newAngle;
 
-    for (let i = 0; i < 10; i++) {
-      const offset = (Math.random() * 120 + 30) * (Math.PI / 180);
-      const sign = Math.random() < 0.5 ? -1 : 1;
-      newAngle = prevAngle + offset * sign;
 
-      const angleDiff = Math.abs(newAngle - prevAngle) % (2 * Math.PI);
-      if (angleDiff > Math.PI / 6) break;
-    }
-
-    // 블럭 제거는 즉시
+function handleMetalBlock(block) {
+  block.hitCount++;
+  if (block.hitCount >= block.maxHits) {
     block.status = 0;
+  }
+}
 
-    // 다음 프레임에서 방향 변경 (물리 충돌 이후)
-    setTimeout(() => {
-      const speed = ball.speed;
-      ball.dx = Math.cos(newAngle) * speed;
-      ball.dy = Math.sin(newAngle) * speed;
-    }, 0);
+function handleTireBlock(block) {
+  const prevAngle = Math.atan2(ball.dy, ball.dx);
+  let newAngle;
+
+  for (let i = 0; i < 10; i++) {
+    const offset = (Math.random() * 120 + 30) * (Math.PI / 180);
+    const sign = Math.random() < 0.5 ? -1 : 1;
+    newAngle = prevAngle + offset * sign;
+
+    const angleDiff = Math.abs(newAngle - prevAngle) % (2 * Math.PI);
+    if (angleDiff > Math.PI / 6) break;
   }
 
+  // 블럭 제거는 즉시
+  block.status = 0;
 
-  function handleFuelBlock(block) {
-    const count = explodeFuelChain(block);
-    applyScore(count, 15);
-  }
+  // 다음 프레임에서 방향 변경 (물리 충돌 이후)
+  setTimeout(() => {
+    const speed = ball.speed;
+    ball.dx = Math.cos(newAngle) * speed;
+    ball.dy = Math.sin(newAngle) * speed;
+  }, 0);
+}
 
-  function explodeFuelChain(center) {
-    let destroyed = 0;
-    bricks.forEach(b => {
-      if (b.status === 1) {
-        const dx = Math.abs(b.x - center.x);
-        const dy = Math.abs(b.y - center.y);
-        if (dx <= 80 && dy <= 40) {
-          if (b.type === BLOCK_TYPES.METAL) {
-            b.hitCount++;
-            if (b.hitCount >= b.maxHits) {
-              b.status = 0;
-              destroyed++;
-            }
-          } else {
+
+function handleFuelBlock(block) {
+  const count = explodeFuelChain(block);
+  applyScore(count, 15);
+}
+
+function explodeFuelChain(center) {
+  let destroyed = 0;
+  bricks.forEach(b => {
+    if (b.status === 1) {
+      const dx = Math.abs(b.x - center.x);
+      const dy = Math.abs(b.y - center.y);
+      if (dx <= 80 && dy <= 40) {
+        if (b.type === BLOCK_TYPES.METAL) {
+          b.hitCount++;
+          if (b.hitCount >= b.maxHits) {
             b.status = 0;
             destroyed++;
+          }
+        } else {
+          b.status = 0;
+          destroyed++;
 
-            if (b.type === BLOCK_TYPES.FUEL) {
-              destroyed += explodeFuelChain(b);
-            }
-            if (b.type === BLOCK_TYPES.GLASS) {
-              destroyed += explodeGlassChain(b);
-            }
+          if (b.type === BLOCK_TYPES.FUEL) {
+            destroyed += explodeFuelChain(b);
+          }
+          if (b.type === BLOCK_TYPES.GLASS) {
+            destroyed += explodeGlassChain(b);
           }
         }
       }
-    });
-    return destroyed;
-  }
-
-  function destroySurroundingBlocks(center) {
-    bricks.forEach(b => {
-      if (b.status === 1) {
-        const dx = Math.abs(b.x - center.x);
-        const dy = Math.abs(b.y - center.y);
-        if (dx <= 80 && dy <= 40) {
-          b.status = 0;
-        }
-      }
-    });
-  }
-  function handleLightBlock(block) {
-    flashScreen();
-    block.status = 0;
-  }
-
-  function flashScreen() {
-    document.body.style.backgroundColor = "black";
-    setTimeout(() => {
-      document.body.style.backgroundColor = "white";
-      setTimeout(() => {
-        document.body.style.backgroundColor = "#f0f0f0";
-      }, 100);
-    }, 100);
-  }
-  function handleItemCoolerBlock(block) {
-    if (!GameState.hasCooler) {
-      ball.originalSpeed = ball.speed;
-      ball.speed = Math.max(1, ball.speed - 1);
-      ball.collidedWithPaddleOnceAfterCooler = true;
-      GameState.hasCooler = true;
     }
-    block.status = 0;
-    updateItemUI();
-  }
-
-
-  function handleItemCutterBlock(block) {
-    GameState.hasCutter = true;
-    block.status = 0;
-    updateItemUI();
-  }
-
-  function applyCutterIfAvailable(block) {
-    if (!GameState.hasCutter) return false;
-
-    GameState.hasCutter = false;
-    updateItemUI();
-
-    switch (block.type) {
-      case BLOCK_TYPES.GLASS: handleGlassBlock(block); break;
-      case BLOCK_TYPES.FUEL: handleFuelBlock(block); break;
-      case BLOCK_TYPES.METAL:
-        block.status = 0;
-        block.hitCount = block.maxHits;
-        break;
-      case BLOCK_TYPES.TIRE: handleTireBlock(block); break;
-      case BLOCK_TYPES.LIGHT: handleLightBlock(block); break;
-      case BLOCK_TYPES.ITEM_COOLER: handleItemCoolerBlock(block); break;
-      case BLOCK_TYPES.ITEM_CUTTER: handleItemCutterBlock(block); break;
-      case BLOCK_TYPES.ITEM_GUIDE: handleItemGuideBlock(block); break;
-      case BLOCK_TYPES.NORMAL:
-      default: block.status = 0;
-    }
-
-    return true;
-  }
-
-
-
-  // function handleItemBarrierBlock(block) {
-  //   GameState.barrierCount = (GameState.barrierCount || 0) + 1;
-  //   block.status = 0;
-  //   updateItemUI();
-  // }
-
-  function handleItemGuideBlock(block) {
-    block.status = 0;
-    updateItemUI();
-
-    const targetX = paddle.x + paddle.width / 2;
-    const targetY = canvas.height - paddle.height - 20 - ball.radius;
-    const startX = ball.x;
-    const startY = ball.y;
-    const duration = 500;
-    const startTime = Date.now();
-    const originalSpeed = ball.speed;
-
-    function animateGuide() {
-      const now = Date.now();
-      const t = Math.min((now - startTime) / duration, 1);
-      const ease = t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
-      ball.x = startX + (targetX - startX) * ease;
-      ball.y = startY + (targetY - startY) * ease;
-
-      if (t < 1) {
-        requestAnimationFrame(animateGuide);
-      } else {
-        // 무작위 각도로 발사
-        const angleDeg = Math.random() * 60 + 30; // 30~90도
-        const angleRad = angleDeg * (Math.PI / 180);
-        const direction = Math.random() < 0.5 ? -1 : 1;
-
-        ball.dx = Math.cos(angleRad) * originalSpeed * direction;
-        ball.dy = -Math.sin(angleRad) * originalSpeed;
-        ball.speed = originalSpeed;
-
-        if (GameState.hasCooler) {
-          GameState.hasCooler = false;
-          ball.collidedWithPaddleOnceAfterCooler = false;
-          updateItemUI();
-        }
-      }
-    }
-
-    animateGuide();
-  }
-
-  function applyScore(numBlocks = 1, baseScore = 10) {
-    const bonusUpgradeCount = GameState.upgrades.filter(x => x === "보너스점수").length;
-    const multiplier = 1 + 0.2 * bonusUpgradeCount;  // 20%씩 증가
-    const totalBase = Math.floor(baseScore * numBlocks * multiplier);
-
-    comboCount += numBlocks;
-    comboScore += comboCount * 5;
-    score += totalBase;
-
-    $('#score').text(score + comboScore);
-    $('#combo').text(comboCount);
-
-    if (comboTimer) clearTimeout(comboTimer);
-    comboTimer = setTimeout(() => {
-      comboCount = 0;
-      $('#combo').text("0");
-    }, 1500);
-  }
-
-
-  function collisionDetection() {
-    bricks.forEach(b => {
-      if (b.status === 1 &&
-        ball.x > b.x && ball.x < b.x + 70 &&
-        !b.ignoreCollision &&
-        ball.y > b.y && ball.y < b.y + 20) {
-
-        // 고출력 커터 효과 우선 적용
-        if (applyCutterIfAvailable(b)) {
-          applyScore();
-          ball.dy = -ball.dy;
-          return;
-        }
-
-        switch (b.type) {
-          case BLOCK_TYPES.NORMAL:
-            handleNormalBlock(b);
-            applyScore();
-            break;
-          case BLOCK_TYPES.METAL:
-            handleMetalBlock(b);
-            applyScore();
-            break;
-          case BLOCK_TYPES.GLASS:
-            handleGlassBlock(b);
-            break;
-          case BLOCK_TYPES.FUEL:
-            handleFuelBlock(b);
-            break;
-          case BLOCK_TYPES.TIRE:
-            handleTireBlock(b);
-            applyScore(1, 20);
-            break;
-          case BLOCK_TYPES.LIGHT:
-            handleLightBlock(b);
-            applyScore(1, 10);
-            break;
-          case BLOCK_TYPES.ITEM_COOLER:
-            handleItemCoolerBlock(b);
-            applyScore();
-            break;
-          case BLOCK_TYPES.ITEM_CUTTER:
-            handleItemCutterBlock(b);
-            applyScore();
-            break;
-          // case BLOCK_TYPES.ITEM_BARRIER:
-          //   handleItemBarrierBlock(b);
-          //   applyScore();
-          //   break;
-          case BLOCK_TYPES.ITEM_GUIDE:
-            handleItemGuideBlock(b);
-            applyScore();
-            break;
-          default:
-            b.status = 0;
-            applyScore();
-        }
-
-        ball.dy = -ball.dy;
-      }
-    });
-  }
-
-  function playBGM() {
-    const bgm = document.getElementById("bgm");
-    if (bgm) {
-      bgm.muted = false; // 크롬 제한 우회
-      if (GameState.settings.bgm) {
-        bgm.play();
-      }
-    }
-  }
-
-  function stopBGM() {
-    const bgm = document.getElementById("bgm");
-    if (bgm) {
-      bgm.pause();
-      bgm.currentTime = 0;
-    }
-  }
-
-
-  window.addEventListener('DOMContentLoaded', () => {
-    document.body.addEventListener('click', () => {
-      playBGM();
-    }, { once: true }); // 딱 1번만 실행
   });
+  return destroyed;
+}
+
+function destroySurroundingBlocks(center) {
+  bricks.forEach(b => {
+    if (b.status === 1) {
+      const dx = Math.abs(b.x - center.x);
+      const dy = Math.abs(b.y - center.y);
+      if (dx <= 80 && dy <= 40) {
+        b.status = 0;
+      }
+    }
+  });
+}
+function handleLightBlock(block) {
+  flashScreen();
+  block.status = 0;
+}
+
+function flashScreen() {
+  document.body.style.backgroundColor = "black";
+  setTimeout(() => {
+    document.body.style.backgroundColor = "white";
+    setTimeout(() => {
+      document.body.style.backgroundColor = "#f0f0f0";
+    }, 100);
+  }, 100);
+}
+function handleItemCoolerBlock(block) {
+  if (!GameState.hasCooler) {
+    ball.originalSpeed = ball.speed;
+    ball.speed = Math.max(1, ball.speed - 1);
+    ball.collidedWithPaddleOnceAfterCooler = true;
+    GameState.hasCooler = true;
+  }
+  block.status = 0;
+  updateItemUI();
+}
+
+
+function handleItemCutterBlock(block) {
+  GameState.hasCutter = true;
+  block.status = 0;
+  updateItemUI();
+}
+
+function applyCutterIfAvailable(block) {
+  if (!GameState.hasCutter) return false;
+
+  GameState.hasCutter = false;
+  updateItemUI();
+
+  switch (block.type) {
+    case BLOCK_TYPES.GLASS: handleGlassBlock(block); break;
+    case BLOCK_TYPES.FUEL: handleFuelBlock(block); break;
+    case BLOCK_TYPES.METAL:
+      block.status = 0;
+      block.hitCount = block.maxHits;
+      break;
+    case BLOCK_TYPES.TIRE: handleTireBlock(block); break;
+    case BLOCK_TYPES.LIGHT: handleLightBlock(block); break;
+    case BLOCK_TYPES.ITEM_COOLER: handleItemCoolerBlock(block); break;
+    case BLOCK_TYPES.ITEM_CUTTER: handleItemCutterBlock(block); break;
+    case BLOCK_TYPES.ITEM_GUIDE: handleItemGuideBlock(block); break;
+    case BLOCK_TYPES.NORMAL:
+    default: block.status = 0;
+  }
+
+  return true;
+}
+
+
+
+// function handleItemBarrierBlock(block) {
+//   GameState.barrierCount = (GameState.barrierCount || 0) + 1;
+//   block.status = 0;
+//   updateItemUI();
+// }
+
+function handleItemGuideBlock(block) {
+  block.status = 0;
+  updateItemUI();
+
+  const targetX = paddle.x + paddle.width / 2;
+  const targetY = canvas.height - paddle.height - 20 - ball.radius;
+  const startX = ball.x;
+  const startY = ball.y;
+  const duration = 500;
+  const startTime = Date.now();
+  const originalSpeed = ball.speed;
+
+  function animateGuide() {
+    const now = Date.now();
+    const t = Math.min((now - startTime) / duration, 1);
+    const ease = t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+    ball.x = startX + (targetX - startX) * ease;
+    ball.y = startY + (targetY - startY) * ease;
+
+    if (t < 1) {
+      requestAnimationFrame(animateGuide);
+    } else {
+      // 무작위 각도로 발사
+      const angleDeg = Math.random() * 60 + 30; // 30~90도
+      const angleRad = angleDeg * (Math.PI / 180);
+      const direction = Math.random() < 0.5 ? -1 : 1;
+
+      ball.dx = Math.cos(angleRad) * originalSpeed * direction;
+      ball.dy = -Math.sin(angleRad) * originalSpeed;
+      ball.speed = originalSpeed;
+
+      if (GameState.hasCooler) {
+        GameState.hasCooler = false;
+        ball.collidedWithPaddleOnceAfterCooler = false;
+        updateItemUI();
+      }
+    }
+  }
+
+  animateGuide();
+}
+
+function applyScore(numBlocks = 1, baseScore = 10) {
+  const bonusUpgradeCount = GameState.upgrades.filter(x => x === "보너스점수").length;
+  const multiplier = 1 + 0.2 * bonusUpgradeCount;  // 20%씩 증가
+  const totalBase = Math.floor(baseScore * numBlocks * multiplier);
+
+  comboCount += numBlocks;
+  comboScore += comboCount * 5;
+  score += totalBase;
+
+  $('#score').text(score + comboScore);
+  $('#combo').text(comboCount);
+
+  if (comboTimer) clearTimeout(comboTimer);
+  comboTimer = setTimeout(() => {
+    comboCount = 0;
+    $('#combo').text("0");
+  }, 1500);
+}
+
+
+function collisionDetection() {
+  bricks.forEach(b => {
+    if (b.status === 1 &&
+      ball.x > b.x && ball.x < b.x + 70 &&
+      !b.ignoreCollision &&
+      ball.y > b.y && ball.y < b.y + 20) {
+
+      // 고출력 커터 효과 우선 적용
+      if (applyCutterIfAvailable(b)) {
+        applyScore();
+        ball.dy = -ball.dy;
+        return;
+      }
+
+      switch (b.type) {
+        case BLOCK_TYPES.NORMAL:
+          handleNormalBlock(b);
+          applyScore();
+          break;
+        case BLOCK_TYPES.METAL:
+          handleMetalBlock(b);
+          applyScore();
+          break;
+        case BLOCK_TYPES.GLASS:
+          handleGlassBlock(b);
+          break;
+        case BLOCK_TYPES.FUEL:
+          handleFuelBlock(b);
+          break;
+        case BLOCK_TYPES.TIRE:
+          handleTireBlock(b);
+          applyScore(1, 20);
+          break;
+        case BLOCK_TYPES.LIGHT:
+          handleLightBlock(b);
+          applyScore(1, 10);
+          break;
+        case BLOCK_TYPES.ITEM_COOLER:
+          handleItemCoolerBlock(b);
+          applyScore();
+          break;
+        case BLOCK_TYPES.ITEM_CUTTER:
+          handleItemCutterBlock(b);
+          applyScore();
+          break;
+        // case BLOCK_TYPES.ITEM_BARRIER:
+        //   handleItemBarrierBlock(b);
+        //   applyScore();
+        //   break;
+        case BLOCK_TYPES.ITEM_GUIDE:
+          handleItemGuideBlock(b);
+          applyScore();
+          break;
+        default:
+          b.status = 0;
+          applyScore();
+      }
+
+      ball.dy = -ball.dy;
+    }
+  });
+}
+
+function playBGM() {
+  const bgm = document.getElementById("bgm");
+  if (bgm) {
+    bgm.muted = false; // 크롬 제한 우회
+    if (GameState.settings.bgm) {
+      bgm.play();
+    }
+  }
+}
+
+function stopBGM() {
+  const bgm = document.getElementById("bgm");
+  if (bgm) {
+    bgm.pause();
+    bgm.currentTime = 0;
+  }
+}
+
+
+window.addEventListener('DOMContentLoaded', () => {
+  document.body.addEventListener('click', () => {
+    playBGM();
+  }, { once: true }); // 딱 1번만 실행
+});
