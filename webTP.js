@@ -1513,10 +1513,12 @@ function gameOver() {
 // import { startStage } from './GameStage.js';
 // import { showEnding } from './EndingScene.js';
 
-// ✅ 캔버스 기반 강화 UI 전체 구성 (선택, 버튼, 결과 표시 포함)
+// 캔버스 기반 강화 UI 전체 구성 (선택, 버튼, 결과 표시 포함)
 function goToUpgradePopup(stars) {
+  // 강화 기회를 별 개수만큼 추가
   GameState.reinforceChances += stars;
 
+  // 팝업창 역할을 하는 div 생성
   const popup = document.createElement('div');
   popup.id = 'upgradePopup';
   popup.style.position = 'absolute';
@@ -1531,6 +1533,7 @@ function goToUpgradePopup(stars) {
   popup.style.color = 'white';
   popup.style.zIndex = '2000';
 
+  // 강화 내역, 기회 수, 캔버스 포함한 HTML 삽입
   popup.innerHTML = `
     <h2>강화 화면</h2>
     <div id="upgradeStatus">강화 내역: ${summarizeUpgrades()}</div>
@@ -1540,6 +1543,7 @@ function goToUpgradePopup(stars) {
 
   document.body.appendChild(popup);
 
+  // 렌더링 이후 캔버스 요소를 얻어와 UI 세팅
   setTimeout(() => {
     const canvas = document.getElementById("upgradeCanvas");
     const ctx = canvas.getContext("2d");
@@ -1548,17 +1552,20 @@ function goToUpgradePopup(stars) {
 }
 
 function setupUpgradeCanvas(canvas, ctx, popup) {
+  // 강화 옵션 정의
   const options = ["패들강화", "보너스점수", "생명"];
   let selectedIndex = 0;
-  let resultText = "";
+  let resultText = ""; // 강화 결과 메시지
   let animationFrame = 0;
   let animTimer = 0;
 
+  // 버튼 정보 (위치, 크기, hover 여부)
   const buttons = [
     { label: "강화 시도", x: 40, y: 170, w: 120, h: 40, hover: false },
     { label: "건너뛰기", x: 240, y: 170, w: 120, h: 40, hover: false }
   ];
 
+  // 마우스 이동 시 hover 처리
   canvas.addEventListener("mousemove", (e) => {
     const rect = canvas.getBoundingClientRect();
     const mx = e.clientX - rect.left;
@@ -1572,6 +1579,7 @@ function setupUpgradeCanvas(canvas, ctx, popup) {
     drawUI();
   });
 
+  // 마우스 클릭 시 버튼 또는 옵션 선택 처리
   canvas.addEventListener("click", (e) => {
     const rect = canvas.getBoundingClientRect();
     const mx = e.clientX - rect.left;
@@ -1597,6 +1605,7 @@ function setupUpgradeCanvas(canvas, ctx, popup) {
     }
   });
 
+  // 캔버스에 전체 UI 그리기 (옵션, 버튼, 결과 메시지)
   function drawUI() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.font = "16px DungGeunMo, sans-serif";
@@ -1629,11 +1638,13 @@ function setupUpgradeCanvas(canvas, ctx, popup) {
     }
   }
 
+  // 강화 시도 처리
   function tryUpgrade(option) {
     if (GameState.reinforceChances <= 0) return;
 
     const count = GameState.upgrades.filter(x => x === option).length;
 
+    // 최대 3회까지만 강화 가능
     if (count >= 3) {
       resultText = `${option} 최대 강화`;
       drawUI();
@@ -1643,14 +1654,14 @@ function setupUpgradeCanvas(canvas, ctx, popup) {
     GameState.reinforceChances--;
     document.getElementById("chanceDisplay").innerText = GameState.reinforceChances;
 
-    const success = Math.random() < 0.6;
+    const success = Math.random() < 0.6; // 60% 확률
 
     if (success) {
       GameState.upgrades.push(option);
 
       if (option === "생명") {
         GameState.barrierCount = (GameState.barrierCount || 0) + 1;
-        updateItemUI();
+        updateItemUI(); // 생명 UI 갱신
       }
 
       resultText = `${option} 강화 성공!`;
@@ -1667,6 +1678,7 @@ function setupUpgradeCanvas(canvas, ctx, popup) {
     animTimer = 30;
     animateResult();
 
+    // 기회 모두 소진 시 자동 다음 스테이지로 이동
     if (GameState.reinforceChances === 0) {
       setTimeout(() => {
         document.body.removeChild(popup);
@@ -1675,6 +1687,7 @@ function setupUpgradeCanvas(canvas, ctx, popup) {
     }
   }
 
+  // 결과 메시지 깜빡이는 애니메이션 처리
   function animateResult() {
     if (animTimer-- <= 0) {
       drawUI();
@@ -1688,6 +1701,7 @@ function setupUpgradeCanvas(canvas, ctx, popup) {
   drawUI();
 }
 
+// 강화 내역 요약 문자열 반환
 function summarizeUpgrades() {
   const summary = {};
   GameState.upgrades.forEach(up => {
@@ -1696,6 +1710,7 @@ function summarizeUpgrades() {
   return Object.entries(summary).map(([k, v]) => `${k} x${v}`).join(', ') || '없음';
 }
 
+// 다음 스테이지로 이동 처리
 function proceedToNextStage() {
   if (GameState.selectedStage >= 3) {
     showEnding();
