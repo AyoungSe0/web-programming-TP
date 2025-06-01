@@ -1071,8 +1071,10 @@ function draw() {
   }
 
   // 바닥에 닿음
+  const tolerance = 10;
   if (ball.y + ball.dy > canvas.height - ball.radius - paddle.height - 10) {
-    if (ball.x > paddle.x && ball.x < paddle.x + paddle.width) {
+    if (ball.x + ball.radius >= paddle.x - tolerance &&
+      ball.x - ball.radius <= paddle.x + paddle.width + tolerance) {
       ball.dy = -ball.dy;
       if (ball.collidedWithPaddleOnceAfterCooler) {
         ball.speed = ball.originalSpeed || 3;
@@ -2109,6 +2111,7 @@ function collisionDetection() {
       ball.x > b.x && ball.x < b.x + 70 &&
       !b.ignoreCollision &&
       ball.y > b.y && ball.y < b.y + 20) {
+        
 
       // 고출력 커터 효과 우선 적용
       if (applyCutterIfAvailable(b)) {
