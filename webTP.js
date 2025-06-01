@@ -933,59 +933,96 @@ function startStage(stageNumber) {
   draw();
 }
 
-function initGameElements() {
-  let speed = 2 + GameState.selectedStage;
-  if (GameState.upgrades.includes("스피드업")) {
-    speed += 1;
+// 캐릭터별 공 이미지와 반지름 정보
+const ballInfoMap = {
+  "야구선수": {
+    img: (() => {
+      const img = new Image();
+      img.src = "baseball_img.png";
+      return img;
+    })(),
+    radius: 14,
+    speedFactor: 1.2
+  },
+  "축구선수": {
+    img: (() => {
+      const img = new Image();
+      img.src = "soccer_img.png";
+      return img;
+    })(),
+    radius: 18,
+    speedFactor: 1.0
+  },
+  "테니스선수": {
+    img: (() => {
+      const img = new Image();
+      img.src = "tennis_img.png";
+      return img;
+    })(),
+    radius: 12,
+    speedFactor: 0.8
   }
-  const angleDeg = Math.random() * 60 + 30; // 30° ~ 90°
+};
+
+
+function initGameElements() {
+  const selected = GameState.selectedCharacter.name;
+  const info = ballInfoMap[selected] || { radius: 14, speedFactor: 1.0 };
+
+  const stageSpeed = 2 + GameState.selectedStage +
+    (GameState.upgrades.includes("스피드업") ? 1 : 0);
+  const baseSpeed = stageSpeed * info.speedFactor;
+
+  const angleDeg = Math.random() * 60 + 30;
   const angleRad = angleDeg * (Math.PI / 180);
   const direction = Math.random() < 0.5 ? -1 : 1;
 
   ball = {
     x: canvas.width / 2,
-    y: canvas.height - 30,
-    dx: Math.cos(angleRad) * speed * direction,
-    dy: -Math.sin(angleRad) * speed,
-    radius: 7,
-    speed: speed,
-    originalSpeed: speed,
+    y: canvas.height - 60 - info.radius,
+    dx: Math.cos(angleRad) * baseSpeed * direction,
+    dy: -Math.sin(angleRad) * baseSpeed,
+    radius: info.radius,
+    speed: baseSpeed,
+    originalSpeed: baseSpeed,
+    img: info.img
   };
 
-  let basePaddleWidth = 80 - GameState.selectedStage * 10;
-  const paddleUpgradeCount = GameState.upgrades.filter(x => x === "패들강화").length;
-  basePaddleWidth += 20 * paddleUpgradeCount;
+
+let basePaddleWidth = 80 - GameState.selectedStage * 10;
+const paddleUpgradeCount = GameState.upgrades.filter(x => x === "패들강화").length;
+basePaddleWidth += 20 * paddleUpgradeCount;
 
 
-  paddle = {
-    height: 12,
-    width: basePaddleWidth,
-    x: (canvas.width - basePaddleWidth) / 2,
-    rightPressed: false,
-    leftPressed: false
-  };
+paddle = {
+  height: 12,
+  width: basePaddleWidth,
+  x: (canvas.width - basePaddleWidth) / 2,
+  rightPressed: false,
+  leftPressed: false
+};
 
-  const layout = levelBlockLayouts[GameState.selectedStage];
-  bricks = layout.map(block => ({
-    x: block.x,
-    y: block.y,
-    type: block.type,
-    status: 1,
-    hitCount: 0,
-    maxHits: block.type === BLOCK_TYPES.METAL ? 3 : 1,
-    effectStage: null,
-    effectTimer: 0
-  }));
+const layout = levelBlockLayouts[GameState.selectedStage];
+bricks = layout.map(block => ({
+  x: block.x,
+  y: block.y,
+  type: block.type,
+  status: 1,
+  hitCount: 0,
+  maxHits: block.type === BLOCK_TYPES.METAL ? 3 : 1,
+  effectStage: null,
+  effectTimer: 0
+}));
 
-  $(document).off('keydown').on('keydown', function (e) {
-    if (e.key === "ArrowRight") paddle.rightPressed = true;
-    if (e.key === "ArrowLeft") paddle.leftPressed = true;
-  });
+$(document).off('keydown').on('keydown', function (e) {
+  if (e.key === "ArrowRight") paddle.rightPressed = true;
+  if (e.key === "ArrowLeft") paddle.leftPressed = true;
+});
 
-  $(document).on('keyup', function (e) {
-    if (e.key === "ArrowRight") paddle.rightPressed = false;
-    if (e.key === "ArrowLeft") paddle.leftPressed = false;
-  });
+$(document).on('keyup', function (e) {
+  if (e.key === "ArrowRight") paddle.rightPressed = false;
+  if (e.key === "ArrowLeft") paddle.leftPressed = false;
+});
 }
 
 // ✅ 정리된 draw 함수 - 중복 제거 및 반사 보정 포함
@@ -1059,7 +1096,10 @@ function draw() {
             ball.x = canvas.width / 2;
             ball.y = canvas.height - 30;
 
-            const angleDeg = Math.random() * 60 + 30;
+            const isLeft = Math.random() < 0.5;
+            const angleDeg = isLeft
+              ? Math.random() * 15 + 60   // 왼쪽으로 날아감
+              : Math.random() * 15 + 105; // 오른쪽으로 날아감
             const angleRad = angleDeg * (Math.PI / 180);
             const direction = Math.random() < 0.5 ? -1 : 1;
             const speed = ball.speed;
@@ -1115,12 +1155,19 @@ function draw() {
 }
 
 function drawBall() {
-  ctx.beginPath();
-  ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
-  ctx.fillStyle = "#fff";
-  ctx.fill();
-  ctx.closePath();
+  const size = ball.radius * 2;
+  if (ball.img?.complete) {
+    ctx.drawImage(ball.img, ball.x - ball.radius, ball.y - ball.radius, size, size);
+  } else {
+    // 이미지 로딩 안 됐을 경우 대체 표시
+    ctx.beginPath();
+    ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
+    ctx.fillStyle = "#fff";
+    ctx.fill();
+    ctx.closePath();
+  }
 }
+
 
 function drawPaddle() {
   ctx.beginPath();
