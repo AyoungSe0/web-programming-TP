@@ -697,7 +697,7 @@ function goToStoryScene2() {
   });
 
   $(document).on("keydown", function (e) {
-    if (e.code === "Enter"||e.code==="Space") {
+    if (e.code === "Enter" || e.code === "Space") {
       e.preventDefault();
       advanceStory();
     }
@@ -1280,7 +1280,7 @@ function showStageResultPopup(starCount) {
     popup.appendChild(failMsg);
 
     document.body.appendChild(popup);
-    
+
     setTimeout(() => {
       if (document.body.contains(popup)) document.body.removeChild(popup);
       goToMapScene();
@@ -1567,22 +1567,41 @@ function proceedToNextStage() {
 
 function showEnding() {
   $('body').html(`
-    <div style="text-align:center">
+    <div style="text-align:center; position:relative;">
       <canvas id="gameCanvas" width="1000" height="600" style="background:black;"></canvas>
     </div>
   `);
 
   const canvas = document.getElementById("gameCanvas");
-  canvas.addEventListener("click", handleEndingPopupClick);
-  canvas.addEventListener("mousemove", handleEndingMouseMove);
+  const ctx = canvas.getContext("2d");
+
+  ctx.fillStyle = "black";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = "white";
+  ctx.font = "24px DungGeunMo, sans-serif";
+  ctx.textAlign = "center";
+  ctx.fillText("결과 불러오는 중...", canvas.width / 2, canvas.height / 2);
 
   const bg = new Image();
-  bg.src = "mergedEnding.png"; // 너가 제공한 배경 이미지
-  bg.onload = () => {
+  bg.src = "mergedEnding.png";
+
+  const charImg = new Image();
+  charImg.src = GameState.selectedCharacter?.image || "baseballP.png";  // 기본 이미지
+
+  let loaded = 0;
+  const tryDraw = () => {
+    loaded++;
+    if (loaded < 2) return;
+    GameState._endingCharImg = charImg;  // ✅ 캐릭터 이미지를 글로벌 상태에 임시 저장
     startFinalScene(bg);
   };
-}
 
+  bg.onload = tryDraw;
+  charImg.onload = tryDraw;
+
+  canvas.addEventListener("click", handleEndingPopupClick);
+  canvas.addEventListener("mousemove", handleEndingMouseMove);
+}
 // 버튼 상태
 let endingButtons = [
   { id: "restartBtn", text: "다시 시작", x: 0, y: 0, w: 160, h: 40, hover: false },
@@ -1641,24 +1660,28 @@ function drawGameEndingOverlay(ctx) {
   const totalScore = GameState.totalScore + GameState.totalComboScore;
   const upgrades = GameState.upgrades.length > 0 ? GameState.upgrades.join(", ") : "없음";
 
+  // 1. 캐릭터 이미지 (중앙 상단)
+  if (GameState._endingCharImg) {
+    ctx.drawImage(GameState._endingCharImg, canvas.width / 2 - 100, 330, 200, 200);
+  }
+
+  // 2. 텍스트
   ctx.textAlign = "center";
   ctx.lineWidth = 4;
   ctx.font = "24px DungGeunMo, sans-serif";
-
-  // 점수 텍스트 (GAME CLEAR 바로 아래 위치)
-  const scoreY = 320;
-  const upgradesY = 360;
-
   ctx.strokeStyle = "black";
   ctx.fillStyle = "yellow";
-  ctx.strokeText(`${nickname}님의 총 점수: ${totalScore}`, canvas.width / 2, scoreY);
-  ctx.fillText(`${nickname}님의 총 점수: ${totalScore}`, canvas.width / 2, scoreY);
 
-  ctx.strokeText(`강화 내역: ${upgrades}`, canvas.width / 2, upgradesY);
-  ctx.fillText(`강화 내역: ${upgrades}`, canvas.width / 2, upgradesY);
+  ctx.strokeText(`${nickname}님의 총 점수: ${totalScore}`, canvas.width / 2, 260);
+  ctx.fillText(`${nickname}님의 총 점수: ${totalScore}`, canvas.width / 2, 260);
 
+  ctx.strokeText(`강화 내역: ${upgrades}`, canvas.width / 2, 300);
+  ctx.fillText(`강화 내역: ${upgrades}`, canvas.width / 2, 300);
+
+  // 3. 버튼
   drawButtons(ctx);
 }
+
 
 function drawButtons(ctx) {
   const canvas = ctx.canvas;
@@ -1668,7 +1691,7 @@ function drawButtons(ctx) {
   const spacing = 20;
   const totalWidth = btnWidth * 2 + spacing;
   const startX = (width - totalWidth) / 2;
-  const btnY = 500;
+  const btnY = 540;
 
   endingButtons[0].x = startX;
   endingButtons[0].y = btnY;
@@ -1678,7 +1701,7 @@ function drawButtons(ctx) {
   endingButtons.forEach(btn => {
     ctx.fillStyle = btn.hover ? "#fff" : "#111";
     ctx.fillRect(btn.x, btn.y, btn.w, btn.h);
-    ctx.strokeStyle = "#fff";
+    ctx.strokeStyle = btn.hover ? "#000" : "#fff"
     ctx.strokeRect(btn.x, btn.y, btn.w, btn.h);
     ctx.fillStyle = btn.hover ? "#000" : "#fff";
     ctx.font = "20px DungGeunMo, sans-serif";
