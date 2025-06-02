@@ -71,18 +71,21 @@ button{
 }
 
 #ad1, #ad2 {
-  position: fixed;
+  position: absolute;
   top: 100px;
   z-index: 9999;
 }
 
 #ad1 {
-  left: 10px;
+  left: calc(50% - 500px - 170px - 10px);
+  /* 너비 170px, 왼쪽으로 10px 벗어나게 */
 }
 
 #ad2 {
-  right: 10px;
+  left: calc(50% + 500px + 10px);
+  /* 오른쪽으로 10px 벗어나게 */
 }
+
 
 .ad-box {
   position: relative;
