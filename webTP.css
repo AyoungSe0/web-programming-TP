@@ -69,3 +69,36 @@ button{
 #gameCanvas{
 	cursor: url("cursor.png") 16 16, auto;
 }
+
+#ad1, #ad2 {
+  position: fixed;
+  top: 100px;
+  z-index: 9999;
+}
+
+#ad1 {
+  left: 10px;
+}
+
+#ad2 {
+  right: 10px;
+}
+
+.ad-box {
+  position: relative;
+  width: 170px;
+}
+
+.ad-image {
+  width: 100%;
+  cursor: pointer;
+}
+
+.close-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}

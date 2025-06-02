@@ -130,6 +130,54 @@ $('#restartBtn').on('click', () => {
   resetGameState();
   goToMapScene();
 });
+
+// ======= 광고 ========
+
+const AdState = {
+  ad1Closed: false,
+  ad2Closed: false
+};
+
+function addAds() {
+  if (document.getElementById("ads-container")) return;
+
+  const adsContainer = document.createElement('div');
+  adsContainer.id = "ads-container";
+
+  if (!AdState.ad1Closed) {
+    const ad1 = document.createElement('div');
+    ad1.className = "ad-box";
+    ad1.id = "ad1";
+    ad1.innerHTML = `
+      <img src="ad1.png" class="ad-image" onclick="window.open('https://cse.konkuk.ac.kr/cse/9960/subview.do?enc=Zm5jdDF8QEB8JTJGcHJvZkluZm8lMkZjc2UlMkY1NDclMkYyMTQyMDA2MiUyRnZpZXcuZG8lM0ZzcmNoQ3RnciUzRCUyNg%3D%3D', '_blank')">
+      <img src="close.png" class="close-btn" onclick="closeAd('ad1')">
+    `;
+    adsContainer.appendChild(ad1);
+  }
+
+  if (!AdState.ad2Closed) {
+    const ad2 = document.createElement('div');
+    ad2.className = "ad-box";
+    ad2.id = "ad2";
+    ad2.innerHTML = `
+      <img src="ad2.png" class="ad-image" onclick="window.open('https://cse.konkuk.ac.kr/cse/index.do', '_blank')">
+      <img src="close.png" class="close-btn" onclick="closeAd('ad2')">
+    `;
+    adsContainer.appendChild(ad2);
+  }
+
+  document.body.appendChild(adsContainer);
+}
+
+// 광고 닫기
+function closeAd(id) {
+  const el = document.getElementById(id);
+  if (el) el.remove();
+
+  if (id === "ad1") AdState.ad1Closed = true;
+  if (id === "ad2") AdState.ad2Closed = true;
+}
+
 // ===== GameStartUI.js =====
 
 // import { goToStoryScene } from './StoryScene.js';
@@ -220,7 +268,7 @@ function showStartUI() {
     }
   });
 
-
+  addAds();
 }
 
 // ===== StoryScene.js =====
@@ -348,6 +396,8 @@ function goToStoryScene() {
     canvas.removeEventListener("click", advanceStory);
     goToCharacterSelect();
   });
+
+  addAds();
 }
 
 
@@ -598,6 +648,8 @@ function goToCharacterSelect() {
       drawCharacterScene(lastHoveredIndex);
     }
   }
+
+  addAds();
 }
 
 //==========스토리==========
@@ -698,6 +750,7 @@ function goToStoryScene2() {
       advanceStory();
     }
   });
+addAds();
 }
 
 
@@ -886,6 +939,8 @@ function goToMapScene() {
   bgImg.onload = tryDrawScene;
   arrowImg.onload = tryDrawScene;
   stageImgs.forEach(img => img.onload = tryDrawScene);
+
+  addAds();
 }
 
 let canvas, ctx;
@@ -927,6 +982,8 @@ function startStage(stageNumber) {
 
   initGameElements();
   draw();
+
+  addAds();
 }
 
 // 캐릭터별 공 이미지와 반지름 정보
