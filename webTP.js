@@ -102,7 +102,8 @@ const GameState = {
     bgm: true,
     sfx: true,
     cursor: true,
-    bgm: true,
+    theme: "day", /////////<- 테마 적용하려고 추가했긴 한데 /////////
+    // bgm: true, //<- 왜 두 번 선언했어??
   },
   mapVisitedOnce: false
 };
@@ -130,6 +131,215 @@ $('#restartBtn').on('click', () => {
   resetGameState();
   goToMapScene();
 });
+
+// ===== 옵션 버튼 =====
+function addOptionButton() {
+  let btn = document.getElementById("optionBtn");
+  if (!btn) {
+    btn = document.createElement("img");
+    btn.id = "optionBtn";
+    btn.src = "option.png";
+    btn.style.position = "fixed"; // 화면 고정 위치
+    btn.style.width = "40px";
+    btn.style.cursor = "pointer";
+    btn.style.zIndex = "1000";
+
+    btn.addEventListener("mouseenter", () => {
+      btn.src = "optionHover.png";
+    });
+    btn.addEventListener("mouseleave", () => {
+      btn.src = "option.png";
+    });
+    btn.addEventListener("click", () => {
+      showOptionPanel();
+    });
+
+    document.body.appendChild(btn);
+  }
+
+  // 캔버스 좌표에 맞게 위치 설정
+  const canvas = document.getElementById("gameCanvas");
+  if (canvas) {
+    const rect = canvas.getBoundingClientRect();
+    btn.style.left = `${rect.left + 10}px`;  // 캔버스 왼쪽 + 여백
+    btn.style.top = `${rect.top + 10}px`;    // 캔버스 상단 + 여백
+  }
+}
+
+// 위치 다시 계산
+window.addEventListener("resize", () => {
+  addOptionButton();
+  repositionOptionPanel();
+});
+
+function showOptionPanel() {
+  if (document.getElementById("optionPanel")) return;
+
+  const canvas = document.getElementById("gameCanvas");
+  const rect = canvas.getBoundingClientRect();
+
+  const panel = document.createElement("div");
+  panel.id = "optionPanel";
+  panel.style.position = "fixed";
+  panel.style.zIndex = "1001";
+  panel.style.pointerEvents = "auto";
+
+  const panelWidth = 300;
+  const panelHeight = 200;
+  panel.style.left = `${rect.left + (rect.width - panelWidth) / 2}px`;
+  panel.style.top = `${rect.top + (rect.height - panelHeight) / 2}px`;
+  panel.style.width = `${panelWidth}px`;
+  panel.style.height = `${panelHeight}px`;
+
+  panel.innerHTML = `
+    <img src="selectBack.png" style="width:100%; height:100%; position:absolute; top:0; left:0;">
+
+    <div style="
+      position:absolute; 
+      top:20px; 
+      left:0; 
+      width:100%; 
+      text-align:center; 
+      font-family:'DungGeunMo',sans-serif; 
+      font-size:18px; 
+      color:white;
+      text-shadow:
+    -1px -1px 0 black,
+     1px -1px 0 black,
+    -1px  1px 0 black,
+     1px  1px 0 black;"
+      z-index:2;">
+      ~환경 설정~
+    </div>
+
+    <img id="soundToggle"
+         src="${GameState.settings.bgm ? 'soundOn.png' : 'soundOff.png'}"
+         style="position:absolute; top:60px; left:75px; width:50px; cursor:pointer; z-index:2;">
+
+    <img id="themeToggle"
+         src="${GameState.settings.theme === 'night' ? 'night.png' : 'day.png'}"
+         style="position:absolute; top:60px; left:175px; width:50px; cursor:pointer; z-index:2;">
+
+    <img id="doneBtn"
+     src="done.png"
+     style="position:absolute; top:140px; left:50%; transform:translateX(-50%);
+            width:100px; cursor:pointer; z-index:2;">
+  `;
+
+  document.body.appendChild(panel);
+
+  const soundBtn = document.getElementById("soundToggle");
+  const themeBtn = document.getElementById("themeToggle");
+  const doneBtn = document.getElementById("doneBtn");
+
+  // hover 효과
+  soundBtn.addEventListener("mouseenter", () => {
+    soundBtn.src = GameState.settings.bgm ? "soundOnH.png" : "soundOffH.png";
+  });
+  soundBtn.addEventListener("mouseleave", () => {
+    soundBtn.src = GameState.settings.bgm ? "soundOn.png" : "soundOff.png";
+  });
+
+  themeBtn.addEventListener("mouseenter", () => {
+    themeBtn.src = GameState.settings.theme === "night" ? "nightH.png" : "dayH.png";
+  });
+  themeBtn.addEventListener("mouseleave", () => {
+    themeBtn.src = GameState.settings.theme === "night" ? "night.png" : "day.png";
+  });
+
+  doneBtn.addEventListener("mouseenter", () => {
+    doneBtn.src = "doneH.png";
+  });
+  doneBtn.addEventListener("mouseleave", () => {
+    doneBtn.src = "done.png";
+  });
+
+  // 클릭 동작
+  soundBtn.addEventListener("click", () => {
+    GameState.settings.bgm = !GameState.settings.bgm;
+    if (GameState.settings.bgm) playBGM();
+    else stopBGM();
+    soundBtn.src = GameState.settings.bgm ? "soundOnH.png" : "soundOffH.png";
+  });
+
+  themeBtn.addEventListener("click", () => {
+    GameState.settings.theme = GameState.settings.theme === "night" ? "day" : "night";
+    themeBtn.src = GameState.settings.theme === "night" ? "nightH.png" : "dayH.png";
+    applyTheme();
+  });
+
+  doneBtn.addEventListener("click", () => {
+    panel.remove();
+    window.removeEventListener("keydown", escHandler);
+  });
+
+  // ESC 닫기
+  const escHandler = (e) => {
+    if (e.key === "Escape") {
+      panel.remove();
+      window.removeEventListener("keydown", escHandler);
+    }
+  };
+
+  window.addEventListener("keydown", escHandler);
+}
+
+// resize 시 옵션 패널 위치 조정
+function repositionOptionPanel() {
+  const panel = document.getElementById("optionPanel");
+  const canvas = document.getElementById("gameCanvas");
+  if (!panel || !canvas) return;
+
+  const rect = canvas.getBoundingClientRect();
+  const panelWidth = panel.offsetWidth;
+  const panelHeight = panel.offsetHeight;
+
+  panel.style.left = `${rect.left + (rect.width - panelWidth) / 2}px`;
+  panel.style.top = `${rect.top + (rect.height - panelHeight) / 2}px`;
+}
+
+
+// 테마 설정
+function applyTheme() { /////// <- 미완
+  const theme = GameState.settings.theme;
+
+  // storyPage
+  const storyBg = document.getElementById("storyBackground");
+  if (storyBg) {
+    storyBg.src = theme === "night" ? "StoryPageN.png" : "StoryPage.png";
+  }
+
+  // skip 버튼
+  const skipBtn = document.getElementById("skipBtn");
+  if (skipBtn) {
+    skipBtn.src = theme === "night" ? "skipBtnN.png" : "skipBtn.png";
+  }
+
+  // startPage
+  const startBg = document.getElementById("startBackground");
+  if (startBg) {
+    startBg.src = theme === "night" ? "startPageN.png" : "startPage.png";
+  }
+
+  // mergedEnding
+  const mergedEnding = document.getElementById("endingBackground");
+  if (mergedEnding) {
+    mergedEnding.src = theme === "night" ? "mergedEndingN.png" : "mergedEnding.png";
+  }
+
+  // stage (canvas 내에서 배경 이미지 사용 시)
+  if (typeof backgroundImg !== 'undefined') {
+    backgroundImg.src = theme === "night" ? "stageN.png" : "stage.png";
+  }
+
+  // stageBackground
+  
+
+  // body 배경색
+  document.body.style.backgroundColor = theme === "night" ? "#222" : "#f0f0f0";
+}
+
+
 
 // ======= 광고 ========
 
@@ -190,13 +400,14 @@ function showStartUI() {
       <audio id="bgm" src="audio/opening.mp3" autoplay loop muted></audio>
   </div> 
   `);
-
+  addOptionButton();
   // 이제 canvas가 DOM에 들어왔기 때문에 여기서 접근 가능
   const canvas = document.getElementById("gameCanvas");
   const ctx = canvas.getContext("2d");
 
   const bgImage = new Image();
   bgImage.src = "startPage.png"; // 이미지 경로는 필요시 수정
+  bgImage.id = "startBackground";
 
   const startButtonImg = new Image();
   startButtonImg.src = "StartBtn.png";
@@ -672,6 +883,7 @@ function goToStoryScene2() {
 
   const bg = new Image();
   bg.src = "StoryPage.png";
+  bg.id="storyBackground";
 
   const bubble = new Image();
   bubble.src = "story.png";
@@ -800,6 +1012,7 @@ function goToMapScene() {
 
   const bgImg = new Image();
   bgImg.src = "stageBackground.png";
+  bgImg.id = "stageBackground";
 
   const arrowImg = new Image();
   arrowImg.src = "arrow.png";
@@ -1800,6 +2013,7 @@ function showEnding() {
 
   const bg = new Image();
   bg.src = "mergedEnding.png";
+  bg.src = "endingBackground";
 
   const charImg = new Image();
   charImg.src = GameState.selectedCharacter?.image || "baseballP.png";  // 기본 이미지
