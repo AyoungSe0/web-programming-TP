@@ -102,11 +102,17 @@ const GameState = {
     bgm: true,
     sfx: true,
     cursor: true,
-    theme: "day", /////////<- 테마 적용하려고 추가했긴 한데 /////////
+    //theme: "day", /////////<- 테마 적용하려고 추가했긴 한데 /////////
+    //currentScene: "start",//////////////////////////
     // bgm: true, //<- 왜 두 번 선언했어??
   },
   mapVisitedOnce: false
 };
+
+let startBgImg = null;
+let storyPageBgImg = null;
+let stageBgImg = null;
+let currentDrawScene = null;
 
 function resetGameState() {
   GameState.score = 0;
@@ -223,7 +229,7 @@ function showOptionPanel() {
     <img id="doneBtn"
      src="done.png"
      style="position:absolute; top:140px; left:50%; transform:translateX(-50%);
-            width:100px; cursor:pointer; z-index:2;">
+            width:150px; cursor:pointer; z-index:2;">
   `;
 
   document.body.appendChild(panel);
@@ -298,34 +304,63 @@ function repositionOptionPanel() {
   panel.style.top = `${rect.top + (rect.height - panelHeight) / 2}px`;
 }
 
+function onThemeChange(newTheme) {
+  GameState.settings.theme = newTheme;
+
+  if (GameState.currentScene === "map") {
+    goToMapScene(); // canvas 다시 그려야 하기 때문에 전체 재진입
+  } else {
+    applyTheme();   // story/start 등은 기존 방식으로 적용
+  }
+}
 
 // 테마 설정
 function applyTheme() { /////// <- 미완
   const theme = GameState.settings.theme;
 
   // storyPage
-  const storyBg = document.getElementById("storyBackground");
-  if (storyBg) {
-    storyBg.src = theme === "night" ? "StoryPageN.png" : "StoryPage.png";
+  if (storyPageBgImg) {
+  storyPageBgImg.src = GameState.settings.theme === "night"
+    ? "StoryPageN.png" : "StoryPage.png";
+
+  if (storyPageBgImg.complete && typeof currentDrawScene === "function") {
+    currentDrawScene();
   }
+}
+
 
   // skip 버튼
-  const skipBtn = document.getElementById("skipBtn");
+  const skipBtn = document.getElementById("skipBtn") || document.getElementById("skipBtn_w");
   if (skipBtn) {
     skipBtn.src = theme === "night" ? "skipBtnN.png" : "skipBtn.png";
   }
 
+
   // startPage
-  const startBg = document.getElementById("startBackground");
-  if (startBg) {
-    startBg.src = theme === "night" ? "startPageN.png" : "startPage.png";
-  }
+  if (startBgImg) {
+  startBgImg.src = GameState.settings.theme === "night"
+    ? "startPageN.png" : "startPage.png";
+}
+
 
   // mergedEnding
   const mergedEnding = document.getElementById("endingBackground");
-  if (mergedEnding) {
-    mergedEnding.src = theme === "night" ? "mergedEndingN.png" : "mergedEnding.png";
+if (mergedEnding) {
+  const themeSrc = theme === "night" ? "mergedEndingN.png" : "mergedEnding.png";
+  mergedEnding.src = themeSrc;
+
+  const canvas = document.getElementById("gameCanvas");
+  const ctx = canvas?.getContext("2d");
+
+  if (ctx && mergedEnding.complete) {
+    ctx.drawImage(mergedEnding, 0, 0, canvas.width, canvas.height);
+  } else if (ctx) {
+    mergedEnding.onload = () => {
+      ctx.drawImage(mergedEnding, 0, 0, canvas.width, canvas.height);
+    };
   }
+}
+
 
   // stage (canvas 내에서 배경 이미지 사용 시)
   if (typeof backgroundImg !== 'undefined') {
@@ -333,10 +368,19 @@ function applyTheme() { /////// <- 미완
   }
 
   // stageBackground
-  
+if (stageBgImg) {
+  stageBgImg.src = theme === "night" ? "stageBackgroundN.png" : "stageBackground.png";
+
+  if (stageBgImg.complete && typeof currentDrawScene === "function") {
+    currentDrawScene();
+  }
+}
+
 
   // body 배경색
   document.body.style.backgroundColor = theme === "night" ? "#222" : "#f0f0f0";
+
+  
 }
 
 
@@ -392,95 +436,68 @@ function closeAd(id) {
 
 // import { goToStoryScene } from './StoryScene.js';
 
+
 function showStartUI() {
   $('body').html(`
-  <div style="text-align:center; position: relative;">
+    <div style="text-align:center; position: relative;">
       <canvas id="gameCanvas" width="1000" height="600"
       style="background-color: black; border: none;"></canvas>
       <audio id="bgm" src="audio/opening.mp3" autoplay loop muted></audio>
-  </div> 
+    </div> 
   `);
   addOptionButton();
-  // 이제 canvas가 DOM에 들어왔기 때문에 여기서 접근 가능
+
   const canvas = document.getElementById("gameCanvas");
   const ctx = canvas.getContext("2d");
 
-  const bgImage = new Image();
-  bgImage.src = "startPage.png"; // 이미지 경로는 필요시 수정
-  bgImage.id = "startBackground";
+  startBgImg = new Image();
+  startBgImg.src = GameState.settings.theme === "night"
+    ? "startPageN.png" : "startPage.png";
 
   const startButtonImg = new Image();
-  startButtonImg.src = "StartBtn.png";
-
   const startButtonHoverImg = new Image();
+  startButtonImg.src = "StartBtn.png";
   startButtonHoverImg.src = "StartBtnHover.png";
 
-  const button = {
-    x: 400,
-    y: 420,
-    width: 200,
-    height: 60
-  };
-
-
+  const button = { x: 400, y: 420, width: 200, height: 60 };
   let isHoveringStartBtn = false;
-  let imagesLoaded = 0;
 
-  function tryDrawStartScene() {
-    if (imagesLoaded === 2) {
-      ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height);
-      ctx.drawImage(startButtonImg, button.x, button.y, button.width, button.height);
-    }
+  function drawStartScene() {
+    ctx.drawImage(startBgImg, 0, 0, canvas.width, canvas.height);
+    ctx.drawImage(isHoveringStartBtn ? startButtonHoverImg : startButtonImg,
+                  button.x, button.y, button.width, button.height);
   }
 
-  bgImage.onload = () => {
-    imagesLoaded++;
-    tryDrawStartScene();
-  };
-
-  startButtonImg.onload = () => {
-    imagesLoaded++;
-    tryDrawStartScene();
-  };
-
-
-
-  canvas.addEventListener("click", function (e) {
-    const rect = canvas.getBoundingClientRect();
-    const mx = e.clientX - rect.left;
-    const my = e.clientY - rect.top;
-
-    if (
-      mx >= button.x &&
-      mx <= button.x + button.width &&
-      my >= button.y &&
-      my <= button.y + button.height
-    ) {
-      // START 버튼 눌렀을 때 실행할 동작
-      goToStoryScene();
-    }
-  });
-
-  function drawStartButton(ctx) {
-    const img = isHoveringStartBtn ? startButtonHoverImg : startButtonImg;
-    ctx.drawImage(img, 400, 420, 200, 60);
-  }
+  startBgImg.onload = drawStartScene;
+  startButtonImg.onload = drawStartScene;
 
   canvas.addEventListener("mousemove", function (e) {
     const rect = canvas.getBoundingClientRect();
     const mx = e.clientX - rect.left;
     const my = e.clientY - rect.top;
 
-    const hovering = mx >= 400 && mx <= 600 && my >= 420 && my <= 480;
+    const hovering = mx >= button.x && mx <= button.x + button.width &&
+                     my >= button.y && my <= button.y + button.height;
     if (hovering !== isHoveringStartBtn) {
       isHoveringStartBtn = hovering;
-      ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height);
-      drawStartButton(ctx);
+      drawStartScene();
+    }
+  });
+
+  canvas.addEventListener("click", function (e) {
+    const rect = canvas.getBoundingClientRect();
+    const mx = e.clientX - rect.left;
+    const my = e.clientY - rect.top;
+
+    if (mx >= button.x && mx <= button.x + button.width &&
+        my >= button.y && my <= button.y + button.height) {
+      goToStoryScene();
     }
   });
 
   addAds();
 }
+
 
 // ===== StoryScene.js =====
 
@@ -497,7 +514,7 @@ function goToStoryScene() {
       top:20px; right:20px; width:50px; z-index:10;">
     </div>
   `);
-
+  addOptionButton();
   const canvas = document.getElementById("gameCanvas");
   const ctx = canvas.getContext("2d");
 
@@ -656,6 +673,7 @@ function goToCharacterSelect() {
   let lastHoveredIndex = -1;
   // 캔버스 초기화
   document.body.innerHTML = '<div style="text-align:center;"><canvas id="gameCanvas" width="1000" height="600" style="background-color:black; border:none;"></canvas></div>';
+  addOptionButton();
   const canvas = document.getElementById("gameCanvas");
   const ctx = canvas.getContext("2d");
 
@@ -864,6 +882,7 @@ function goToCharacterSelect() {
 }
 
 //==========스토리==========
+
 function goToStoryScene2() {
   $('body').html(`
     <style>
@@ -878,12 +897,19 @@ function goToStoryScene2() {
     </div>
   `);
 
+  addOptionButton();
+
   const canvas = document.getElementById("gameCanvas");
   const ctx = canvas.getContext("2d");
+const skipBtn = document.getElementById("skipBtn");
+if (skipBtn) {
+  skipBtn.src = GameState.settings.theme === "night" ? "skipBtnN.png" : "skipBtn.png";
+}
 
-  const bg = new Image();
-  bg.src = "StoryPage.png";
-  bg.id="storyBackground";
+  // 전역 이미지 객체
+  storyPageBgImg = new Image();
+  storyPageBgImg.src = GameState.settings.theme === "night"
+    ? "StoryPageN.png" : "StoryPage.png";
 
   const bubble = new Image();
   bubble.src = "story.png";
@@ -897,14 +923,15 @@ function goToStoryScene2() {
     { speaker: "아버지", text: "그래그래. 비록 운동에서는 못했지만, 폐차 업계에서는 꼭 정상에 오르길 바란다." },
     { speaker: GameState.nickname, text: "네!!! 아버지!!!!" }
   ];
+
   let currentLine = 0;
 
   function drawScene() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    if (bg.complete) ctx.drawImage(bg, 0, 0, canvas.width, canvas.height);
+    if (storyPageBgImg?.complete)
+      ctx.drawImage(storyPageBgImg, 0, 0, canvas.width, canvas.height);
 
-    const bw = 900;
-    const bh = 140;
+    const bw = 900, bh = 140;
     const bx = (canvas.width - bw) / 2;
     const by = canvas.height - bh - 30;
 
@@ -923,7 +950,10 @@ function goToStoryScene2() {
     ctx.fillText(current.text, canvas.width / 2, by + 80);
   }
 
-  bg.onload = drawScene;
+  // 현재 씬의 drawScene 저장
+  currentDrawScene = drawScene;
+
+  storyPageBgImg.onload = drawScene;
   bubble.onload = drawScene;
 
   function advanceStory() {
@@ -931,7 +961,7 @@ function goToStoryScene2() {
       currentLine++;
       drawScene();
     } else {
-      goToMapScene();  // 모든 대사 끝나면 맵 씬으로 이동
+      goToMapScene();  // 대사 끝나면 맵으로 이동
     }
   }
 
@@ -940,12 +970,10 @@ function goToStoryScene2() {
     const mx = e.clientX - rect.left;
     const my = e.clientY - rect.top;
 
-    const bw = 900;
-    const bh = 140;
+    const bw = 900, bh = 140;
     const bx = (canvas.width - bw) / 2;
     const by = canvas.height - bh - 30;
 
-    // 말풍선 영역 안일 때
     if (mx >= bx && mx <= bx + bw && my >= by && my <= by + bh) {
       advanceStory();
     }
@@ -962,8 +990,10 @@ function goToStoryScene2() {
       advanceStory();
     }
   });
-addAds();
+
+  addAds();
 }
+
 
 
 // ===== MapScene.js =====
@@ -990,6 +1020,11 @@ function updateItemUI() {
 
 
 function goToMapScene() {
+  GameState.currentScene = "map";
+  $('body').off("keydown");  // 문서 전체에 걸려 있는 keydown 제거
+$(document).off("keydown");  // 키보드 입력 중복 방지
+
+  // 게임 상태 초기화
   GameState.score = 0;
   GameState.comboScore = 0;
   GameState.comboCount = 0;
@@ -1001,18 +1036,25 @@ function goToMapScene() {
   const stageImages = ["stage1.png", "stage2.png", "stage3.png"];
   const stageLabels = ["경차 해체", "트럭 해체", "탱크 해체"];
 
+  // HTML 초기화 및 캔버스 생성
   $('body').html(`
-    <div style="position: relative; text-align: center;">
-      <canvas id="gameCanvas" width="1000" height="600" style="background-color:black;"></canvas>
+    <div style="position: relative; width: 1000px; height: 600px; margin: auto;">
+      <canvas id="gameCanvas"
+              width="1000" height="600"
+              style="position: absolute; top: 0; left: 0; z-index: 1; border: none;"></canvas>
     </div>
   `);
+
+  addOptionButton();  // 옵션 버튼 추가
 
   const canvas = document.getElementById("gameCanvas");
   const ctx = canvas.getContext("2d");
 
+  // 테마에 따라 배경 이미지 설정
   const bgImg = new Image();
-  bgImg.src = "stageBackground.png";
-  bgImg.id = "stageBackground";
+  bgImg.src = GameState.settings.theme === "night"
+    ? "stageBackgroundN.png"
+    : "stageBackground.png";
 
   const arrowImg = new Image();
   arrowImg.src = "arrow.png";
@@ -1078,7 +1120,7 @@ function goToMapScene() {
       const yPos = y + yOffset;
 
       if (mx >= x && mx <= x + displayWidth &&
-        my >= yPos && my <= yPos + displayHeight) {
+          my >= yPos && my <= yPos + displayHeight) {
         return i;
       }
     }
@@ -1102,7 +1144,6 @@ function goToMapScene() {
     const mx = e.clientX - rect.left;
     const my = e.clientY - rect.top;
 
-    // 선택된 스테이지의 위치 계산
     const spacing = 300;
     const startX = 80;
     const y = 410;
@@ -1116,9 +1157,10 @@ function goToMapScene() {
     const yOffset = (selectedIndex === 1) ? -10 : (selectedIndex === 2 ? 5 : 0);
     const yPos = y + yOffset;
 
-    const within =
+    const within = (
       mx >= x && mx <= x + displayWidth &&
-      my >= yPos && my <= yPos + displayHeight;
+      my >= yPos && my <= yPos + displayHeight
+    );
 
     if (within) {
       GameState.selectedStage = selectedIndex + 1;
@@ -1153,8 +1195,11 @@ function goToMapScene() {
   arrowImg.onload = tryDrawScene;
   stageImgs.forEach(img => img.onload = tryDrawScene);
 
+  currentDrawScene = drawScene;
+
   addAds();
 }
+
 
 let canvas, ctx;
 let ball, paddle, bricks;
@@ -1187,7 +1232,7 @@ function startStage(stageNumber) {
       <canvas id="gameCanvas" width="1000" height="600"></canvas>
     </div>
   `);
-
+addOptionButton();
   canvas = document.getElementById("gameCanvas");
   ctx = canvas.getContext("2d");
 
@@ -2000,7 +2045,7 @@ function showEnding() {
       <canvas id="gameCanvas" width="1000" height="600" style="background:black;"></canvas>
     </div>
   `);
-
+addOptionButton();
   const canvas = document.getElementById("gameCanvas");
   const ctx = canvas.getContext("2d");
 
