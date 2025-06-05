@@ -453,7 +453,7 @@ if (!AdState.ad4Closed) {
     ad5.className = "ad-box ad-left";
     ad5.id = "ad5";
     ad5.innerHTML = `
-      <img src="ads/ad5.png" class="ad-image" onclick="window.open('https://example.com/right', '_blank')">
+      <img src="ads/ad5.png" class="ad-image" onclick="window.open('ads/konGoose.gif', '_blank')">
       <img src="close.png" class="close-btn" onclick="closeAd('ad5')">
     `;
     adsContainer.appendChild(ad5);
