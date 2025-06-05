@@ -52,7 +52,7 @@ const levelBlockLayouts = {
     { x: 180, y: 100, type: BLOCK_TYPES.NORMAL, imgIndex: 1 }, // truck.png
     { x: 260, y: 100, type: BLOCK_TYPES.NORMAL, imgIndex: 2 }, // tankF.png
     { x: 340, y: 100, type: BLOCK_TYPES.NORMAL, imgIndex: 3 },  // tankS.png
-    { x: 340, y: 100, type: BLOCK_TYPES.TIRE}
+    { x: 340, y: 100, type: BLOCK_TYPES.TIRE }
   ],
   2: [],
   3: []
@@ -106,7 +106,8 @@ const GameState = {
     //currentScene: "start",//////////////////////////
     // bgm: true, //<- 왜 두 번 선언했어??
   },
-  mapVisitedOnce: false
+  mapVisitedOnce: false,
+  currentBGM:"audio/opening.mp3"
 };
 
 let startBgImg = null;
@@ -160,7 +161,8 @@ function addOptionButton() {
       showOptionPanel();
     });
 
-    document.body.appendChild(btn);
+    $("#game").append(btn);  // jQuery 방식
+
   }
 
   // 캔버스 좌표에 맞게 위치 설정
@@ -232,7 +234,8 @@ function showOptionPanel() {
             width:150px; cursor:pointer; z-index:2;">
   `;
 
-  document.body.appendChild(panel);
+  $("#game").append(panel);  // jQuery 방식
+
 
   const soundBtn = document.getElementById("soundToggle");
   const themeBtn = document.getElementById("themeToggle");
@@ -320,13 +323,13 @@ function applyTheme() { /////// <- 미완
 
   // storyPage
   if (storyPageBgImg) {
-  storyPageBgImg.src = GameState.settings.theme === "night"
-    ? "StoryPageN.png" : "StoryPage.png";
+    storyPageBgImg.src = GameState.settings.theme === "night"
+      ? "StoryPageN.png" : "StoryPage.png";
 
-  if (storyPageBgImg.complete && typeof currentDrawScene === "function") {
-    currentDrawScene();
+    if (storyPageBgImg.complete && typeof currentDrawScene === "function") {
+      currentDrawScene();
+    }
   }
-}
 
 
   // skip 버튼
@@ -338,28 +341,28 @@ function applyTheme() { /////// <- 미완
 
   // startPage
   if (startBgImg) {
-  startBgImg.src = GameState.settings.theme === "night"
-    ? "startPageN.png" : "startPage.png";
-}
+    startBgImg.src = GameState.settings.theme === "night"
+      ? "startPageN.png" : "startPage.png";
+  }
 
 
   // mergedEnding
   const mergedEnding = document.getElementById("endingBackground");
-if (mergedEnding) {
-  const themeSrc = theme === "night" ? "mergedEndingN.png" : "mergedEnding.png";
-  mergedEnding.src = themeSrc;
+  if (mergedEnding) {
+    const themeSrc = theme === "night" ? "mergedEndingN.png" : "mergedEnding.png";
+    mergedEnding.src = themeSrc;
 
-  const canvas = document.getElementById("gameCanvas");
-  const ctx = canvas?.getContext("2d");
+    const canvas = document.getElementById("gameCanvas");
+    const ctx = canvas?.getContext("2d");
 
-  if (ctx && mergedEnding.complete) {
-    ctx.drawImage(mergedEnding, 0, 0, canvas.width, canvas.height);
-  } else if (ctx) {
-    mergedEnding.onload = () => {
+    if (ctx && mergedEnding.complete) {
       ctx.drawImage(mergedEnding, 0, 0, canvas.width, canvas.height);
-    };
+    } else if (ctx) {
+      mergedEnding.onload = () => {
+        ctx.drawImage(mergedEnding, 0, 0, canvas.width, canvas.height);
+      };
+    }
   }
-}
 
 
   // stage (canvas 내에서 배경 이미지 사용 시)
@@ -368,19 +371,19 @@ if (mergedEnding) {
   }
 
   // stageBackground
-if (stageBgImg) {
-  stageBgImg.src = theme === "night" ? "stageBackgroundN.png" : "stageBackground.png";
+  if (stageBgImg) {
+    stageBgImg.src = theme === "night" ? "stageBackgroundN.png" : "stageBackground.png";
 
-  if (stageBgImg.complete && typeof currentDrawScene === "function") {
-    currentDrawScene();
+    if (stageBgImg.complete && typeof currentDrawScene === "function") {
+      currentDrawScene();
+    }
   }
-}
 
 
   // body 배경색
   document.body.style.backgroundColor = theme === "night" ? "#222" : "#f0f0f0";
 
-  
+
 }
 
 
@@ -420,7 +423,8 @@ function addAds() {
     adsContainer.appendChild(ad2);
   }
 
-  document.body.appendChild(adsContainer);
+  $("#game").append(adsContainer);  // jQuery 방식
+
 }
 
 // 광고 닫기
@@ -438,11 +442,10 @@ function closeAd(id) {
 
 
 function showStartUI() {
-  $('body').html(`
+  $('#game').html(`
     <div style="text-align:center; position: relative;">
       <canvas id="gameCanvas" width="1000" height="600"
       style="background-color: black; border: none;"></canvas>
-      <audio id="bgm" src="audio/opening.mp3" autoplay loop muted></audio>
     </div> 
   `);
   addOptionButton();
@@ -465,7 +468,7 @@ function showStartUI() {
   function drawStartScene() {
     ctx.drawImage(startBgImg, 0, 0, canvas.width, canvas.height);
     ctx.drawImage(isHoveringStartBtn ? startButtonHoverImg : startButtonImg,
-                  button.x, button.y, button.width, button.height);
+      button.x, button.y, button.width, button.height);
   }
 
   startBgImg.onload = drawStartScene;
@@ -477,7 +480,7 @@ function showStartUI() {
     const my = e.clientY - rect.top;
 
     const hovering = mx >= button.x && mx <= button.x + button.width &&
-                     my >= button.y && my <= button.y + button.height;
+      my >= button.y && my <= button.y + button.height;
     if (hovering !== isHoveringStartBtn) {
       isHoveringStartBtn = hovering;
       drawStartScene();
@@ -490,7 +493,7 @@ function showStartUI() {
     const my = e.clientY - rect.top;
 
     if (mx >= button.x && mx <= button.x + button.width &&
-        my >= button.y && my <= button.y + button.height) {
+      my >= button.y && my <= button.y + button.height) {
       goToStoryScene();
     }
   });
@@ -506,7 +509,7 @@ function showStartUI() {
 // import { goToCharacterSelect } from './CharacterSelector.js';
 
 function goToStoryScene() {
-  $('body').html(`
+  $('#game').html(`
     <div style="text-align:center;position:relative;">
       <canvas id="gameCanvas" width="1000" height="600" style="background-color:black; border:none;"></canvas>
       <img id="skipBtn_w" src="skip_btn_w.png"  
@@ -514,6 +517,8 @@ function goToStoryScene() {
       top:20px; right:20px; width:50px; z-index:10;">
     </div>
   `);
+  //GameState.currentBGM = "audio/cut2.mp3";
+  playBGM("audio/cut2.mp3");
   addOptionButton();
   const canvas = document.getElementById("gameCanvas");
   const ctx = canvas.getContext("2d");
@@ -672,7 +677,7 @@ function goToCharacterSelect() {
   let isHoveringSelect = false;
   let lastHoveredIndex = -1;
   // 캔버스 초기화
-  document.body.innerHTML = '<div style="text-align:center;"><canvas id="gameCanvas" width="1000" height="600" style="background-color:black; border:none;"></canvas></div>';
+  document.getElementById("game").innerHTML = '<div style="text-align:center;"><canvas id="gameCanvas" width="1000" height="600" style="background-color:black; border:none;"></canvas></div>';
   addOptionButton();
   const canvas = document.getElementById("gameCanvas");
   const ctx = canvas.getContext("2d");
@@ -884,7 +889,7 @@ function goToCharacterSelect() {
 //==========스토리==========
 
 function goToStoryScene2() {
-  $('body').html(`
+  $('#game').html(`
     <style>
       canvas, #skipBtn {
         cursor: url("cursor.png") 16 16, auto !important;
@@ -901,10 +906,10 @@ function goToStoryScene2() {
 
   const canvas = document.getElementById("gameCanvas");
   const ctx = canvas.getContext("2d");
-const skipBtn = document.getElementById("skipBtn");
-if (skipBtn) {
-  skipBtn.src = GameState.settings.theme === "night" ? "skipBtnN.png" : "skipBtn.png";
-}
+  const skipBtn = document.getElementById("skipBtn");
+  if (skipBtn) {
+    skipBtn.src = GameState.settings.theme === "night" ? "skipBtnN.png" : "skipBtn.png";
+  }
 
   // 전역 이미지 객체
   storyPageBgImg = new Image();
@@ -1021,8 +1026,8 @@ function updateItemUI() {
 
 function goToMapScene() {
   GameState.currentScene = "map";
-  $('body').off("keydown");  // 문서 전체에 걸려 있는 keydown 제거
-$(document).off("keydown");  // 키보드 입력 중복 방지
+  $('#game').off("keydown");  // 문서 전체에 걸려 있는 keydown 제거
+  $(document).off("keydown");  // 키보드 입력 중복 방지
 
   // 게임 상태 초기화
   GameState.score = 0;
@@ -1037,7 +1042,7 @@ $(document).off("keydown");  // 키보드 입력 중복 방지
   const stageLabels = ["경차 해체", "트럭 해체", "탱크 해체"];
 
   // HTML 초기화 및 캔버스 생성
-  $('body').html(`
+  $('#game').html(`
     <div style="position: relative; width: 1000px; height: 600px; margin: auto;">
       <canvas id="gameCanvas"
               width="1000" height="600"
@@ -1120,7 +1125,7 @@ $(document).off("keydown");  // 키보드 입력 중복 방지
       const yPos = y + yOffset;
 
       if (mx >= x && mx <= x + displayWidth &&
-          my >= yPos && my <= yPos + displayHeight) {
+        my >= yPos && my <= yPos + displayHeight) {
         return i;
       }
     }
@@ -1222,7 +1227,7 @@ function startStage(stageNumber) {
   comboCount = 0;
   isGameOver = false;
 
-  $('body').html(`
+  $('#game').html(`
     <div class="game-container">
       <div class="score">
         총 점수: <span id="score">0</span> 
@@ -1232,7 +1237,7 @@ function startStage(stageNumber) {
       <canvas id="gameCanvas" width="1000" height="600"></canvas>
     </div>
   `);
-addOptionButton();
+  addOptionButton();
   canvas = document.getElementById("gameCanvas");
   ctx = canvas.getContext("2d");
 
@@ -1384,7 +1389,7 @@ function draw() {
   const tolerance = 10;
   if (ball.y + ball.dy > canvas.height - ball.radius - paddle.height - 10) {
     if (ball.x + ball.radius >= paddle.x - tolerance &&
-    ball.x - ball.radius <= paddle.x + paddle.width + tolerance) {
+      ball.x - ball.radius <= paddle.x + paddle.width + tolerance) {
       ball.dy = -ball.dy;
       if (ball.collidedWithPaddleOnceAfterCooler) {
         ball.speed = ball.originalSpeed || 3;
@@ -1414,14 +1419,16 @@ function draw() {
         overlay.style.justifyContent = 'center';
         overlay.style.zIndex = '1000';
         overlay.id = 'barrierOverlay';
-        document.body.appendChild(overlay);
+        document.getElementById("game").appendChild(overlay);
+
 
         const interval = setInterval(() => {
           overlay.textContent = countdown;
           countdown--;
           if (countdown < 0) {
             clearInterval(interval);
-            document.body.removeChild(overlay);
+            document.getElementById("game").removeChild(overlay);
+
 
             // 공과 패들 위치 초기화
             ball.x = canvas.width / 2;
@@ -1662,10 +1669,14 @@ function showStageResultPopup(starCount) {
     failMsg.style.marginTop = '10px';
     popup.appendChild(failMsg);
 
-    document.body.appendChild(popup);
+    $("#game").append(popup);  // jQuery 방식
+
 
     setTimeout(() => {
-      if (document.body.contains(popup)) document.body.removeChild(popup);
+      const gameEl = document.getElementById("game");
+      if (gameEl && gameEl.contains(popup)) {
+        gameEl.removeChild(popup);
+      }
       resetGameState();
       goToMapScene();
     }, 3000);
@@ -1678,7 +1689,7 @@ function showStageResultPopup(starCount) {
     //nextBtn.style.width = '160px';
     nextBtn.style.height = '40px';
     nextBtn.onclick = () => {
-      document.body.removeChild(popup);
+      document.getElementById("game").removeChild(popup);
       if (GameState.selectedStage >= 3) {
         showEnding();
       } else {
@@ -1701,7 +1712,7 @@ function showStageResultPopup(starCount) {
     //selectBtn.style.width = '160px';
     selectBtn.style.height = '40px';
     selectBtn.onclick = () => {
-      document.body.removeChild(popup);
+      document.getElementById("game").removeChild(popup);
       goToMapScene();
     };
 
@@ -1722,7 +1733,8 @@ function showStageResultPopup(starCount) {
     restartBtn.style.cursor = 'pointer';
     restartBtn.style.height = '40px';
     restartBtn.onclick = () => {
-      document.body.removeChild(popup);
+      document.getElementById("game").removeChild(popup);
+
 
       // 방금 플레이 점수 반영 취소
       GameState.totalScore -= currentScore;
@@ -1761,8 +1773,8 @@ function showStageResultPopup(starCount) {
         countdownText.textContent = `자동 이동까지 ${timeLeft}초...`;
         if (timeLeft <= 0) {
           clearInterval(countdownInterval);
-          if (document.body.contains(popup)) {
-            document.body.removeChild(popup);
+          if (document.getElementById("game").contains(popup)) {
+            document.getElementById("game").removeChild(popup);
             if (GameState.selectedStage >= 3) {
               showEnding();
             } else {
@@ -1774,7 +1786,7 @@ function showStageResultPopup(starCount) {
     }
 
 
-    document.body.appendChild(popup);
+    $("#game").append(popup); 
   }
 }
 
@@ -1850,7 +1862,7 @@ function goToUpgradePopup(stars) {
     <canvas id="upgradeCanvas" width="400" height="250" style="border:1px solid white; background:black; margin-top: 15px;"></canvas>
   `;
 
-  document.body.appendChild(popup);
+  $("#game").append(popup);  
 
   // 렌더링 이후 캔버스 요소를 얻어와 UI 세팅
   setTimeout(() => {
@@ -1882,7 +1894,7 @@ function setupUpgradeCanvas(canvas, ctx, popup) {
 
     buttons.forEach(btn => {
       btn.hover = mx >= btn.x && mx <= btn.x + btn.w &&
-                  my >= btn.y && my <= btn.y + btn.h;
+        my >= btn.y && my <= btn.y + btn.h;
     });
 
     drawUI();
@@ -1903,13 +1915,13 @@ function setupUpgradeCanvas(canvas, ctx, popup) {
     });
 
     if (mx >= buttons[0].x && mx <= buttons[0].x + buttons[0].w &&
-        my >= buttons[0].y && my <= buttons[0].y + buttons[0].h) {
+      my >= buttons[0].y && my <= buttons[0].y + buttons[0].h) {
       tryUpgrade(options[selectedIndex]);
     }
 
     if (mx >= buttons[1].x && mx <= buttons[1].x + buttons[1].w &&
-        my >= buttons[1].y && my <= buttons[1].y + buttons[1].h) {
-      document.body.removeChild(popup);
+      my >= buttons[1].y && my <= buttons[1].y + buttons[1].h) {
+      document.getElementById("game").removeChild(popup);
       proceedToNextStage();
     }
   });
@@ -1990,7 +2002,7 @@ function setupUpgradeCanvas(canvas, ctx, popup) {
     // 기회 모두 소진 시 자동 다음 스테이지로 이동
     if (GameState.reinforceChances === 0) {
       setTimeout(() => {
-        document.body.removeChild(popup);
+        document.getElementById("game").removeChild(popup);
         proceedToNextStage();
       }, 2000);
     }
@@ -2040,12 +2052,12 @@ function proceedToNextStage() {
 // import { goToMapScene } from './MapScene.js';
 
 function showEnding() {
-  $('body').html(`
+  $('#game').html(`
     <div style="text-align:center; position:relative;">
       <canvas id="gameCanvas" width="1000" height="600" style="background:black;"></canvas>
     </div>
   `);
-addOptionButton();
+  addOptionButton();
   const canvas = document.getElementById("gameCanvas");
   const ctx = canvas.getContext("2d");
 
@@ -2384,14 +2396,18 @@ function handleLightBlock(block) {
 }
 
 function flashScreen() {
-  document.body.style.backgroundColor = "black";
+  const game = document.getElementById("game");
+  if (!game) return; // 예외 방지
+
+  game.style.backgroundColor = "black";
   setTimeout(() => {
-    document.body.style.backgroundColor = "white";
+    game.style.backgroundColor = "white";
     setTimeout(() => {
-      document.body.style.backgroundColor = "#f0f0f0";
+      game.style.backgroundColor = "#f0f0f0";
     }, 100);
   }, 100);
 }
+
 function handleItemCoolerBlock(block) {
   if (!GameState.hasCooler) {
     ball.originalSpeed = ball.speed;
@@ -2511,7 +2527,7 @@ function collisionDetection() {
       ball.x > b.x && ball.x < b.x + 70 &&
       !b.ignoreCollision &&
       ball.y > b.y && ball.y < b.y + 20) {
-        
+
 
       // 고출력 커터 효과 우선 적용
       if (applyCutterIfAvailable(b)) {
@@ -2569,13 +2585,31 @@ function collisionDetection() {
   });
 }
 
-function playBGM() {
-  const bgm = document.getElementById("bgm");
-  if (bgm) {
-    bgm.muted = false; // 크롬 제한 우회
-    if (GameState.settings.bgm) {
-      bgm.play();
-    }
+function playBGM(src) {
+  let bgm = document.getElementById("bgm");
+
+  if (!bgm) {
+    bgm = document.createElement("audio");
+    bgm.id = "bgm";
+    bgm.loop = true;
+    document.body.appendChild(bgm);
+  }
+
+  // src가 명시적으로 전달된 경우에만 업데이트
+  if (src) {
+    bgm.src = src;
+    GameState.currentBGM = src;
+  } else if (GameState.currentBGM) {
+    bgm.src = GameState.currentBGM;
+  } else {
+    bgm.src = "audio/opening.mp3";
+    GameState.currentBGM = "audio/opening.mp3";
+  }
+
+  bgm.muted = false;
+
+  if (GameState.settings.bgm) {
+    bgm.play();
   }
 }
 
@@ -2589,7 +2623,10 @@ function stopBGM() {
 
 
 window.addEventListener('DOMContentLoaded', () => {
-  document.body.addEventListener('click', () => {
-    playBGM();
-  }, { once: true }); // 딱 1번만 실행
+  const gameEl = document.getElementById("game");
+  if (gameEl) {
+    gameEl.addEventListener("click", () => {
+      playBGM();
+    }, { once: true });
+  }
 });
