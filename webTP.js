@@ -107,7 +107,7 @@ const GameState = {
     // bgm: true, //<- 왜 두 번 선언했어??
   },
   mapVisitedOnce: false,
-  currentBGM:"audio/opening.mp3"
+  currentBGM: "audio/opening.mp3"
 };
 
 let startBgImg = null;
@@ -507,9 +507,8 @@ function showStartUI() {
 // 파일: StoryScene.js - 이름 입력란 조건부 노출로 수정
 // import { GameState } from './GameState.js';
 // import { goToCharacterSelect } from './CharacterSelector.js';
-
-function goToStoryScene() {
-  $('#game').html(`
+  function goToStoryScene() {
+    $('#game').html(`
     <div style="text-align:center;position:relative;">
       <canvas id="gameCanvas" width="1000" height="600" style="background-color:black; border:none;"></canvas>
       <img id="skipBtn_w" src="skip_btn_w.png"  
@@ -517,122 +516,132 @@ function goToStoryScene() {
       top:20px; right:20px; width:50px; z-index:10;">
     </div>
   `);
-  //GameState.currentBGM = "audio/cut2.mp3";
   playBGM("audio/cut2.mp3");
-  addOptionButton();
-  const canvas = document.getElementById("gameCanvas");
-  const ctx = canvas.getContext("2d");
 
-  const storyText = [
-    "평생을 운동 선수로 살아온 당신...",
-    "안타깝게도 눈에 띄는 성적을 보이지는 못했다.",
-    "당신의 이름은?"
-  ];
+    addOptionButton();
+    const canvas = document.getElementById("gameCanvas");
+    const ctx = canvas.getContext("2d");
 
-  let storyIndex = 0;
-  let nickname = "";
-  let isEnteringName = false;
-  let promptBoxImageLoaded = false;
+    const storyText = [
+      "평생을 운동 선수로 살아온 당신...",
+      "안타깝게도 눈에 띄는 성적을 보이지는 못했다.",
+      "당신의 이름은?"
+    ];
 
-  const promptBoxImage = new Image();
-  promptBoxImage.src = "pop-up.png";
-  promptBoxImage.onload = () => {
-    promptBoxImageLoaded = true;
-    if (isEnteringName) {
-      drawNameInputBox();
-    }
-    document.fonts.ready.then(() => {
-      drawStoryScene();
-    });
-  };
+    let storyIndex = 0;
+    let nickname = "";
+    let isEnteringName = false;
+    let promptBoxImageLoaded = false;
 
-  function drawStoryScene() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = "black";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    const promptBoxImage = new Image();
+    promptBoxImage.src = "pop-up.png";
+    promptBoxImage.onload = () => {
+      promptBoxImageLoaded = true;
+      if (isEnteringName) {
+        drawNameInputBox();
+      }
+      document.fonts.ready.then(() => {
+        drawStoryScene();
+      });
+    };
 
-    ctx.fillStyle = "white";
-    ctx.font = "28px DungGeunMo, sans-serif";
-    ctx.textAlign = "center";
-    ctx.fillText(storyText[storyIndex], canvas.width / 2, 300);
-  }
+    function drawStoryScene() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "black";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-
-  //이름 입력 받는 창 띄움
-  //조합형이 적용이 안되므로 html에서 관련된 소스 불러와 사용 중
-  function drawNameInputBox() {
-    drawStoryScene();
-
-    const boxWidth = promptBoxImage.width || 400;
-    const boxHeight = promptBoxImage.height || 160;
-    const boxX = (canvas.width - boxWidth) / 2;
-    const boxY = (canvas.height - boxHeight) / 2 - 40;
-
-    if (promptBoxImageLoaded) {
-      ctx.drawImage(promptBoxImage, boxX, boxY);
+      ctx.fillStyle = "white";
+      ctx.font = "28px DungGeunMo, sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText(storyText[storyIndex], canvas.width / 2, 300);
     }
 
-    ctx.fillStyle = "white";
-    ctx.font = "24px DungGeunMo, sans-serif";
-    ctx.textAlign = "center";
-    ctx.fillText("당신의 이름은?", canvas.width / 2, boxY + 40);
-
-    const composed = Hangul.assemble(nickname.split(''));
-    ctx.fillText(composed + "_", canvas.width / 2, boxY + 85);
-  }
-
-  function advanceStory() {
-    if (storyIndex < storyText.length - 1) {
-      storyIndex++;
+    function drawNameInputBox() {
       drawStoryScene();
-      if (storyIndex === storyText.length - 1) {
-        isEnteringName = true;
+
+      const boxWidth = promptBoxImage.width || 400;
+      const boxHeight = promptBoxImage.height || 160;
+      const boxX = (canvas.width - boxWidth) / 2;
+      const boxY = (canvas.height - boxHeight) / 2 - 40;
+
+      if (promptBoxImageLoaded) {
+        ctx.drawImage(promptBoxImage, boxX, boxY);
+      }
+
+      ctx.fillStyle = "white";
+      ctx.font = "24px DungGeunMo, sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText("당신의 이름은?", canvas.width / 2, boxY + 40);
+
+      const composed = Hangul.assemble(nickname.split(''));
+      ctx.fillText(composed + "_", canvas.width / 2, boxY + 85);
+
+      document.getElementById("skipBtn_w")?.remove();
+    }
+
+    function advanceStory() {
+      if (storyIndex < storyText.length - 1) {
+        storyIndex++;
+        drawStoryScene();
+        if (storyIndex === storyText.length - 1) {
+          isEnteringName = true;
+          drawNameInputBox();
+        }
+      }
+    }
+
+    // ✅ key 입력 핸들러 함수로 추출
+    function storyKeyHandler(e) {
+      if (!isEnteringName) {
+        if (e.code === "Space" || e.code === "Enter") {
+          e.preventDefault();
+          advanceStory();
+        }
+      } else {
+        if (e.key === "Backspace") {
+          nickname = nickname.slice(0, -1);
+        } else if (e.key.length === 1 && nickname.length < 10) {
+          nickname += e.key;
+        } else if (e.key === "Enter") {
+          const composed = Hangul.assemble(nickname.split('')).trim() || "랄푸";
+          GameState.nickname = composed;
+          isEnteringName = false;
+          $(document).off("keydown");
+          canvas.removeEventListener("click", advanceStory);
+          goToCharacterSelect();
+          return;
+        }
         drawNameInputBox();
       }
     }
+
+    canvas.addEventListener("click", advanceStory);
+    $(document).on("keydown", storyKeyHandler);
+
+    // 수정된 스킵 버튼 로직
+    $('#skipBtn_w').on('click', () => {
+      $(document).off("keydown");
+      canvas.removeEventListener("click", advanceStory);
+
+      storyIndex = storyText.length - 1;
+      isEnteringName = true;
+
+      if (promptBoxImage.complete) {
+        promptBoxImageLoaded = true;
+        drawNameInputBox();
+      } else {
+        promptBoxImage.onload = () => {
+          promptBoxImageLoaded = true;
+          drawNameInputBox();
+        };
+      }
+
+      $(document).on("keydown", storyKeyHandler);
+    });
+
+    drawStoryScene();
+    addAds();
   }
-
-  // 마우스 클릭 --> 다음 대사
-  canvas.addEventListener("click", advanceStory);
-
-  // 키보드 이벤트: Space,Enter --> 다음 / skipBtn_w --> Skip
-  //앤터 입력시 스킵된다는 문구 추가 필요
-  $(document).on("keydown", (e) => {
-    if (!isEnteringName) {
-      if (e.code === "Space" || e.code === "Enter") {
-        e.preventDefault();
-        advanceStory();
-      }
-    } else {
-      // 이름 입력 중
-      if (e.key === "Backspace") {
-        nickname = nickname.slice(0, -1);
-      } else if (e.key.length === 1 && nickname.length < 10) {
-        nickname += e.key;
-      } else if (e.key === "Enter") {
-        const composed = Hangul.assemble(nickname.split('')).trim() || "랄푸";
-        GameState.nickname = composed;
-        isEnteringName = false;
-        $(document).off("keydown");
-        canvas.removeEventListener("click", advanceStory);
-        goToCharacterSelect();
-        return;
-      }
-      drawNameInputBox();
-    }
-  });
-  drawStoryScene();
-
-  $('#skipBtn_w').on('click', () => {
-    GameState.nickname = "랄푸";
-    $(document).off("keydown");
-    canvas.removeEventListener("click", advanceStory);
-    goToCharacterSelect();
-  });
-
-  addAds();
-}
-
 
 
 
@@ -1285,7 +1294,7 @@ function initGameElements() {
   const selected = GameState.selectedCharacter.name;
   const info = ballInfoMap[selected] || { radius: 14, speedFactor: 1.0 };
 
-  const stageSpeed = 2 + GameState.selectedStage +
+  const stageSpeed = 3 + GameState.selectedStage +
     (GameState.upgrades.includes("스피드업") ? 1 : 0);
   const baseSpeed = stageSpeed * info.speedFactor;
 
@@ -1786,7 +1795,7 @@ function showStageResultPopup(starCount) {
     }
 
 
-    $("#game").append(popup); 
+    $("#game").append(popup);
   }
 }
 
@@ -1862,7 +1871,7 @@ function goToUpgradePopup(stars) {
     <canvas id="upgradeCanvas" width="400" height="250" style="border:1px solid white; background:black; margin-top: 15px;"></canvas>
   `;
 
-  $("#game").append(popup);  
+  $("#game").append(popup);
 
   // 렌더링 이후 캔버스 요소를 얻어와 UI 세팅
   setTimeout(() => {
@@ -2606,7 +2615,7 @@ function playBGM(src) {
     GameState.currentBGM = "audio/opening.mp3";
   }
 
-  bgm.muted = false;
+   bgm.muted = !GameState.settings.bgm;
 
   if (GameState.settings.bgm) {
     bgm.play();
