@@ -392,7 +392,10 @@ function applyTheme() { /////// <- 미완
 
 const AdState = {
   ad1Closed: false,
-  ad2Closed: false
+  ad2Closed: false,
+  ad3Closed: false,
+  ad4Closed: false,
+  ad5Closed: false
 };
 
 function addAds() {
@@ -403,10 +406,10 @@ function addAds() {
 
   if (!AdState.ad1Closed) {
     const ad1 = document.createElement('div');
-    ad1.className = "ad-box";
+    ad1.className = "ad-box ad-left";
     ad1.id = "ad1";
     ad1.innerHTML = `
-      <img src="ad1.png" class="ad-image" onclick="window.open('https://cse.konkuk.ac.kr/cse/9960/subview.do?enc=Zm5jdDF8QEB8JTJGcHJvZkluZm8lMkZjc2UlMkY1NDclMkYyMTQyMDA2MiUyRnZpZXcuZG8lM0ZzcmNoQ3RnciUzRCUyNg%3D%3D', '_blank')">
+      <img src="ads/ad1.png" class="ad-image" onclick="window.open('https://cse.konkuk.ac.kr/cse/9960/subview.do?enc=Zm5jdDF8QEB8JTJGcHJvZkluZm8lMkZjc2UlMkY1NDclMkYyMTQyMDA2MiUyRnZpZXcuZG8lM0ZzcmNoQ3RnciUzRCUyNg%3D%3D', '_blank')">
       <img src="close.png" class="close-btn" onclick="closeAd('ad1')">
     `;
     adsContainer.appendChild(ad1);
@@ -414,13 +417,46 @@ function addAds() {
 
   if (!AdState.ad2Closed) {
     const ad2 = document.createElement('div');
-    ad2.className = "ad-box";
+    ad2.className = "ad-box ad-right";
     ad2.id = "ad2";
     ad2.innerHTML = `
-      <img src="ad2.png" class="ad-image" onclick="window.open('https://cse.konkuk.ac.kr/cse/index.do', '_blank')">
+      <img src="ads/ad2.png" class="ad-image" onclick="window.open('https://cse.konkuk.ac.kr/cse/index.do', '_blank')">
       <img src="close.png" class="close-btn" onclick="closeAd('ad2')">
     `;
     adsContainer.appendChild(ad2);
+  }
+
+if (!AdState.ad3Closed) {
+    const ad3 = document.createElement('div');
+    ad3.className = "ad-box ad-left";
+    ad3.id = "ad3";
+    ad3.innerHTML = `
+      <img src="ads/ad3.png" class="ad-image" onclick="window.open('https://cse.konkuk.ac.kr/cse/9960/subview.do', '_blank')">
+      <img src="close.png" class="close-btn" onclick="closeAd('ad3')">
+    `;
+    adsContainer.appendChild(ad3);
+  }
+
+if (!AdState.ad4Closed) {
+    const ad4 = document.createElement('div');
+    ad4.className = "ad-box ad-right";
+    ad4.id = "ad4";
+    ad4.innerHTML = `
+      <img src="ads/ad4.png" class="ad-image" onclick="window.open('https://sugang.konkuk.ac.kr', '_blank')">
+      <img src="close.png" class="close-btn" onclick="closeAd('ad4')">
+    `;
+    adsContainer.appendChild(ad4);
+  }
+
+  if (!AdState.ad5Closed) {
+    const ad5 = document.createElement('div');
+    ad5.className = "ad-box ad-left";
+    ad5.id = "ad5";
+    ad5.innerHTML = `
+      <img src="ads/ad5.png" class="ad-image" onclick="window.open('https://example.com/right', '_blank')">
+      <img src="close.png" class="close-btn" onclick="closeAd('ad5')">
+    `;
+    adsContainer.appendChild(ad5);
   }
 
   $("#game").append(adsContainer);  // jQuery 방식
@@ -434,6 +470,9 @@ function closeAd(id) {
 
   if (id === "ad1") AdState.ad1Closed = true;
   if (id === "ad2") AdState.ad2Closed = true;
+  if (id === "ad3") AdState.ad3Closed = true;
+  if (id === "ad4") AdState.ad4Closed = true;
+  if (id === "ad5") AdState.ad5Closed = true;
 }
 
 // ===== GameStartUI.js =====

@@ -76,16 +76,27 @@ button{
   z-index: 9999;
 }
 
-#ad1 {
+#ad3, #ad4{
+  position: absolute;
+  top: 430px;
+  z-index: 9999;
+}
+
+#ad5 {
+  position: absolute;
+  top: 620px;
+  z-index: 9999;
+}
+
+.ad-left {
   left: calc(50% - 500px - 170px - 10px);
   /* 너비 170px, 왼쪽으로 10px 벗어나게 */
 }
 
-#ad2 {
+.ad-right {
   left: calc(50% + 500px + 10px);
   /* 오른쪽으로 10px 벗어나게 */
 }
-
 
 .ad-box {
   position: relative;
