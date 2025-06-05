@@ -88,6 +88,19 @@ button{
   z-index: 9999;
 }
 
+#ad6 {
+  position: relative;
+  width: 970px;
+  height: 20px;
+  margin: 20px auto 0 auto; /* 중앙 정렬 + 위 여백 */
+  z-index: 9999;
+}
+
+.ad-horizontal-image {
+  width: 100%;
+  cursor: pointer;
+}
+
 .ad-left {
   left: calc(50% - 500px - 170px - 10px);
   /* 너비 170px, 왼쪽으로 10px 벗어나게 */

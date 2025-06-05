@@ -395,7 +395,8 @@ const AdState = {
   ad2Closed: false,
   ad3Closed: false,
   ad4Closed: false,
-  ad5Closed: false
+  ad5Closed: false,
+  ad6Closed: false
 };
 
 function addAds() {
@@ -459,12 +460,41 @@ if (!AdState.ad4Closed) {
     adsContainer.appendChild(ad5);
   }
 
+  if (!AdState.ad6Closed) {
+  const ad6 = document.createElement('div');
+  ad6.className = "ad-box-horizontal";
+  ad6.id = "ad6";
+  ad6.innerHTML = `
+    <img src="ads/ad6.png" class="ad-horizontal-image">
+    <img src="close.png" class="close-btn" onclick="closeAd('ad6')">
+  `;
+  adsContainer.appendChild(ad6);
+}
+else {
+  const ad6 = document.createElement('div');
+  ad6.className = "ad-box-horizontal";
+  ad6.id = "ad6";
+  ad6.innerHTML = `
+    <img src="ads/ad6no.png" class="ad-horizontal-image">
+  `;
+  adsContainer.appendChild(ad6);
+}
+
   $("#game").append(adsContainer);  // jQuery 방식
 
 }
 
 // 광고 닫기
 function closeAd(id) {
+  if (id === "ad6"){
+    if (ad6) {
+      ad6.innerHTML = `
+        <img src="ads/ad6no.png" class="ad-horizontal-image">
+      `;
+    }
+    AdState.ad6Closed = true;
+    return;
+  }
   const el = document.getElementById(id);
   if (el) el.remove();
 
