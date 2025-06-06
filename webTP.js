@@ -1769,7 +1769,7 @@ function showStageResultPopup(starCount) {
     }, 3000);
   } else {
     const nextBtn = document.createElement('img');
-    nextBtn.src = 'toNextBtn.png';
+    nextBtn.src = 'afterGameBtns/toNextBtn.png';
     nextBtn.alt = '다음 스테이지';
     nextBtn.style.margin = '10px';
     nextBtn.style.cursor = 'pointer';
@@ -1785,14 +1785,14 @@ function showStageResultPopup(starCount) {
     }
     // hover 시 이미지 변경
     nextBtn.addEventListener('mouseenter', () => {
-      nextBtn.src = 'HtoNextBtn.png';
+      nextBtn.src = 'afterGameBtns/HtoNextBtn.png';
     });
     nextBtn.addEventListener('mouseleave', () => {
-      nextBtn.src = 'toNextBtn.png';
+      nextBtn.src = 'afterGameBtns/toNextBtn.png';
     });
 
     const selectBtn = document.createElement('img');
-    selectBtn.src = 'toStageBtn.png';
+    selectBtn.src = 'afterGameBtns/toStageBtn.png';
     selectBtn.alt = '스테이지 선택';
     selectBtn.style.margin = '10px';
     selectBtn.style.cursor = 'pointer';
@@ -1805,16 +1805,16 @@ function showStageResultPopup(starCount) {
 
     // hover 시 이미지 변경
     selectBtn.addEventListener('mouseenter', () => {
-      selectBtn.src = 'HtoStageBtn.png';
+      selectBtn.src = 'afterGameBtns/HtoStageBtn.png';
     });
     selectBtn.addEventListener('mouseleave', () => {
-      selectBtn.src = 'toStageBtn.png';
+      selectBtn.src = 'afterGameBtns/toStageBtn.png';
     });
 
     ///////////////////////////////////////
     // 다시 시작 버튼 추가
     const restartBtn = document.createElement('img');
-    restartBtn.src = 'restartBtn.png';
+    restartBtn.src = 'afterGameBtns/restartBtn.png';
     restartBtn.alt = '다시 도전';
     restartBtn.style.margin = '10px';
     restartBtn.style.cursor = 'pointer';
@@ -1834,10 +1834,10 @@ function showStageResultPopup(starCount) {
 
     // hover 시 이미지 변경
     restartBtn.addEventListener('mouseenter', () => {
-      restartBtn.src = 'HrestartBtn.png';
+      restartBtn.src = 'afterGameBtns/HrestartBtn.png';
     });
     restartBtn.addEventListener('mouseleave', () => {
-      restartBtn.src = 'restartBtn.png';
+      restartBtn.src = 'afterGameBtns/restartBtn.png';
     });
     ///////////////////////////////////////
 
