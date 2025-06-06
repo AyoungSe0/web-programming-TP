@@ -13,11 +13,11 @@ const BLOCK_TYPES = {
 };
 
 const blockImages = {
-  [BLOCK_TYPES.GLASS]: "glass.png",
-  [BLOCK_TYPES.METAL]: "iron.png",
-  [BLOCK_TYPES.TIRE]: "tire.png",
-  [BLOCK_TYPES.FUEL]: "motor.png",
-  [BLOCK_TYPES.LIGHT]: "light.png"
+  [BLOCK_TYPES.GLASS]: "blocks/glass.png",
+  [BLOCK_TYPES.METAL]: "blocks/iron.png",
+  [BLOCK_TYPES.TIRE]: "blocks/tire.png",
+  [BLOCK_TYPES.FUEL]: "blocks/motor.png",
+  [BLOCK_TYPES.LIGHT]: "blocks/light.png"
 };
 
 const loadedBlockImages = {};
@@ -28,10 +28,10 @@ for (const [type, src] of Object.entries(blockImages)) {
 }
 
 const normalBlockImages = [
-  "car.png",
-  "truck.png",
-  "tankF.png",
-  "tankS.png"
+  "blocks/car.png",
+  "blocks/truck.png",
+  "blocks/tankF.png",
+  "blocks/tankS.png"
 ];
 
 const loadedNormalImages = normalBlockImages.map(src => {
