@@ -1737,7 +1737,7 @@ function showStageResultPopup(starCount) {
 
   // ⭐ 별 이미지 추가
   const starImg = document.createElement('img');
-  starImg.src = `star${starCount}.png`;
+  starImg.src = `starImg/star${starCount}.png`;
   starImg.alt = `별 ${starCount}개`;
   starImg.style.width = '150px';
   popup.appendChild(starImg);
