@@ -343,7 +343,7 @@ function applyTheme() { /////// <- 미완
   // startPage
   if (startBgImg) {
     startBgImg.src = GameState.settings.theme === "night"
-      ? "startPageN.png" : "startPage.png";
+      ? "title/startPageN.png" : "title/startPage.png";
   }
 
 
@@ -525,12 +525,12 @@ function showStartUI() {
 
   startBgImg = new Image();
   startBgImg.src = GameState.settings.theme === "night"
-    ? "startPageN.png" : "startPage.png";
+    ? "title/startPageN.png" : "title/startPage.png";
 
   const startButtonImg = new Image();
   const startButtonHoverImg = new Image();
-  startButtonImg.src = "StartBtn.png";
-  startButtonHoverImg.src = "StartBtnHover.png";
+  startButtonImg.src = "title/startBtn.png";
+  startButtonHoverImg.src = "title/startBtnHover.png";
 
   const button = { x: 400, y: 420, width: 200, height: 60 };
   let isHoveringStartBtn = false;
