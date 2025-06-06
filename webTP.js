@@ -1123,9 +1123,7 @@ function goToMapScene() {
   // HTML 초기화 및 캔버스 생성
   $('#game').html(`
     <div style="position: relative; width: 1000px; height: 600px; margin: auto;">
-      <canvas id="gameCanvas"
-              width="1000" height="600"
-              style="position: absolute; top: 0; left: 0; z-index: 1; border: none;"></canvas>
+      <canvas id="gameCanvas" width="1000" height="600" style="position: absolute; top: 0; left: 0; z-index: 1; border: none;"></canvas>
     </div>
   `);
 
@@ -1136,18 +1134,47 @@ function goToMapScene() {
 
   // 테마에 따라 배경 이미지 설정
   const bgImg = new Image();
-  bgImg.src = GameState.settings.theme === "night"
-    ? "stageBackgroundN.png"
-    : "stageBackground.png";
+  bgImg.src = GameState.settings.theme === "night" ? "stageBackgroundN.png" : "stageBackground.png";
 
-  const arrowImg = new Image();
-  arrowImg.src = "arrow.png";
+  const ufoImg = new Image();
+  ufoImg.src = "ufo.png";
 
   const stageImgs = stageImages.map(src => {
     const img = new Image();
     img.src = src;
     return img;
   });
+
+  let ufoX = 0;
+  let ufoY = 0;
+  let targetX = 0;
+  let targetY = 0;
+
+  function updateUfoTarget() {
+    const spacing = 300;
+    const startX = 80;
+    const displayWidth = 240;
+    const ufoWidth = 105;
+    const ufoHeight = 140;
+    const y = 410;
+
+    const x = startX + selectedIndex * spacing + displayWidth / 2 - ufoWidth / 2;
+    const yOffset = (selectedIndex === 1) ? -10 : (selectedIndex === 2 ? 5 : 0);
+    const yPos = y + yOffset;
+
+    targetX = x;
+    targetY = yPos - ufoHeight - 70;
+  }
+
+  function animateUfo() {
+    const dx = targetX - ufoX;
+    const dy = targetY - ufoY;
+    ufoX += dx * 0.1;
+    ufoY += dy * 0.1;
+
+    drawScene();
+    requestAnimationFrame(animateUfo);
+  }
 
   function drawScene() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -1180,12 +1207,10 @@ function goToMapScene() {
       ctx.fillText(stageLabels[i], x + displayWidth / 2, yPos + displayHeight + 25);
     }
 
-    // 화살표
-    const arrowWidth = 105;
-    const arrowHeight = 140;
-    const arrowX = startX + selectedIndex * spacing + displayWidth / 2 - arrowWidth / 2;
-    const arrowY = y - arrowHeight - 70;
-    ctx.drawImage(arrowImg, arrowX, arrowY, arrowWidth, arrowHeight);
+    // ufo
+    const ufoWidth = 105;
+    const ufoHeight = 140;
+    ctx.drawImage(ufoImg, ufoX, ufoY, ufoWidth, ufoHeight);
   }
 
   function getSelectedIndexByMouse(mx, my) {
@@ -1219,7 +1244,7 @@ function goToMapScene() {
     const index = getSelectedIndexByMouse(mx, my);
     if (index !== -1) {
       selectedIndex = index;
-      drawScene();
+      updateUfoTarget();
     }
   });
 
@@ -1258,10 +1283,10 @@ function goToMapScene() {
       startStage(GameState.selectedStage);
     } else if (e.key === "ArrowLeft") {
       selectedIndex = (selectedIndex - 1 + stageImgs.length) % stageImgs.length;
-      drawScene();
+      updateUfoTarget();
     } else if (e.key === "ArrowRight") {
       selectedIndex = (selectedIndex + 1) % stageImgs.length;
-      drawScene();
+      updateUfoTarget();
     }
   });
 
@@ -1271,12 +1296,16 @@ function goToMapScene() {
   function tryDrawScene() {
     loadedCount++;
     if (loadedCount === totalImages) {
+      updateUfoTarget();
+      ufoX = targetX;
+      ufoY = targetY;
       drawScene();
+      requestAnimationFrame(animateUfo);
     }
   }
 
   bgImg.onload = tryDrawScene;
-  arrowImg.onload = tryDrawScene;
+  ufoImg.onload = tryDrawScene;
   stageImgs.forEach(img => img.onload = tryDrawScene);
 
   currentDrawScene = drawScene;
