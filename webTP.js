@@ -520,6 +520,18 @@ const AdState = {
   ad6Closed: false
 };
 
+function openRandomLink() {
+  const links = [
+    "https://www.instagram.com/polar._.daye05/",
+    "https://www.instagram.com/seo_ayoung___/",
+    "https://www.instagram.com/weweweeeeeeeee_/",
+    "https://www.instagram.com/ya_sd_5/"
+  ];
+  let i = Math.floor(Math.random() * 4);
+  let randomLink = links[i];
+  window.open(randomLink, "_blank");
+}
+
 function addAds() {
   if (document.getElementById("ads-container")) return;
 
@@ -542,7 +554,7 @@ function addAds() {
     ad2.className = "ad-box ad-right";
     ad2.id = "ad2";
     ad2.innerHTML = `
-      <img src="ads/ad2.png" class="ad-image" onclick="window.open('https://cse.konkuk.ac.kr/cse/index.do', '_blank')">
+      <img src="ads/ad2.png" class="ad-image" onclick="openRandomLink()">
       <img src="ads/close.png" class="close-btn" onclick="closeAd('ad2')">
     `;
     adsContainer.appendChild(ad2);
