@@ -1772,34 +1772,50 @@ function drawBricks() {
 
 
 
+
 function collisionDetection() {
+  const BLOCK_WIDTH = 70;
+  const BLOCK_HEIGHT = 20;
+
+  // 캐릭터별 충돌 판정 보정 값
+  const COLLISION_PADDING = {
+    "야구선수": 4,
+    "축구선수": 6,
+    "테니스선수": 3
+  };
+
+  // 현재 선택된 캐릭터에 맞는 패딩 값 사용
+  const padding = COLLISION_PADDING[GameState.selectedCharacter] || 4;
+
+  // 공과 겹치는 블럭 후보 수집
   const candidates = bricks.filter(b =>
     b.status === 1 &&
     b.effectStage === null &&
-    ball.x + ball.radius +4> b.x &&
-    ball.x - ball.radius -4< b.x + 70 &&
-    ball.y + ball.radius +4> b.y &&
-    ball.y - ball.radius -4< b.y + 20
+    ball.x + ball.radius + padding > b.x &&
+    ball.x - ball.radius - padding < b.x + BLOCK_WIDTH &&
+    ball.y + ball.radius + padding > b.y &&
+    ball.y - ball.radius - padding < b.y + BLOCK_HEIGHT
   );
 
   if (candidates.length === 0) return;
 
-  // 가장 가까운 블럭만 반응
+  // 가장 중심에 가까운 블럭 선택
   const target = candidates.reduce((closest, b) => {
-    const dist = Math.hypot(ball.x - (b.x + 35), ball.y - (b.y + 10));
-    return !closest || dist < closest.dist ? { dist, b } : closest;
+    const dist = Math.hypot(ball.x - (b.x + BLOCK_WIDTH / 2), ball.y - (b.y + BLOCK_HEIGHT / 2));
+    if (!closest) return { dist, b };
+    return dist < closest.dist ? { dist, b } : closest;
   }, null)?.b;
 
   if (!target) return;
 
-  // 고출력 커터 먼저 처리
+  // 고출력 커터 처리
   if (applyCutterIfAvailable(target)) {
     ball.dy *= -1;
     score += 10;
     return;
   }
 
-  // 블럭 타입 처리
+  // 블럭 타입별 처리
   switch (target.type) {
     case BLOCK_TYPES.NORMAL: handleNormalBlock(target); break;
     case BLOCK_TYPES.METAL: handleMetalBlock(target); break;
@@ -1813,14 +1829,28 @@ function collisionDetection() {
     default: target.status = 0;
   }
 
-  // 충돌 전 위치 복원
-  ball.x -= ball.dx;
-  ball.y -= ball.dy;
+  // 충돌 전 위치 복원 + 살짝 추가 보정
+  ball.x -= ball.dx * 1.2;
+  ball.y -= ball.dy * 1.2;
 
-  // 반사
-  ball.dy *= -1;
+  // 반사 방향 판단
+  const prevX = ball.x - ball.dx;
+  const prevY = ball.y - ball.dy;
+
+  const hitFromLeftOrRight =
+    prevY + ball.radius > target.y &&
+    prevY - ball.radius < target.y + BLOCK_HEIGHT &&
+    (prevX <= target.x || prevX >= target.x + BLOCK_WIDTH);
+
+  if (hitFromLeftOrRight) {
+    ball.dx *= -1;
+  } else {
+    ball.dy *= -1;
+  }
+
   score += 10;
 }
+
 
 
 
@@ -2769,69 +2799,6 @@ function applyScore(numBlocks = 1, baseScore = 10) {
 }
 
 
-function collisionDetection() {
-  bricks.forEach(b => {
-    if (b.status === 1 &&
-      ball.x > b.x && ball.x < b.x + 70 &&
-      !b.ignoreCollision &&
-      ball.y > b.y && ball.y < b.y + 20) {
-
-
-      // 고출력 커터 효과 우선 적용
-      if (applyCutterIfAvailable(b)) {
-        applyScore();
-        ball.dy = -ball.dy;
-        return;
-      }
-
-      switch (b.type) {
-        case BLOCK_TYPES.NORMAL:
-          handleNormalBlock(b);
-          applyScore();
-          break;
-        case BLOCK_TYPES.METAL:
-          handleMetalBlock(b);
-          applyScore();
-          break;
-        case BLOCK_TYPES.GLASS:
-          handleGlassBlock(b);
-          break;
-        case BLOCK_TYPES.FUEL:
-          handleFuelBlock(b);
-          break;
-        case BLOCK_TYPES.TIRE:
-          handleTireBlock(b);
-          applyScore(1, 20);
-          break;
-        case BLOCK_TYPES.LIGHT:
-          handleLightBlock(b);
-          applyScore(1, 10);
-          break;
-        case BLOCK_TYPES.ITEM_COOLER:
-          handleItemCoolerBlock(b);
-          applyScore();
-          break;
-        case BLOCK_TYPES.ITEM_CUTTER:
-          handleItemCutterBlock(b);
-          applyScore();
-          break;
-        // case BLOCK_TYPES.ITEM_BARRIER:
-        //   handleItemBarrierBlock(b);
-        //   applyScore();
-        //   break;
-        case BLOCK_TYPES.ITEM_GUIDE:
-          handleItemGuideBlock(b);
-          applyScore();
-          break;
-        default:
-          b.status = 0;
-          applyScore();
-      }
-
-      ball.dy = -ball.dy;
-    }
-  });
-}
 
 function playBGM(src) {
   let bgm = document.getElementById("bgm");
