@@ -47,81 +47,7 @@ const START_X = 200; // x축 시작 기준
 const START_Y = 100; // y축 시작 기준
 
 const levelBlockLayouts = {
-  1: [
-    { x: 340, y: 100, type: BLOCK_TYPES.NORMAL },
-    { x: 420, y: 100, type: BLOCK_TYPES.NORMAL },
-    { x: 500, y: 100, type: BLOCK_TYPES.NORMAL },
-    { x: 580, y: 100, type: BLOCK_TYPES.NORMAL },
-    { x: 660, y: 100, type: BLOCK_TYPES.NORMAL },
-    { x: 260, y: 130, type: BLOCK_TYPES.NORMAL },
-    { x: 340, y: 130, type: BLOCK_TYPES.NORMAL },
-    { x: 420, y: 130, type: BLOCK_TYPES.NORMAL },
-    { x: 500, y: 130, type: BLOCK_TYPES.NORMAL },
-    { x: 580, y: 130, type: BLOCK_TYPES.NORMAL },
-    { x: 660, y: 130, type: BLOCK_TYPES.NORMAL },
-    { x: 180, y: 160, type: BLOCK_TYPES.NORMAL },
-    { x: 260, y: 160, type: BLOCK_TYPES.NORMAL },
-    { x: 340, y: 160, type: BLOCK_TYPES.NORMAL },
-    { x: 420, y: 160, type: BLOCK_TYPES.NORMAL },
-    { x: 500, y: 160, type: BLOCK_TYPES.NORMAL },
-    { x: 580, y: 160, type: BLOCK_TYPES.NORMAL },
-    { x: 660, y: 160, type: BLOCK_TYPES.NORMAL },
-    { x: 740, y: 160, type: BLOCK_TYPES.NORMAL },
-    { x: 100, y: 190, type: BLOCK_TYPES.NORMAL },
-    { x: 180, y: 190, type: BLOCK_TYPES.NORMAL },
-    { x: 260, y: 190, type: BLOCK_TYPES.NORMAL },
-    { x: 340, y: 190, type: BLOCK_TYPES.NORMAL },
-    { x: 420, y: 190, type: BLOCK_TYPES.NORMAL },
-    { x: 500, y: 190, type: BLOCK_TYPES.NORMAL },
-    { x: 580, y: 190, type: BLOCK_TYPES.NORMAL },
-    { x: 660, y: 190, type: BLOCK_TYPES.NORMAL },
-    { x: 740, y: 190, type: BLOCK_TYPES.NORMAL },
-    { x: 100, y: 220, type: BLOCK_TYPES.NORMAL },
-    { x: 180, y: 220, type: BLOCK_TYPES.NORMAL },
-    { x: 260, y: 220, type: BLOCK_TYPES.NORMAL },
-    { x: 340, y: 220, type: BLOCK_TYPES.NORMAL },
-    { x: 420, y: 220, type: BLOCK_TYPES.NORMAL },
-    { x: 500, y: 220, type: BLOCK_TYPES.NORMAL },
-    { x: 580, y: 220, type: BLOCK_TYPES.NORMAL },
-    { x: 660, y: 220, type: BLOCK_TYPES.NORMAL },
-    { x: 740, y: 220, type: BLOCK_TYPES.NORMAL },
-    { x: 820, y: 220, type: BLOCK_TYPES.NORMAL },
-    { x: 100, y: 250, type: BLOCK_TYPES.NORMAL },
-    { x: 180, y: 250, type: BLOCK_TYPES.NORMAL },
-    { x: 260, y: 250, type: BLOCK_TYPES.NORMAL },
-    { x: 340, y: 250, type: BLOCK_TYPES.NORMAL },
-    { x: 420, y: 250, type: BLOCK_TYPES.NORMAL },
-    { x: 500, y: 250, type: BLOCK_TYPES.NORMAL },
-    { x: 580, y: 250, type: BLOCK_TYPES.NORMAL },
-    { x: 660, y: 250, type: BLOCK_TYPES.NORMAL },
-    { x: 740, y: 250, type: BLOCK_TYPES.NORMAL },
-    { x: 820, y: 250, type: BLOCK_TYPES.NORMAL },
-    { x: 20, y: 280, type: BLOCK_TYPES.NORMAL },
-    { x: 100, y: 280, type: BLOCK_TYPES.NORMAL },
-    { x: 180, y: 280, type: BLOCK_TYPES.NORMAL },
-    { x: 260, y: 280, type: BLOCK_TYPES.NORMAL },
-    { x: 340, y: 280, type: BLOCK_TYPES.NORMAL },
-    { x: 420, y: 280, type: BLOCK_TYPES.NORMAL },
-    { x: 500, y: 280, type: BLOCK_TYPES.NORMAL },
-    { x: 580, y: 280, type: BLOCK_TYPES.NORMAL },
-    { x: 660, y: 280, type: BLOCK_TYPES.NORMAL },
-    { x: 740, y: 280, type: BLOCK_TYPES.NORMAL },
-    { x: 820, y: 280, type: BLOCK_TYPES.NORMAL },
-    { x: 100, y: 310, type: BLOCK_TYPES.NORMAL },
-    { x: 180, y: 310, type: BLOCK_TYPES.NORMAL },
-    { x: 260, y: 310, type: BLOCK_TYPES.NORMAL },
-    { x: 340, y: 310, type: BLOCK_TYPES.NORMAL },
-    { x: 420, y: 310, type: BLOCK_TYPES.NORMAL },
-    { x: 500, y: 310, type: BLOCK_TYPES.NORMAL },
-    { x: 580, y: 310, type: BLOCK_TYPES.NORMAL },
-    { x: 660, y: 310, type: BLOCK_TYPES.NORMAL },
-    { x: 740, y: 310, type: BLOCK_TYPES.NORMAL },
-    { x: 820, y: 310, type: BLOCK_TYPES.NORMAL },
-    { x: 180, y: 340, type: BLOCK_TYPES.NORMAL },
-    { x: 260, y: 340, type: BLOCK_TYPES.NORMAL },
-    { x: 660, y: 340, type: BLOCK_TYPES.NORMAL },
-    { x: 740, y: 340, type: BLOCK_TYPES.NORMAL },
-  ],
+  1: [],
   2: [
     { x: 260, y: 100, type: BLOCK_TYPES.NORMAL },
     { x: 340, y: 100, type: BLOCK_TYPES.NORMAL },
@@ -1544,7 +1470,7 @@ const ballInfoMap = {
       return img;
     })(),
     radius: 18,
-    speedFactor: 0.8
+    speedFactor: 0.9
   },
   "테니스선수": {
     img: (() => {
@@ -1553,7 +1479,7 @@ const ballInfoMap = {
       return img;
     })(),
     radius: 12,
-    speedFactor: 1.2
+    speedFactor: 1.1
   }
 };
 
@@ -1562,7 +1488,7 @@ function initGameElements() {
   const selected = GameState.selectedCharacter.name;
   const info = ballInfoMap[selected] || { radius: 14, speedFactor: 1.0 };
 
-  const stageSpeed = 3 + GameState.selectedStage +
+  const stageSpeed = 2 + GameState.selectedStage +
     (GameState.upgrades.includes("스피드업") ? 1 : 0);
   const baseSpeed = stageSpeed * info.speedFactor;
 
@@ -1815,24 +1741,31 @@ function drawBricks() {
       // 🔸 NORMAL 블럭: imgIndex에 따라 이미지 사용
       if (b.type === BLOCK_TYPES.NORMAL && b.imgIndex !== undefined) {
         const img = loadedNormalImages[b.imgIndex];
-        if (img?.complete) {
+        if (img) {
           ctx.drawImage(img, b.x, b.y, w, h);
-          return;
+        } else {
+          // ✅ 이미지가 없으면 fallback 색상으로 표시
+          ctx.beginPath();
+          ctx.rect(b.x, b.y, w, h);
+          ctx.fillStyle = "#ff00ff"; // 눈에 띄는 색상으로 문제 확인
+          ctx.fill();
+          ctx.closePath();
         }
-      }
-
-      // 🔸 기타 타입: blockImages에서 해당 이미지 출력
-      if (loadedBlockImages[b.type]?.complete) {
-        ctx.drawImage(loadedBlockImages[b.type], b.x, b.y, w, h);
         return;
       }
 
-      // 🔸 이미지가 없을 경우 fallback 색상
-      ctx.beginPath();
-      ctx.rect(b.x, b.y, w, h);
-      ctx.fillStyle = getColorByType(b.type, b.hitCount);
-      ctx.fill();
-      ctx.closePath();
+      // 🔸 기타 타입: blockImages에서 해당 이미지 출력
+      const img = loadedBlockImages[b.type];
+      if (img) {
+        ctx.drawImage(img, b.x, b.y, w, h);
+      } else {
+        // ✅ 이미지가 없으면 fallback 색상으로 표시
+        ctx.beginPath();
+        ctx.rect(b.x, b.y, w, h);
+        ctx.fillStyle = "#00ffff"; // 눈에 띄는 색상으로 문제 확인
+        ctx.fill();
+        ctx.closePath();
+      }
     }
   });
 }
@@ -1840,59 +1773,55 @@ function drawBricks() {
 
 
 function collisionDetection() {
-  bricks.forEach(b => {
-    if (b.status === 1 &&
-      b.effectStage === null &&
-      ball.x > b.x && ball.x < b.x + 70 &&
-      ball.y > b.y && ball.y < b.y + 20) {
+  const candidates = bricks.filter(b =>
+    b.status === 1 &&
+    b.effectStage === null &&
+    ball.x + ball.radius +4> b.x &&
+    ball.x - ball.radius -4< b.x + 70 &&
+    ball.y + ball.radius +4> b.y &&
+    ball.y - ball.radius -4< b.y + 20
+  );
 
-      // 고출력 커터 효과 우선 적용
-      if (applyCutterIfAvailable(b)) {
-        ball.dy = -ball.dy;
-        score += 10;
-        return;
-      }
+  if (candidates.length === 0) return;
 
-      switch (b.type) {
-        case BLOCK_TYPES.NORMAL:
-          handleNormalBlock(b);
-          break;
-        case BLOCK_TYPES.METAL:
-          handleMetalBlock(b);
-          break;
-        case BLOCK_TYPES.GLASS:
-          handleGlassBlock(b);
-          break;
-        case BLOCK_TYPES.FUEL:
-          handleFuelBlock(b);
-          break;
-        case BLOCK_TYPES.TIRE:
-          handleTireBlock(b);
-          break;
-        case BLOCK_TYPES.LIGHT:
-          handleLightBlock(b);
-          break;
-        case BLOCK_TYPES.ITEM_COOLER:
-          handleItemCoolerBlock(b);
-          break;
-        case BLOCK_TYPES.ITEM_CUTTER:
-          handleItemCutterBlock(b);
-          break;
-        // case BLOCK_TYPES.ITEM_BARRIER:
-        //   handleItemBarrierBlock(b);
-        //   break;
-        case BLOCK_TYPES.ITEM_GUIDE:
-          handleItemGuideBlock(b);
-          break;
-        default:
-          b.status = 0;
-      }
+  // 가장 가까운 블럭만 반응
+  const target = candidates.reduce((closest, b) => {
+    const dist = Math.hypot(ball.x - (b.x + 35), ball.y - (b.y + 10));
+    return !closest || dist < closest.dist ? { dist, b } : closest;
+  }, null)?.b;
 
-      ball.dy = -ball.dy;
-      score += 10;
-    }
-  });
+  if (!target) return;
+
+  // 고출력 커터 먼저 처리
+  if (applyCutterIfAvailable(target)) {
+    ball.dy *= -1;
+    score += 10;
+    return;
+  }
+
+  // 블럭 타입 처리
+  switch (target.type) {
+    case BLOCK_TYPES.NORMAL: handleNormalBlock(target); break;
+    case BLOCK_TYPES.METAL: handleMetalBlock(target); break;
+    case BLOCK_TYPES.GLASS: handleGlassBlock(target); break;
+    case BLOCK_TYPES.FUEL: handleFuelBlock(target); break;
+    case BLOCK_TYPES.TIRE: handleTireBlock(target); break;
+    case BLOCK_TYPES.LIGHT: handleLightBlock(target); break;
+    case BLOCK_TYPES.ITEM_COOLER: handleItemCoolerBlock(target); break;
+    case BLOCK_TYPES.ITEM_CUTTER: handleItemCutterBlock(target); break;
+    case BLOCK_TYPES.ITEM_GUIDE: handleItemGuideBlock(target); break;
+    default: target.status = 0;
+  }
+
+  // 충돌 전 위치 복원
+  ball.x -= ball.dx;
+  ball.y -= ball.dy;
+
+  // 반사
+  ball.dy *= -1;
+  score += 10;
 }
+
 
 
 
