@@ -146,7 +146,7 @@ function addOptionButton() {
     btn = document.createElement("img");
     btn.id = "optionBtn";
     btn.src = "option.png";
-    btn.style.position = "fixed"; // 화면 고정 위치
+    btn.style.position = "absolute";
     btn.style.width = "40px";
     btn.style.cursor = "pointer";
     btn.style.zIndex = "1000";
@@ -161,18 +161,20 @@ function addOptionButton() {
       showOptionPanel();
     });
 
-    $("#game").append(btn);  // jQuery 방식
-
+    document.body.appendChild(btn);
   }
 
-  // 캔버스 좌표에 맞게 위치 설정
-  const canvas = document.getElementById("gameCanvas");
-  if (canvas) {
-    const rect = canvas.getBoundingClientRect();
-    btn.style.left = `${rect.left + 10}px`;  // 캔버스 왼쪽 + 여백
-    btn.style.top = `${rect.top + 10}px`;    // 캔버스 상단 + 여백
-  }
+  // 위치 계산을 다음 프레임으로 미룸
+  requestAnimationFrame(() => {
+    const canvas = document.getElementById("gameCanvas");
+    if (canvas) {
+      const rect = canvas.getBoundingClientRect();
+      btn.style.left = `${window.scrollX + rect.left + 10}px`;
+      btn.style.top = `${window.scrollY + rect.top + 10}px`;
+    }
+  });
 }
+
 
 // 위치 다시 계산
 window.addEventListener("resize", () => {
@@ -234,8 +236,7 @@ function showOptionPanel() {
             width:150px; cursor:pointer; z-index:2;">
   `;
 
-  $("#game").append(panel);  // jQuery 방식
-
+  $("#game").append(panel);
 
   const soundBtn = document.getElementById("soundToggle");
   const themeBtn = document.getElementById("themeToggle");
