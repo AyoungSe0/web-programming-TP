@@ -1333,7 +1333,7 @@ const ballInfoMap = {
   "야구선수": {
     img: (() => {
       const img = new Image();
-      img.src = "baseball_img.png";
+      img.src = "balls/baseballBall.png";
       return img;
     })(),
     radius: 14,
@@ -1342,7 +1342,7 @@ const ballInfoMap = {
   "축구선수": {
     img: (() => {
       const img = new Image();
-      img.src = "soccer_img.png";
+      img.src = "balls/soccerBall.png";
       return img;
     })(),
     radius: 18,
@@ -1351,7 +1351,7 @@ const ballInfoMap = {
   "테니스선수": {
     img: (() => {
       const img = new Image();
-      img.src = "tennis_img.png";
+      img.src = "balls/tennisBall.png";
       return img;
     })(),
     radius: 12,
