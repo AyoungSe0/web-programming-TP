@@ -1587,119 +1587,128 @@ function draw() {
     ball.dy = -ball.dy;
   }
 
-  // 바닥에 닿음
-  const tolerance = 10;
-  if (ball.y + ball.dy > canvas.height - ball.radius - paddle.height - 10) {
-    if (ball.x + ball.radius >= paddle.x - tolerance &&
-      ball.x - ball.radius <= paddle.x + paddle.width + tolerance) {
-      ball.dy = -ball.dy;
-      if (ball.collidedWithPaddleOnceAfterCooler) {
-        ball.speed = ball.originalSpeed || 3;
-        ball.collidedWithPaddleOnceAfterCooler = false;
-        GameState.hasCooler = false;
-        updateItemUI();
-      }
-    } else {
-      if ((GameState.barrierCount || 0) > 0) {
-        GameState.barrierCount--;
-        updateItemUI();
-        cancelAnimationFrame(animationId);
-        animationId = null;
+  const PADDLE_Y_TOLERANCE = {
+    "야구선수": 2,
+    "축구선수": 4,
+    "테니스선수": 1
+  };
+  const character = GameState.selectedCharacter?.name || "야구선수";
+  const yTol = PADDLE_Y_TOLERANCE[character] || 2;
 
-        let countdown = 3;
-        const overlay = document.createElement('div');
-        overlay.style.position = 'absolute';
-        overlay.style.top = '0';
-        overlay.style.left = '0';
-        overlay.style.width = '100%';
-        overlay.style.height = '100%';
-        overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
-        overlay.style.color = 'white';
-        overlay.style.fontSize = '80px';
-        overlay.style.display = 'flex';
-        overlay.style.alignItems = 'center';
-        overlay.style.justifyContent = 'center';
-        overlay.style.zIndex = '1000';
-        overlay.id = 'barrierOverlay';
-        document.getElementById("game").appendChild(overlay);
+  if (ball.y + ball.radius >= paddle.y &&
+    ball.y + ball.radius <= paddle.y + paddle.height / 2 + yTol &&
+    ball.x + ball.radius >= paddle.x &&
+    ball.x - ball.radius <= paddle.x + paddle.width) {
 
-
-        const interval = setInterval(() => {
-          overlay.textContent = countdown;
-          countdown--;
-          if (countdown < 0) {
-            clearInterval(interval);
-            document.getElementById("game").removeChild(overlay);
-
-
-            // 공과 패들 위치 초기화
-            ball.x = canvas.width / 2;
-            ball.y = canvas.height - 30;
-
-            const isLeft = Math.random() < 0.5;
-            const angleDeg = isLeft
-              ? Math.random() * 15 + 60   // 왼쪽으로 날아감
-              : Math.random() * 15 + 105; // 오른쪽으로 날아감
-            const angleRad = angleDeg * (Math.PI / 180);
-            const direction = Math.random() < 0.5 ? -1 : 1;
-            const speed = ball.speed;
-
-            ball.dx = Math.cos(angleRad) * speed * direction;
-            ball.dy = -Math.sin(angleRad) * speed;
-
-            paddle.x = (canvas.width - paddle.width) / 2;
-
-            // ✅ draw 직접 호출 대신 안전하게 루프 재개
-            animationId = requestAnimationFrame(draw);
-          }
-        }, 1000);
-
-        return;
-      } else {
-        gameOver();
-        return;
-      }
+    // 패들 윗면에서 튕겼다!
+    ball.dy = -Math.abs(ball.dy);
+    if (ball.collidedWithPaddleOnceAfterCooler) {
+      ball.speed = ball.originalSpeed || 3;
+      ball.collidedWithPaddleOnceAfterCooler = false;
+      GameState.hasCooler = false;
+      updateItemUI();
     }
-  }
+  } else if(ball.y + ball.radius > paddle.y + paddle.height){
+    if ((GameState.barrierCount || 0) > 0) {
+      GameState.barrierCount--;
+      updateItemUI();
+      cancelAnimationFrame(animationId);
+      animationId = null;
 
-  // 속도 및 반사 보정
-  let magnitude = Math.sqrt(ball.dx * ball.dx + ball.dy * ball.dy);
-  if (magnitude === 0) {
-    ball.dx = 1;
-    ball.dy = -1;
-    magnitude = Math.sqrt(ball.dx * ball.dx + ball.dy * ball.dy);
-  }
-
-  ball.speed = Math.min(ball.speed, ball.originalSpeed || 3);
-
-  // 수직·수평 방지 보정
-  const minComponent = 0.3;
-  let dxNorm = ball.dx / magnitude;
-  let dyNorm = ball.dy / magnitude;
-  if (Math.abs(dxNorm) < minComponent) dxNorm = minComponent * Math.sign(dxNorm);
-  if (Math.abs(dyNorm) < minComponent) dyNorm = minComponent * Math.sign(dyNorm);
-  const normMag = Math.sqrt(dxNorm * dxNorm + dyNorm * dyNorm);
-  ball.dx = (dxNorm / normMag) * ball.speed;
-  ball.dy = (dyNorm / normMag) * ball.speed;
-
-  ball.x += ball.dx;
-  ball.y += ball.dy;
-
-  if (paddle.rightPressed) {
-    paddle.x += 5;
-  }
-  if (paddle.leftPressed) {
-    paddle.x -= 5;
-  }
-
-  // 👇 이동 후 화면 안에 있도록 보정
-  if (paddle.x < 0) paddle.x = 0;
-  if (paddle.x + paddle.width > canvas.width) {
-    paddle.x = canvas.width - paddle.width;
-  }
+      let countdown = 3;
+      const overlay = document.createElement('div');
+      overlay.style.position = 'absolute';
+      overlay.style.top = '0';
+      overlay.style.left = '0';
+      overlay.style.width = '100%';
+      overlay.style.height = '100%';
+      overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+      overlay.style.color = 'white';
+      overlay.style.fontSize = '80px';
+      overlay.style.display = 'flex';
+      overlay.style.alignItems = 'center';
+      overlay.style.justifyContent = 'center';
+      overlay.style.zIndex = '1000';
+      overlay.id = 'barrierOverlay';
+      document.getElementById("game").appendChild(overlay);
 
 
-  animationId = requestAnimationFrame(draw);
+      const interval = setInterval(() => {
+        overlay.textContent = countdown;
+        countdown--;
+        if (countdown < 0) {
+          clearInterval(interval);
+          document.getElementById("game").removeChild(overlay);
+
+
+          // 공과 패들 위치 초기화
+          ball.x = canvas.width / 2;
+          ball.y = canvas.height - 30;
+
+          const isLeft = Math.random() < 0.5;
+          const angleDeg = isLeft
+            ? Math.random() * 15 + 60   // 왼쪽으로 날아감
+            : Math.random() * 15 + 105; // 오른쪽으로 날아감
+          const angleRad = angleDeg * (Math.PI / 180);
+          const direction = Math.random() < 0.5 ? -1 : 1;
+          const speed = ball.speed;
+
+          ball.dx = Math.cos(angleRad) * speed * direction;
+          ball.dy = -Math.sin(angleRad) * speed;
+
+          paddle.x = (canvas.width - paddle.width) / 2;
+
+          // ✅ draw 직접 호출 대신 안전하게 루프 재개
+          animationId = requestAnimationFrame(draw);
+        }
+      }, 1000);
+
+      return;
+    } else {
+      gameOver();
+      return;
+    }
+  
+}
+
+// 속도 및 반사 보정
+let magnitude = Math.sqrt(ball.dx * ball.dx + ball.dy * ball.dy);
+if (magnitude === 0) {
+  ball.dx = 1;
+  ball.dy = -1;
+  magnitude = Math.sqrt(ball.dx * ball.dx + ball.dy * ball.dy);
+}
+
+ball.speed = Math.min(ball.speed, ball.originalSpeed || 3);
+
+// 수직·수평 방지 보정
+const minComponent = 0.3;
+let dxNorm = ball.dx / magnitude;
+let dyNorm = ball.dy / magnitude;
+if (Math.abs(dxNorm) < minComponent) dxNorm = minComponent * Math.sign(dxNorm);
+if (Math.abs(dyNorm) < minComponent) dyNorm = minComponent * Math.sign(dyNorm);
+const normMag = Math.sqrt(dxNorm * dxNorm + dyNorm * dyNorm);
+ball.dx = (dxNorm / normMag) * ball.speed;
+ball.dy = (dyNorm / normMag) * ball.speed;
+
+ball.x += ball.dx;
+ball.y += ball.dy;
+
+if (paddle.rightPressed) {
+  paddle.x += 5;
+}
+if (paddle.leftPressed) {
+  paddle.x -= 5;
+}
+
+// 👇 이동 후 화면 안에 있도록 보정
+if (paddle.x < 0) paddle.x = 0;
+if (paddle.x + paddle.width > canvas.width) {
+  paddle.x = canvas.width - paddle.width;
+}
+
+
+animationId = requestAnimationFrame(draw);
 }
 
 function drawBall() {
