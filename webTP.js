@@ -48,14 +48,116 @@ const START_Y = 100; // y축 시작 기준
 
 const levelBlockLayouts = {
   1: [
-    { x: 100, y: 100, type: BLOCK_TYPES.NORMAL, imgIndex: 0 }, // car.png
-    { x: 180, y: 100, type: BLOCK_TYPES.NORMAL, imgIndex: 1 }, // truck.png
-    { x: 260, y: 100, type: BLOCK_TYPES.NORMAL, imgIndex: 2 }, // tankF.png
-    { x: 340, y: 100, type: BLOCK_TYPES.NORMAL, imgIndex: 3 },  // tankS.png
-    { x: 340, y: 100, type: BLOCK_TYPES.TIRE }
+    { x: 100, y: 100, type: BLOCK_TYPES.GLASS },
+    { x: 180, y: 100, type: BLOCK_TYPES.GLASS },
+    { x: 260, y: 100, type: BLOCK_TYPES.GLASS },
+    { x: 340, y: 100, type: BLOCK_TYPES.GLASS },
+    { x: 420, y: 100, type: BLOCK_TYPES.GLASS },
+    { x: 500, y: 100, type: BLOCK_TYPES.GLASS },
+    { x: 580, y: 100, type: BLOCK_TYPES.GLASS },
+    { x: 660, y: 100, type: BLOCK_TYPES.GLASS },
+    { x: 740, y: 100, type: BLOCK_TYPES.GLASS },
+    { x: 820, y: 100, type: BLOCK_TYPES.GLASS },
+
+    // y = 130
+    { x: 100, y: 130, type: BLOCK_TYPES.GLASS },
+    { x: 180, y: 130, type: BLOCK_TYPES.GLASS },
+    { x: 260, y: 130, type: BLOCK_TYPES.GLASS },
+    { x: 340, y: 130, type: BLOCK_TYPES.GLASS },
+    { x: 420, y: 130, type: BLOCK_TYPES.GLASS },
+    { x: 500, y: 130, type: BLOCK_TYPES.GLASS },
+    { x: 580, y: 130, type: BLOCK_TYPES.GLASS },
+    { x: 660, y: 130, type: BLOCK_TYPES.GLASS },
+    { x: 740, y: 130, type: BLOCK_TYPES.GLASS },
+    { x: 820, y: 130, type: BLOCK_TYPES.GLASS },
+
+    // y = 160
+    { x: 100, y: 160, type: BLOCK_TYPES.GLASS },
+    { x: 180, y: 160, type: BLOCK_TYPES.GLASS },
+    { x: 260, y: 160, type: BLOCK_TYPES.GLASS },
+    { x: 340, y: 160, type: BLOCK_TYPES.GLASS },
+    { x: 420, y: 160, type: BLOCK_TYPES.GLASS },
+    { x: 500, y: 160, type: BLOCK_TYPES.GLASS },
+    { x: 580, y: 160, type: BLOCK_TYPES.GLASS },
+    { x: 660, y: 160, type: BLOCK_TYPES.GLASS },
+    { x: 740, y: 160, type: BLOCK_TYPES.GLASS },
+    { x: 820, y: 160, type: BLOCK_TYPES.GLASS },
+
   ],
-  2: [],
-  3: []
+  2: [
+    { x: 100, y: 100, type: BLOCK_TYPES.GLASS },
+    { x: 180, y: 100, type: BLOCK_TYPES.GLASS },
+    { x: 260, y: 100, type: BLOCK_TYPES.GLASS },
+    { x: 340, y: 100, type: BLOCK_TYPES.GLASS },
+    { x: 420, y: 100, type: BLOCK_TYPES.GLASS },
+    { x: 500, y: 100, type: BLOCK_TYPES.GLASS },
+    { x: 580, y: 100, type: BLOCK_TYPES.GLASS },
+    { x: 660, y: 100, type: BLOCK_TYPES.GLASS },
+    { x: 740, y: 100, type: BLOCK_TYPES.GLASS },
+    { x: 820, y: 100, type: BLOCK_TYPES.GLASS },
+
+    // y = 130
+    { x: 100, y: 130, type: BLOCK_TYPES.GLASS },
+    { x: 180, y: 130, type: BLOCK_TYPES.GLASS },
+    { x: 260, y: 130, type: BLOCK_TYPES.GLASS },
+    { x: 340, y: 130, type: BLOCK_TYPES.GLASS },
+    { x: 420, y: 130, type: BLOCK_TYPES.GLASS },
+    { x: 500, y: 130, type: BLOCK_TYPES.GLASS },
+    { x: 580, y: 130, type: BLOCK_TYPES.GLASS },
+    { x: 660, y: 130, type: BLOCK_TYPES.GLASS },
+    { x: 740, y: 130, type: BLOCK_TYPES.GLASS },
+    { x: 820, y: 130, type: BLOCK_TYPES.GLASS },
+
+    // y = 160
+    { x: 100, y: 160, type: BLOCK_TYPES.GLASS },
+    { x: 180, y: 160, type: BLOCK_TYPES.GLASS },
+    { x: 260, y: 160, type: BLOCK_TYPES.GLASS },
+    { x: 340, y: 160, type: BLOCK_TYPES.GLASS },
+    { x: 420, y: 160, type: BLOCK_TYPES.GLASS },
+    { x: 500, y: 160, type: BLOCK_TYPES.GLASS },
+    { x: 580, y: 160, type: BLOCK_TYPES.GLASS },
+    { x: 660, y: 160, type: BLOCK_TYPES.GLASS },
+    { x: 740, y: 160, type: BLOCK_TYPES.GLASS },
+    { x: 820, y: 160, type: BLOCK_TYPES.GLASS },
+
+  ],
+  3: [
+    { x: 100, y: 100, type: BLOCK_TYPES.GLASS },
+    { x: 180, y: 100, type: BLOCK_TYPES.GLASS },
+    { x: 260, y: 100, type: BLOCK_TYPES.GLASS },
+    { x: 340, y: 100, type: BLOCK_TYPES.GLASS },
+    { x: 420, y: 100, type: BLOCK_TYPES.GLASS },
+    { x: 500, y: 100, type: BLOCK_TYPES.GLASS },
+    { x: 580, y: 100, type: BLOCK_TYPES.GLASS },
+    { x: 660, y: 100, type: BLOCK_TYPES.GLASS },
+    { x: 740, y: 100, type: BLOCK_TYPES.GLASS },
+    { x: 820, y: 100, type: BLOCK_TYPES.GLASS },
+
+    // y = 130
+    { x: 100, y: 130, type: BLOCK_TYPES.GLASS },
+    { x: 180, y: 130, type: BLOCK_TYPES.GLASS },
+    { x: 260, y: 130, type: BLOCK_TYPES.GLASS },
+    { x: 340, y: 130, type: BLOCK_TYPES.GLASS },
+    { x: 420, y: 130, type: BLOCK_TYPES.GLASS },
+    { x: 500, y: 130, type: BLOCK_TYPES.GLASS },
+    { x: 580, y: 130, type: BLOCK_TYPES.GLASS },
+    { x: 660, y: 130, type: BLOCK_TYPES.GLASS },
+    { x: 740, y: 130, type: BLOCK_TYPES.GLASS },
+    { x: 820, y: 130, type: BLOCK_TYPES.GLASS },
+
+    // y = 160
+    { x: 100, y: 160, type: BLOCK_TYPES.GLASS },
+    { x: 180, y: 160, type: BLOCK_TYPES.GLASS },
+    { x: 260, y: 160, type: BLOCK_TYPES.GLASS },
+    { x: 340, y: 160, type: BLOCK_TYPES.GLASS },
+    { x: 420, y: 160, type: BLOCK_TYPES.GLASS },
+    { x: 500, y: 160, type: BLOCK_TYPES.GLASS },
+    { x: 580, y: 160, type: BLOCK_TYPES.GLASS },
+    { x: 660, y: 160, type: BLOCK_TYPES.GLASS },
+    { x: 740, y: 160, type: BLOCK_TYPES.GLASS },
+    { x: 820, y: 160, type: BLOCK_TYPES.GLASS },
+
+  ]
 };
 
 
@@ -99,12 +201,12 @@ const GameState = {
   failedUpgrades: [],
   reinforceChances: 3,
   settings: {
-    bgm: true,
+    bgm: false,
     sfx: true,
     cursor: true,
     //theme: "day", /////////<- 테마 적용하려고 추가했긴 한데 /////////
     //currentScene: "start",//////////////////////////
-    // bgm: true, //<- 왜 두 번 선언했어??
+
   },
   mapVisitedOnce: false,
   currentBGM: "audio/opening.mp3"
@@ -113,6 +215,7 @@ const GameState = {
 let startBgImg = null;
 let storyPageBgImg = null;
 let stageBgImg = null;
+let EndingBgImg = null;
 let currentDrawScene = null;
 
 function resetGameState() {
@@ -318,74 +421,84 @@ function onThemeChange(newTheme) {
   }
 }
 
-// 테마 설정
-function applyTheme() { /////// <- 미완
+function applyTheme() {
   const theme = GameState.settings.theme;
 
-  // storyPage
+  // storyPage 배경 이미지 설정
   if (storyPageBgImg) {
-    storyPageBgImg.src = GameState.settings.theme === "night"
-      ? "storyImg/StoryPageN.png" : "storyImg/StoryPage.png";
-
-    if (storyPageBgImg.complete && typeof currentDrawScene === "function") {
+    storyPageBgImg.src = theme === "night" ? "storyImg/StoryPageN.png" : "storyImg/StoryPage.png";
+    storyPageBgImg.onload = () => {
+      if (typeof currentDrawScene === "function") {
+        currentDrawScene();  // 이미지가 로드된 후 씬을 그리기
+      }
+    };
+    if (storyPageBgImg.complete) {
       currentDrawScene();
     }
   }
 
-
-  // skip 버튼
+  // skip 버튼 이미지 변경
   const skipBtn = document.getElementById("skipBtn") || document.getElementById("skipBtn_w");
   if (skipBtn) {
     skipBtn.src = theme === "night" ? "skipBtnN.png" : "skipBtn.png";
   }
 
-
-  // startPage
+  // startPage 배경 이미지 설정
   if (startBgImg) {
-    startBgImg.src = GameState.settings.theme === "night"
-      ? "title/startPageN.png" : "title/startPage.png";
+    startBgImg.src = theme === "night" ? "title/startPageN.png" : "title/startPage.png";
   }
 
-
-  // mergedEnding
-  const mergedEnding = document.getElementById("endingBackground");
-  if (mergedEnding) {
-    const themeSrc = theme === "night" ? "mergedEndingN.png" : "mergedEnding.png";
-    mergedEnding.src = themeSrc;
-
+  // mergedEnding 배경 이미지 설정
+  if (EndingBgImg) {
+    EndingBgImg.src = theme === "night" ? "mergedEndingN.png" : "mergedEnding.png";
     const canvas = document.getElementById("gameCanvas");
     const ctx = canvas?.getContext("2d");
 
-    if (ctx && mergedEnding.complete) {
-      ctx.drawImage(mergedEnding, 0, 0, canvas.width, canvas.height);
-    } else if (ctx) {
-      mergedEnding.onload = () => {
-        ctx.drawImage(mergedEnding, 0, 0, canvas.width, canvas.height);
-      };
+    // 이미지가 로드된 후 currentDrawScene()을 호출
+    EndingBgImg.onload = () => {
+      if (ctx) {
+        ctx.drawImage(EndingBgImg, 0, 0, canvas.width, canvas.height);
+        if (typeof currentDrawScene === "function") {
+          currentDrawScene(); // 씬을 다시 그리기
+        }
+      }
+    };
+
+    // 이미지가 이미 로드된 경우 바로 currentDrawScene() 호출
+    if (EndingBgImg.complete) {
+      if (ctx) {
+        ctx.drawImage(EndingBgImg, 0, 0, canvas.width, canvas.height);
+        currentDrawScene(); // 이미지가 이미 로드된 경우 씬을 그리기
+      }
     }
   }
 
-
-  // stage (canvas 내에서 배경 이미지 사용 시)
+  // stage 배경 이미지 설정
   if (typeof backgroundImg !== 'undefined') {
     backgroundImg.src = theme === "night" ? "stageN.png" : "stage.png";
   }
 
-  // stageBackground
+  // stageBackground 배경 이미지 설정
   if (stageBgImg) {
     stageBgImg.src = theme === "night" ? "stageBackgroundN.png" : "stageBackground.png";
 
-    if (stageBgImg.complete && typeof currentDrawScene === "function") {
-      currentDrawScene();
+    // 이미지 로드 후 currentDrawScene() 호출
+    stageBgImg.onload = () => {
+      if (typeof currentDrawScene === "function") {
+        currentDrawScene(); // 이미지가 로드된 후 씬을 다시 그리기
+      }
+    };
+
+    // 이미지가 이미 로드된 경우 바로 currentDrawScene() 호출
+    if (stageBgImg.complete) {
+      currentDrawScene();  // 이미지가 이미 로드된 경우 씬을 그리기
     }
   }
 
-
-  // body 배경색
+  // body 배경색 설정
   document.body.style.backgroundColor = theme === "night" ? "#222" : "#f0f0f0";
-
-
 }
+
 
 
 
@@ -428,7 +541,7 @@ function addAds() {
     adsContainer.appendChild(ad2);
   }
 
-if (!AdState.ad3Closed) {
+  if (!AdState.ad3Closed) {
     const ad3 = document.createElement('div');
     ad3.className = "ad-box ad-left";
     ad3.id = "ad3";
@@ -439,7 +552,7 @@ if (!AdState.ad3Closed) {
     adsContainer.appendChild(ad3);
   }
 
-if (!AdState.ad4Closed) {
+  if (!AdState.ad4Closed) {
     const ad4 = document.createElement('div');
     ad4.className = "ad-box ad-right";
     ad4.id = "ad4";
@@ -462,24 +575,24 @@ if (!AdState.ad4Closed) {
   }
 
   if (!AdState.ad6Closed) {
-  const ad6 = document.createElement('div');
-  ad6.className = "ad-box-horizontal";
-  ad6.id = "ad6";
-  ad6.innerHTML = `
+    const ad6 = document.createElement('div');
+    ad6.className = "ad-box-horizontal";
+    ad6.id = "ad6";
+    ad6.innerHTML = `
     <img src="ads/ad6.png" class="ad-horizontal-image">
     <img src="ads/close.png" class="close-btn" onclick="closeAd('ad6')">
   `;
-  adsContainer.appendChild(ad6);
-}
-else {
-  const ad6 = document.createElement('div');
-  ad6.className = "ad-box-horizontal";
-  ad6.id = "ad6";
-  ad6.innerHTML = `
+    adsContainer.appendChild(ad6);
+  }
+  else {
+    const ad6 = document.createElement('div');
+    ad6.className = "ad-box-horizontal";
+    ad6.id = "ad6";
+    ad6.innerHTML = `
     <img src="ads/ad6no.png" class="ad-horizontal-image">
   `;
-  adsContainer.appendChild(ad6);
-}
+    adsContainer.appendChild(ad6);
+  }
 
   $("#game").append(adsContainer);  // jQuery 방식
 
@@ -487,7 +600,7 @@ else {
 
 // 광고 닫기
 function closeAd(id) {
-  if (id === "ad6"){
+  if (id === "ad6") {
     if (ad6) {
       ad6.innerHTML = `
         <img src="ads/ad6no.png" class="ad-horizontal-image">
@@ -577,8 +690,8 @@ function showStartUI() {
 // 파일: StoryScene.js - 이름 입력란 조건부 노출로 수정
 // import { GameState } from './GameState.js';
 // import { goToCharacterSelect } from './CharacterSelector.js';
-  function goToStoryScene() {
-    $('#game').html(`
+function goToStoryScene() {
+  $('#game').html(`
     <div style="text-align:center;position:relative;">
       <canvas id="gameCanvas" width="1000" height="600" style="background-color:black; border:none;"></canvas>
       <img id="skipBtn_w" src="skipBtnN.png"  
@@ -588,130 +701,130 @@ function showStartUI() {
   `);
   playBGM("audio/cut2.mp3");
 
-    addOptionButton();
-    const canvas = document.getElementById("gameCanvas");
-    const ctx = canvas.getContext("2d");
+  addOptionButton();
+  const canvas = document.getElementById("gameCanvas");
+  const ctx = canvas.getContext("2d");
 
-    const storyText = [
-      "평생을 운동 선수로 살아온 당신...",
-      "안타깝게도 눈에 띄는 성적을 보이지는 못했다.",
-      "당신의 이름은?"
-    ];
+  const storyText = [
+    "평생을 운동 선수로 살아온 당신...",
+    "안타깝게도 눈에 띄는 성적을 보이지는 못했다.",
+    "당신의 이름은?"
+  ];
 
-    let storyIndex = 0;
-    let nickname = "";
-    let isEnteringName = false;
-    let promptBoxImageLoaded = false;
+  let storyIndex = 0;
+  let nickname = "";
+  let isEnteringName = false;
+  let promptBoxImageLoaded = false;
 
-    const promptBoxImage = new Image();
-    promptBoxImage.src = "pop-up.png";
-    promptBoxImage.onload = () => {
-      promptBoxImageLoaded = true;
-      if (isEnteringName) {
-        drawNameInputBox();
-      }
-      document.fonts.ready.then(() => {
-        drawStoryScene();
-      });
-    };
-
-    function drawStoryScene() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = "black";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      ctx.fillStyle = "white";
-      ctx.font = "28px DungGeunMo, sans-serif";
-      ctx.textAlign = "center";
-      ctx.fillText(storyText[storyIndex], canvas.width / 2, 300);
+  const promptBoxImage = new Image();
+  promptBoxImage.src = "pop-up.png";
+  promptBoxImage.onload = () => {
+    promptBoxImageLoaded = true;
+    if (isEnteringName) {
+      drawNameInputBox();
     }
-
-    function drawNameInputBox() {
+    document.fonts.ready.then(() => {
       drawStoryScene();
+    });
+  };
 
-      const boxWidth = promptBoxImage.width || 400;
-      const boxHeight = promptBoxImage.height || 160;
-      const boxX = (canvas.width - boxWidth) / 2;
-      const boxY = (canvas.height - boxHeight) / 2 - 40;
+  function drawStoryScene() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.fillStyle = "black";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      if (promptBoxImageLoaded) {
-        ctx.drawImage(promptBoxImage, boxX, boxY);
-      }
+    ctx.fillStyle = "white";
+    ctx.font = "28px DungGeunMo, sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText(storyText[storyIndex], canvas.width / 2, 300);
+  }
 
-      ctx.fillStyle = "white";
-      ctx.font = "24px DungGeunMo, sans-serif";
-      ctx.textAlign = "center";
-      ctx.fillText("당신의 이름은?", canvas.width / 2, boxY + 40);
+  function drawNameInputBox() {
+    drawStoryScene();
 
-      const composed = Hangul.assemble(nickname.split(''));
-      ctx.fillText(composed + "_", canvas.width / 2, boxY + 85);
+    const boxWidth = promptBoxImage.width || 400;
+    const boxHeight = promptBoxImage.height || 160;
+    const boxX = (canvas.width - boxWidth) / 2;
+    const boxY = (canvas.height - boxHeight) / 2 - 40;
 
-      document.getElementById("skipBtn_w")?.remove();
+    if (promptBoxImageLoaded) {
+      ctx.drawImage(promptBoxImage, boxX, boxY);
     }
 
-    function advanceStory() {
-      if (storyIndex < storyText.length - 1) {
-        storyIndex++;
-        drawStoryScene();
-        if (storyIndex === storyText.length - 1) {
-          isEnteringName = true;
-          drawNameInputBox();
-        }
-      }
-    }
+    ctx.fillStyle = "white";
+    ctx.font = "24px DungGeunMo, sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText("당신의 이름은?", canvas.width / 2, boxY + 40);
 
-    // ✅ key 입력 핸들러 함수로 추출
-    function storyKeyHandler(e) {
-      if (!isEnteringName) {
-        if (e.code === "Space" || e.code === "Enter") {
-          e.preventDefault();
-          advanceStory();
-        }
-      } else {
-        if (e.key === "Backspace") {
-          nickname = nickname.slice(0, -1);
-        } else if (e.key.length === 1 && nickname.length < 10) {
-          nickname += e.key;
-        } else if (e.key === "Enter") {
-          const composed = Hangul.assemble(nickname.split('')).trim() || "랄푸";
-          GameState.nickname = composed;
-          isEnteringName = false;
-          $(document).off("keydown");
-          canvas.removeEventListener("click", advanceStory);
-          goToCharacterSelect();
-          return;
-        }
+    const composed = Hangul.assemble(nickname.split(''));
+    ctx.fillText(composed + "_", canvas.width / 2, boxY + 85);
+
+    document.getElementById("skipBtn_w")?.remove();
+  }
+
+  function advanceStory() {
+    if (storyIndex < storyText.length - 1) {
+      storyIndex++;
+      drawStoryScene();
+      if (storyIndex === storyText.length - 1) {
+        isEnteringName = true;
         drawNameInputBox();
       }
     }
+  }
 
-    canvas.addEventListener("click", advanceStory);
-    $(document).on("keydown", storyKeyHandler);
+  // ✅ key 입력 핸들러 함수로 추출
+  function storyKeyHandler(e) {
+    if (!isEnteringName) {
+      if (e.code === "Space" || e.code === "Enter") {
+        e.preventDefault();
+        advanceStory();
+      }
+    } else {
+      if (e.key === "Backspace") {
+        nickname = nickname.slice(0, -1);
+      } else if (e.key.length === 1 && nickname.length < 10) {
+        nickname += e.key;
+      } else if (e.key === "Enter") {
+        const composed = Hangul.assemble(nickname.split('')).trim() || "랄푸";
+        GameState.nickname = composed;
+        isEnteringName = false;
+        $(document).off("keydown");
+        canvas.removeEventListener("click", advanceStory);
+        goToCharacterSelect();
+        return;
+      }
+      drawNameInputBox();
+    }
+  }
 
-    // 수정된 스킵 버튼 로직
-    $('#skipBtn_w').on('click', () => {
-      $(document).off("keydown");
-      canvas.removeEventListener("click", advanceStory);
+  canvas.addEventListener("click", advanceStory);
+  $(document).on("keydown", storyKeyHandler);
 
-      storyIndex = storyText.length - 1;
-      isEnteringName = true;
+  // 수정된 스킵 버튼 로직
+  $('#skipBtn_w').on('click', () => {
+    $(document).off("keydown");
+    canvas.removeEventListener("click", advanceStory);
 
-      if (promptBoxImage.complete) {
+    storyIndex = storyText.length - 1;
+    isEnteringName = true;
+
+    if (promptBoxImage.complete) {
+      promptBoxImageLoaded = true;
+      drawNameInputBox();
+    } else {
+      promptBoxImage.onload = () => {
         promptBoxImageLoaded = true;
         drawNameInputBox();
-      } else {
-        promptBoxImage.onload = () => {
-          promptBoxImageLoaded = true;
-          drawNameInputBox();
-        };
-      }
+      };
+    }
 
-      $(document).on("keydown", storyKeyHandler);
-    });
+    $(document).on("keydown", storyKeyHandler);
+  });
 
-    drawStoryScene();
-    addAds();
-  }
+  drawStoryScene();
+  addAds();
+}
 
 
 
@@ -1134,9 +1247,9 @@ function goToMapScene() {
   const canvas = document.getElementById("gameCanvas");
   const ctx = canvas.getContext("2d");
 
-  // 테마에 따라 배경 이미지 설정
-  const bgImg = new Image();
-  bgImg.src = GameState.settings.theme === "night"
+  // 테마에 맞는 배경 이미지 설정
+  stageBgImg = new Image();
+  stageBgImg.src = GameState.settings.theme === "night"
     ? "stageBackgroundN.png"
     : "stageBackground.png";
 
@@ -1151,7 +1264,9 @@ function goToMapScene() {
 
   function drawScene() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height);
+    if (stageBgImg.complete) {
+      ctx.drawImage(stageBgImg, 0, 0, canvas.width, canvas.height);
+    }
 
     ctx.fillStyle = "white";
     ctx.strokeStyle = "black";
@@ -1275,7 +1390,7 @@ function goToMapScene() {
     }
   }
 
-  bgImg.onload = tryDrawScene;
+  stageBgImg.onload = tryDrawScene;
   arrowImg.onload = tryDrawScene;
   stageImgs.forEach(img => img.onload = tryDrawScene);
 
@@ -1451,6 +1566,7 @@ function draw() {
   }
 
   drawBricks();
+  updateGlassEffects();
   drawBall();
   drawPaddle();
   collisionDetection();
@@ -1562,18 +1678,18 @@ function draw() {
   ball.x += ball.dx;
   ball.y += ball.dy;
 
-if (paddle.rightPressed) {
-  paddle.x += 5;
-}
-if (paddle.leftPressed) {
-  paddle.x -= 5;
-}
+  if (paddle.rightPressed) {
+    paddle.x += 5;
+  }
+  if (paddle.leftPressed) {
+    paddle.x -= 5;
+  }
 
-// 👇 이동 후 화면 안에 있도록 보정
-if (paddle.x < 0) paddle.x = 0;
-if (paddle.x + paddle.width > canvas.width) {
-  paddle.x = canvas.width - paddle.width;
-}
+  // 👇 이동 후 화면 안에 있도록 보정
+  if (paddle.x < 0) paddle.x = 0;
+  if (paddle.x + paddle.width > canvas.width) {
+    paddle.x = canvas.width - paddle.width;
+  }
 
 
   animationId = requestAnimationFrame(draw);
@@ -2154,10 +2270,13 @@ function showEnding() {
   ctx.font = "24px DungGeunMo, sans-serif";
   ctx.textAlign = "center";
   ctx.fillText("결과 불러오는 중...", canvas.width / 2, canvas.height / 2);
+  addAds();
 
-  const bg = new Image();
-  bg.src = "mergedEnding.png";
-  bg.src = "endingBackground";
+  // 테마에 맞는 mergedEnding 이미지 설정
+  EndingBgImg = new Image();
+  EndingBgImg.src = GameState.settings.theme === "night"
+    ? "mergedEndingN.png"  // 밤 테마 이미지
+    : "mergedEnding.png";  // 낮 테마 이미지
 
   const charImg = new Image();
   charImg.src = GameState.selectedCharacter?.image || "baseballP.png";  // 기본 이미지
@@ -2166,16 +2285,17 @@ function showEnding() {
   const tryDraw = () => {
     loaded++;
     if (loaded < 2) return;
-    GameState._endingCharImg = charImg;  // ✅ 캐릭터 이미지를 글로벌 상태에 임시 저장
-    startFinalScene(bg);
+    GameState._endingCharImg = charImg;  // 캐릭터 이미지를 글로벌 상태에 임시 저장
+    startFinalScene(EndingBgImg);  // mergedEnding 이미지로 씬을 시작
   };
 
-  bg.onload = tryDraw;
-  charImg.onload = tryDraw;
+  EndingBgImg.onload = tryDraw;  // mergedEnding 이미지 로드 완료 후 호출
+  charImg.onload = tryDraw;      // 캐릭터 이미지 로드 완료 후 호출
 
   canvas.addEventListener("click", handleEndingPopupClick);
   canvas.addEventListener("mousemove", handleEndingMouseMove);
 }
+
 // 버튼 상태
 let endingButtons = [
   { id: "restartBtn", text: "다시 시작", x: 0, y: 0, w: 160, h: 40, hover: false },
@@ -2202,7 +2322,9 @@ function startFinalScene(bgImage) {
   }, 120);
 
   animateScene(bgImage);
+  addAds();
 }
+
 
 function animateScene(bgImage) {
   const canvas = document.getElementById("gameCanvas");
@@ -2359,42 +2481,69 @@ function handleNormalBlock(block) {
   block.status = 0;
 }
 
+
 function handleGlassBlock(block) {
   block.effectStage = "cracking";
   block.effectTimer = 3;
-  block.ignoreCollision = true;  // ✅ 공과의 충돌 무시
+  block.ignoreCollision = true;//공과의 충돌 무시
   const visited = new Set();
   visited.add(`${block.x},${block.y}`);
-  const count = explodeGlassChain(block, 1, visited);
+  const count = explodeGlassChain(block, 0, visited); // depth 0부터
   applyScore(count + 1, 10);
 }
 
 
-function explodeGlassChain(target, depth = 0, visited = new Set()) {
+function explodeGlassChain(start) {
+  const queue = [{ block: start, depth: 0 }];
+  const visited = new Set();
   let destroyed = 0;
-  bricks.forEach(b => {
-    const key = `${b.x},${b.y}`;
-    if (
-      b.status === 1 &&
-      b.type === BLOCK_TYPES.GLASS &&
-      !visited.has(key)
-    ) {
-      const dx = Math.abs(b.x - target.x);
-      const dy = Math.abs(b.y - target.y);
 
-      if (dx <= 80 && dy <= 40) {
-        visited.add(key);
-        b.effectStage = "pending";
-        b.effectTimer = 2 + depth; // ✅ 빠르고 순차적인 이펙트
-        b.ignoreCollision = true;
-        destroyed++;
+  while (queue.length > 0) {
+    const { block, depth } = queue.shift();
+    const key = `${block.x},${block.y}`;
+    if (visited.has(key)) continue;
+    visited.add(key);
 
-        // 다음 깊이 탐색
-        destroyed += explodeGlassChain(b, depth + 1, visited);
+    block.effectStage = "pending";
+    block.effectTimer = 2 + depth * 2;
+    block.ignoreCollision = true;
+    destroyed++;
+
+    const directions = [
+      { dx: -80, dy: 0 },
+      { dx: 80, dy: 0 },
+      { dx: 0, dy: -30 },
+      { dx: 0, dy: 30 }
+    ];
+
+    for (const dir of directions) {
+      const nx = block.x + dir.dx;
+      const ny = block.y + dir.dy;
+
+      const neighbor = bricks.find(b =>
+        b.status === 1 &&
+        b.type === BLOCK_TYPES.GLASS &&
+        b.x === nx && b.y === ny
+      );
+
+      if (neighbor) {
+        queue.push({ block: neighbor, depth: depth + 1 });
       }
     }
-  });
+  }
+
   return destroyed;
+}
+
+function updateGlassEffects() {
+  bricks.forEach(b => {
+    if (b.effectStage && b.effectTimer > 0) {
+      b.effectTimer--;
+    } else if (b.effectStage && (b.effectTimer <= 0 || b.status === 0)) {
+      b.effectStage = "gone";
+      b.status = 0;
+    }
+  });
 }
 
 
@@ -2693,7 +2842,7 @@ function playBGM(src) {
     GameState.currentBGM = "audio/opening.mp3";
   }
 
-   bgm.muted = !GameState.settings.bgm;
+  bgm.muted = !GameState.settings.bgm;
 
   if (GameState.settings.bgm) {
     bgm.play();
@@ -2707,13 +2856,3 @@ function stopBGM() {
     bgm.currentTime = 0;
   }
 }
-
-
-window.addEventListener('DOMContentLoaded', () => {
-  const gameEl = document.getElementById("game");
-  if (gameEl) {
-    gameEl.addEventListener("click", () => {
-      playBGM();
-    }, { once: true });
-  }
-});
