@@ -1562,11 +1562,19 @@ function draw() {
   ball.x += ball.dx;
   ball.y += ball.dy;
 
-  if (paddle.rightPressed && paddle.x < canvas.width - paddle.width) {
-    paddle.x += 5;
-  } else if (paddle.leftPressed && paddle.x > 0) {
-    paddle.x -= 5;
-  }
+if (paddle.rightPressed) {
+  paddle.x += 5;
+}
+if (paddle.leftPressed) {
+  paddle.x -= 5;
+}
+
+// 👇 이동 후 화면 안에 있도록 보정
+if (paddle.x < 0) paddle.x = 0;
+if (paddle.x + paddle.width > canvas.width) {
+  paddle.x = canvas.width - paddle.width;
+}
+
 
   animationId = requestAnimationFrame(draw);
 }
