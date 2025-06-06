@@ -325,7 +325,7 @@ function applyTheme() { /////// <- 미완
   // storyPage
   if (storyPageBgImg) {
     storyPageBgImg.src = GameState.settings.theme === "night"
-      ? "StoryPageN.png" : "StoryPage.png";
+      ? "storyImg/StoryPageN.png" : "storyImg/StoryPage.png";
 
     if (storyPageBgImg.complete && typeof currentDrawScene === "function") {
       currentDrawScene();
@@ -993,10 +993,10 @@ function goToStoryScene2() {
   // 전역 이미지 객체
   storyPageBgImg = new Image();
   storyPageBgImg.src = GameState.settings.theme === "night"
-    ? "StoryPageN.png" : "StoryPage.png";
+    ? "storyImg/StoryPageN.png" : "storyImg/StoryPage.png";
 
   const bubble = new Image();
-  bubble.src = "story.png";
+  bubble.src = "storyImg/story.png";
 
   const storyLines = [
     { speaker: "아버지", text: `${GameState.nickname}... 우리 약속했지 않냐.` },
