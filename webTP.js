@@ -145,17 +145,17 @@ function addOptionButton() {
   if (!btn) {
     btn = document.createElement("img");
     btn.id = "optionBtn";
-    btn.src = "option.png";
+    btn.src = "settingBtn/option.png";
     btn.style.position = "absolute";
     btn.style.width = "40px";
     btn.style.cursor = "pointer";
     btn.style.zIndex = "1000";
 
     btn.addEventListener("mouseenter", () => {
-      btn.src = "optionHover.png";
+      btn.src = "settingBtn/optionHover.png";
     });
     btn.addEventListener("mouseleave", () => {
-      btn.src = "option.png";
+      btn.src = "settingBtn/option.png";
     });
     btn.addEventListener("click", () => {
       showOptionPanel();
@@ -223,15 +223,15 @@ function showOptionPanel() {
     </div>
 
     <img id="soundToggle"
-         src="${GameState.settings.bgm ? 'soundOn.png' : 'soundOff.png'}"
+         src="${GameState.settings.bgm ? 'settingBtn/soundOn.png' : 'settingBtn/soundOff.png'}"
          style="position:absolute; top:60px; left:75px; width:50px; cursor:pointer; z-index:2;">
 
     <img id="themeToggle"
-         src="${GameState.settings.theme === 'night' ? 'night.png' : 'day.png'}"
+         src="${GameState.settings.theme === 'night' ? 'settingBtn/night.png' : 'settingBtn/day.png'}"
          style="position:absolute; top:60px; left:175px; width:50px; cursor:pointer; z-index:2;">
 
     <img id="doneBtn"
-     src="done.png"
+     src="settingBtn/done.png"
      style="position:absolute; top:140px; left:50%; transform:translateX(-50%);
             width:150px; cursor:pointer; z-index:2;">
   `;
@@ -244,24 +244,24 @@ function showOptionPanel() {
 
   // hover 효과
   soundBtn.addEventListener("mouseenter", () => {
-    soundBtn.src = GameState.settings.bgm ? "soundOnH.png" : "soundOffH.png";
+    soundBtn.src = GameState.settings.bgm ? "settingBtn/soundOnH.png" : "settingBtn/soundOffH.png";
   });
   soundBtn.addEventListener("mouseleave", () => {
-    soundBtn.src = GameState.settings.bgm ? "soundOn.png" : "soundOff.png";
+    soundBtn.src = GameState.settings.bgm ? "settingBtn/soundOn.png" : "settingBtn/soundOff.png";
   });
 
   themeBtn.addEventListener("mouseenter", () => {
-    themeBtn.src = GameState.settings.theme === "night" ? "nightH.png" : "dayH.png";
+    themeBtn.src = GameState.settings.theme === "night" ? "settingBtn/nightH.png" : "settingBtn/dayH.png";
   });
   themeBtn.addEventListener("mouseleave", () => {
-    themeBtn.src = GameState.settings.theme === "night" ? "night.png" : "day.png";
+    themeBtn.src = GameState.settings.theme === "night" ? "settingBtn/night.png" : "settingBtn/day.png";
   });
 
   doneBtn.addEventListener("mouseenter", () => {
-    doneBtn.src = "doneH.png";
+    doneBtn.src = "settingBtn/doneH.png";
   });
   doneBtn.addEventListener("mouseleave", () => {
-    doneBtn.src = "done.png";
+    doneBtn.src = "settingBtn/done.png";
   });
 
   // 클릭 동작
@@ -269,12 +269,12 @@ function showOptionPanel() {
     GameState.settings.bgm = !GameState.settings.bgm;
     if (GameState.settings.bgm) playBGM();
     else stopBGM();
-    soundBtn.src = GameState.settings.bgm ? "soundOnH.png" : "soundOffH.png";
+    soundBtn.src = GameState.settings.bgm ? "settingBtn/soundOnH.png" : "settingBtn/soundOffH.png";
   });
 
   themeBtn.addEventListener("click", () => {
     GameState.settings.theme = GameState.settings.theme === "night" ? "day" : "night";
-    themeBtn.src = GameState.settings.theme === "night" ? "nightH.png" : "dayH.png";
+    themeBtn.src = GameState.settings.theme === "night" ? "settingBtn/nightH.png" : "settingBtn/dayH.png";
     applyTheme();
   });
 
@@ -581,7 +581,7 @@ function showStartUI() {
     $('#game').html(`
     <div style="text-align:center;position:relative;">
       <canvas id="gameCanvas" width="1000" height="600" style="background-color:black; border:none;"></canvas>
-      <img id="skipBtn_w" src="skip_btn_w.png"  
+      <img id="skipBtn_w" src="skipBtnN.png"  
       style="position:absolute; 
       top:20px; right:20px; width:50px; z-index:10;">
     </div>
