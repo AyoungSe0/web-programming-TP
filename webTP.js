@@ -412,7 +412,7 @@ function addAds() {
     ad1.id = "ad1";
     ad1.innerHTML = `
       <img src="ads/ad1.png" class="ad-image" onclick="window.open('https://cse.konkuk.ac.kr/cse/9960/subview.do?enc=Zm5jdDF8QEB8JTJGcHJvZkluZm8lMkZjc2UlMkY1NDclMkYyMTQyMDA2MiUyRnZpZXcuZG8lM0ZzcmNoQ3RnciUzRCUyNg%3D%3D', '_blank')">
-      <img src="close.png" class="close-btn" onclick="closeAd('ad1')">
+      <img src="ads/close.png" class="close-btn" onclick="closeAd('ad1')">
     `;
     adsContainer.appendChild(ad1);
   }
@@ -423,7 +423,7 @@ function addAds() {
     ad2.id = "ad2";
     ad2.innerHTML = `
       <img src="ads/ad2.png" class="ad-image" onclick="window.open('https://cse.konkuk.ac.kr/cse/index.do', '_blank')">
-      <img src="close.png" class="close-btn" onclick="closeAd('ad2')">
+      <img src="ads/close.png" class="close-btn" onclick="closeAd('ad2')">
     `;
     adsContainer.appendChild(ad2);
   }
@@ -434,7 +434,7 @@ if (!AdState.ad3Closed) {
     ad3.id = "ad3";
     ad3.innerHTML = `
       <img src="ads/ad3.png" class="ad-image" onclick="window.open('https://cse.konkuk.ac.kr/cse/9960/subview.do', '_blank')">
-      <img src="close.png" class="close-btn" onclick="closeAd('ad3')">
+      <img src="ads/close.png" class="close-btn" onclick="closeAd('ad3')">
     `;
     adsContainer.appendChild(ad3);
   }
@@ -445,7 +445,7 @@ if (!AdState.ad4Closed) {
     ad4.id = "ad4";
     ad4.innerHTML = `
       <img src="ads/ad4.png" class="ad-image" onclick="window.open('https://sugang.konkuk.ac.kr', '_blank')">
-      <img src="close.png" class="close-btn" onclick="closeAd('ad4')">
+      <img src="ads/close.png" class="close-btn" onclick="closeAd('ad4')">
     `;
     adsContainer.appendChild(ad4);
   }
@@ -456,7 +456,7 @@ if (!AdState.ad4Closed) {
     ad5.id = "ad5";
     ad5.innerHTML = `
       <img src="ads/ad5.png" class="ad-image" onclick="window.open('ads/konGoose.gif', '_blank')">
-      <img src="close.png" class="close-btn" onclick="closeAd('ad5')">
+      <img src="ads/close.png" class="close-btn" onclick="closeAd('ad5')">
     `;
     adsContainer.appendChild(ad5);
   }
@@ -467,7 +467,7 @@ if (!AdState.ad4Closed) {
   ad6.id = "ad6";
   ad6.innerHTML = `
     <img src="ads/ad6.png" class="ad-horizontal-image">
-    <img src="close.png" class="close-btn" onclick="closeAd('ad6')">
+    <img src="ads/close.png" class="close-btn" onclick="closeAd('ad6')">
   `;
   adsContainer.appendChild(ad6);
 }
