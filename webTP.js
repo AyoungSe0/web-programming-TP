@@ -213,9 +213,7 @@ const GameState = {
     bgm: false,
     sfx: true,
     cursor: true,
-    //theme: "day", /////////<- 테마 적용하려고 추가했긴 한데 /////////
-    //currentScene: "start",//////////////////////////
-
+    theme: "day",
   },
   mapVisitedOnce: false,
   currentBGM: "audio/opening.mp3"
