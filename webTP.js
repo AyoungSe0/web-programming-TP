@@ -11,12 +11,19 @@ const BLOCK_TYPES = {
   // ITEM_BARRIER: "차단막",
   ITEM_GUIDE: "유도로봇팔",
 };
-
+const ITEM_TYPES = [
+  BLOCK_TYPES.ITEM_COOLER,
+  BLOCK_TYPES.ITEM_CUTTER,
+  BLOCK_TYPES.ITEM_GUIDE
+];
 const blockImages = {
   [BLOCK_TYPES.GLASS]: "blocks/glass.png",
   [BLOCK_TYPES.TIRE]: "blocks/tire.png",
   [BLOCK_TYPES.FUEL]: "blocks/motor.png",
-  [BLOCK_TYPES.LIGHT]: "blocks/light.png"
+  [BLOCK_TYPES.LIGHT]: "blocks/light.png",
+  [BLOCK_TYPES.ITEM_COOLER]: "blocks/cooler.png",
+  [BLOCK_TYPES.ITEM_CUTTER]: "blocks/cutter.png",
+  [BLOCK_TYPES.ITEM_GUIDE]: "blocks/guide.png"
 };
 const metalBlockImages = {
   0: "blocks/iron_3.png", // hitCount 0
@@ -76,8 +83,8 @@ const levelBlockLayouts = {
 
     { x: 340, y: 160, type: BLOCK_TYPES.GLASS },
     { x: 420, y: 160, type: BLOCK_TYPES.GLASS },
-    { x: 500, y: 160, type: BLOCK_TYPES.GLASS},
-    { x: 580, y: 160, type: BLOCK_TYPES.GLASS},
+    { x: 500, y: 160, type: BLOCK_TYPES.GLASS },
+    { x: 580, y: 160, type: BLOCK_TYPES.GLASS },
 
     { x: 660, y: 160, type: BLOCK_TYPES.NORMAL, imgIndex: 0 },
     { x: 740, y: 160, type: BLOCK_TYPES.NORMAL, imgIndex: 0 },
@@ -91,9 +98,9 @@ const levelBlockLayouts = {
     { x: 580, y: 190, type: BLOCK_TYPES.NORMAL, imgIndex: 0 },
     { x: 660, y: 190, type: BLOCK_TYPES.NORMAL, imgIndex: 0 },
     { x: 740, y: 190, type: BLOCK_TYPES.NORMAL, imgIndex: 0 },
-    
+
     { x: 100, y: 220, type: BLOCK_TYPES.NORMAL, imgIndex: 0 },
-    { x: 180, y: 220, type: BLOCK_TYPES.NORMAL,imgIndex:0},
+    { x: 180, y: 220, type: BLOCK_TYPES.NORMAL, imgIndex: 0 },
     { x: 260, y: 220, type: BLOCK_TYPES.NORMAL, imgIndex: 0 },
     { x: 340, y: 220, type: BLOCK_TYPES.NORMAL, imgIndex: 0 },
     { x: 420, y: 220, type: BLOCK_TYPES.NORMAL, imgIndex: 0 },
@@ -103,7 +110,7 @@ const levelBlockLayouts = {
     { x: 740, y: 220, type: BLOCK_TYPES.NORMAL, imgIndex: 0 },
     { x: 820, y: 220, type: BLOCK_TYPES.NORMAL, imgIndex: 0 },
 
-    { x: 20, y: 250, type: BLOCK_TYPES.NORMAL,imgIndex:0 },
+    { x: 20, y: 250, type: BLOCK_TYPES.NORMAL, imgIndex: 0 },
     { x: 100, y: 250, type: BLOCK_TYPES.LIGHT },
     { x: 180, y: 250, type: BLOCK_TYPES.NORMAL, imgIndex: 0 },
     { x: 260, y: 250, type: BLOCK_TYPES.NORMAL, imgIndex: 0 },
@@ -140,7 +147,7 @@ const levelBlockLayouts = {
     { x: 180, y: 340, type: BLOCK_TYPES.TIRE },
     { x: 260, y: 340, type: BLOCK_TYPES.TIRE },
     { x: 660, y: 340, type: BLOCK_TYPES.TIRE },
-    { x: 740, y: 340, type: BLOCK_TYPES.TIRE}
+    { x: 740, y: 340, type: BLOCK_TYPES.TIRE }
   ],
   2: [
     { x: 260, y: 100, type: BLOCK_TYPES.NORMAL, imgIndex: 1 },
@@ -208,7 +215,7 @@ const levelBlockLayouts = {
     { x: 740, y: 250, type: BLOCK_TYPES.NORMAL, imgIndex: 1 },
     { x: 820, y: 250, type: BLOCK_TYPES.NORMAL, imgIndex: 1 },
 
-    { x: 20, y: 280, type: BLOCK_TYPES.METAL},
+    { x: 20, y: 280, type: BLOCK_TYPES.METAL },
     { x: 100, y: 280, type: BLOCK_TYPES.METAL },
     { x: 180, y: 280, type: BLOCK_TYPES.METAL },
     { x: 260, y: 280, type: BLOCK_TYPES.METAL },
@@ -269,14 +276,14 @@ const levelBlockLayouts = {
     { x: 740, y: 310, type: BLOCK_TYPES.NORMAL, imgIndex: 2 },
     { x: 820, y: 310, type: BLOCK_TYPES.NORMAL, imgIndex: 3 },
 
-    { x: 260, y: 340, type: BLOCK_TYPES.NORMAL, imgIndex: 2 },
-    { x: 340, y: 340, type: BLOCK_TYPES.NORMAL, imgIndex: 3 },
-    { x: 420, y: 340, type: BLOCK_TYPES.NORMAL, imgIndex: 2 },
+    { x: 260, y: 340, type: BLOCK_TYPES.ITEM_COOLER },
+    { x: 340, y: 340, type: BLOCK_TYPES.ITEM_COOLER },
+    { x: 420, y: 340, type: BLOCK_TYPES.ITEM_COOLER },
 
-    { x: 500, y: 340, type: BLOCK_TYPES.NORMAL, imgIndex: 3 },
-    { x: 580, y: 340, type: BLOCK_TYPES.NORMAL, imgIndex: 2 },
-    { x: 660, y: 340, type: BLOCK_TYPES.NORMAL, imgIndex: 3 },
-    { x: 740, y: 340, type: BLOCK_TYPES.NORMAL, imgIndex: 2 },
+    { x: 500, y: 340, type: BLOCK_TYPES.ITEM_COOLER },
+    { x: 580, y: 340, type: BLOCK_TYPES.ITEM_COOLER },
+    { x: 660, y: 340, type: BLOCK_TYPES.ITEM_GUIDE },
+    { x: 740, y: 340, type: BLOCK_TYPES.ITEM_COOLER },
 
   ]
 };
@@ -1643,7 +1650,7 @@ function initGameElements() {
   paddleImg.src = paddleImgName;
 
   paddle = {
-    width: 100, // 임시값
+    width: 100,
     height: 20,
     x: (canvas.width - 100) / 2,
     rightPressed: false,
@@ -1661,17 +1668,27 @@ function initGameElements() {
 
 
   const layout = levelBlockLayouts[GameState.selectedStage];
-  bricks = layout.map(block => ({
-    x: block.x,
-    y: block.y,
-    type: block.type,
-    imgIndex: block.imgIndex,
-    status: 1,
-    hitCount: 0,
-    maxHits: block.type === BLOCK_TYPES.METAL ? 3 : 1,
-    effectStage: null,
-    effectTimer: 0
-  }));
+  bricks = layout.map(block => {
+    //.log("[INIT]", block.type, ITEM_TYPES.includes(block.type));
+
+    return {
+      x: block.x,
+      y: block.y,
+      type: block.type,
+      imgIndex: block.imgIndex,
+      status: 1,
+      hitCount: 0,
+      maxHits: ITEM_TYPES.includes(block.type)
+        ? 2
+        : block.type === BLOCK_TYPES.METAL
+          ? 3
+          : 1,
+      effectStage: null,
+      effectTimer: 0
+    };
+  });
+
+
 
   $(document).off('keydown').on('keydown', function (e) {
     if (e.key === "ArrowRight") paddle.rightPressed = true;
@@ -1875,7 +1892,7 @@ function drawBricks() {
         if (img) {
           ctx.drawImage(img, b.x, b.y, w, h);
         } else {
-          // ✅ 이미지가 없으면 fallback 색상으로 표시
+          // 이미지가 없으면 fallback 색상으로 표시
           ctx.beginPath();
           ctx.rect(b.x, b.y, w, h);
           ctx.fillStyle = "#ff00ff"; // 눈에 띄는 색상으로 문제 확인
@@ -1884,7 +1901,7 @@ function drawBricks() {
         }
         return;
       }
-       // 🔸 METAL 블럭: hitCount에 따라 이미지 다르게
+      // 🔸 METAL 블럭: hitCount에 따라 이미지 다르게
       if (b.type === BLOCK_TYPES.METAL) {
         const img = loadedMetalImages[b.hitCount];
         if (img) {
@@ -1895,7 +1912,23 @@ function drawBricks() {
         }
         return;
       }
+      if (ITEM_TYPES.includes(b.type)) {
 
+        const stage = GameState.selectedStage;
+        const index = Math.min(stage - 1, loadedNormalImages.length - 1);  // 0~3 사이 보정
+
+        const img = (b.hitCount === 0)
+          ? loadedNormalImages[index]  // 위장용 normal 이미지
+          : loadedBlockImages[b.type];  // 진짜 아이템 이미지
+
+        if (img) {
+          ctx.drawImage(img, b.x, b.y, w, h);
+        } else {
+          ctx.fillStyle = "#ffcc00";
+          ctx.fillRect(b.x, b.y, w, h);
+        }
+        return;
+      }
 
       // 🔸 기타 타입: blockImages에서 해당 이미지 출력
       const img = loadedBlockImages[b.type];
@@ -1917,6 +1950,7 @@ function drawBricks() {
 
 
 function collisionDetection() {
+  console.log("[CD] collisionDetection called");
   const BLOCK_WIDTH = 70;
   const BLOCK_HEIGHT = 20;
 
@@ -1957,7 +1991,38 @@ function collisionDetection() {
     score += 10;
     return;
   }
+  if (ITEM_TYPES.includes(target.type)) {
+    if (target.ignoreCollision) return;
+    target.hitCount++;
+    console.log("[HIT]", target.type, "| hitCount:", target.hitCount, "| maxHits:", target.maxHits);
 
+    if (target.hitCount === 1) {
+      target.ignoreCollision = true;
+      setTimeout(() => {
+        target.ignoreCollision = false;
+      }, 50);
+
+      // ⛳ 공 위치 밀어내기
+      ball.x -= ball.dx * 1.2;
+      ball.y -= ball.dy * 1.2;
+      ball.dy *= -1;
+      return;
+    }
+    if (target.hitCount === target.maxHits) {
+      switch (target.type) {
+        case BLOCK_TYPES.ITEM_COOLER: handleItemCoolerBlock(target); break;
+        case BLOCK_TYPES.ITEM_CUTTER: handleItemCutterBlock(target); break;
+        case BLOCK_TYPES.ITEM_GUIDE: handleItemGuideBlock(target); break;
+      }
+      target.status = 0;
+      ball.x -= ball.dx * 1.2;
+      ball.y -= ball.dy * 1.2;
+      ball.dy *= -1;
+      score += 10;
+      return; //  여기서 완전히 끝내야 아래 일반 블럭 switch 안 감
+    }
+    return;
+  }
   // 블럭 타입별 처리
   switch (target.type) {
     case BLOCK_TYPES.NORMAL: handleNormalBlock(target); break;
@@ -2858,24 +2923,43 @@ function applyCutterIfAvailable(block) {
   GameState.hasCutter = false;
   updateItemUI();
 
+  // 아이템 블럭 처리
+  if (ITEM_TYPES.includes(block.type)) {
+    if (block.hitCount === 0) {
+      // ✅ 위장 상태일 경우 → 그냥 부서짐 (노말 블럭처럼 처리)
+      block.status = 0;
+      return true;
+    }
+
+    // ✅ 정체 드러난 이후일 경우 → 효과 발동
+    switch (block.type) {
+      case BLOCK_TYPES.ITEM_COOLER: handleItemCoolerBlock(block); break;
+      case BLOCK_TYPES.ITEM_CUTTER: handleItemCutterBlock(block); break;
+      case BLOCK_TYPES.ITEM_GUIDE: handleItemGuideBlock(block); break;
+    }
+
+    block.status = 0;
+    return true;
+  }
+
+  // 일반 블럭 처리
   switch (block.type) {
     case BLOCK_TYPES.GLASS: handleGlassBlock(block); break;
     case BLOCK_TYPES.FUEL: handleFuelBlock(block); break;
     case BLOCK_TYPES.METAL:
-      block.status = 0;
       block.hitCount = block.maxHits;
+      block.status = 0;
       break;
     case BLOCK_TYPES.TIRE: handleTireBlock(block); break;
     case BLOCK_TYPES.LIGHT: handleLightBlock(block); break;
-    case BLOCK_TYPES.ITEM_COOLER: handleItemCoolerBlock(block); break;
-    case BLOCK_TYPES.ITEM_CUTTER: handleItemCutterBlock(block); break;
-    case BLOCK_TYPES.ITEM_GUIDE: handleItemGuideBlock(block); break;
     case BLOCK_TYPES.NORMAL:
-    default: block.status = 0;
+    default:
+      block.status = 0;
   }
 
   return true;
 }
+
 
 
 
