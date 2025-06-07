@@ -71,7 +71,7 @@ const levelBlockLayouts = {
     { x: 580, y: 100, type: BLOCK_TYPES.NORMAL, imgIndex: 0 },
     { x: 660, y: 100, type: BLOCK_TYPES.NORMAL, imgIndex: 0 },
 
-    { x: 260, y: 130, type: BLOCK_TYPES.GLASS},
+    { x: 260, y: 130, type: BLOCK_TYPES.GLASS },
     { x: 340, y: 130, type: BLOCK_TYPES.GLASS },
     { x: 420, y: 130, type: BLOCK_TYPES.GLASS },
     { x: 500, y: 130, type: BLOCK_TYPES.GLASS },
@@ -79,7 +79,7 @@ const levelBlockLayouts = {
     { x: 660, y: 130, type: BLOCK_TYPES.NORMAL, imgIndex: 0 },
 
     { x: 180, y: 160, type: BLOCK_TYPES.NORMAL, imgIndex: 0 },
-    { x: 260, y: 160, type: BLOCK_TYPES.GLASS},
+    { x: 260, y: 160, type: BLOCK_TYPES.GLASS },
 
     { x: 340, y: 160, type: BLOCK_TYPES.GLASS },
     { x: 420, y: 160, type: BLOCK_TYPES.GLASS },
@@ -99,7 +99,7 @@ const levelBlockLayouts = {
     { x: 660, y: 190, type: BLOCK_TYPES.NORMAL, imgIndex: 0 },
     { x: 740, y: 190, type: BLOCK_TYPES.NORMAL, imgIndex: 0 },
 
-    { x: 20, y: 220, type: BLOCK_TYPES.LIGHT},
+    { x: 20, y: 220, type: BLOCK_TYPES.LIGHT },
     { x: 100, y: 220, type: BLOCK_TYPES.LIGHT },
     { x: 180, y: 220, type: BLOCK_TYPES.NORMAL, imgIndex: 0 },
     { x: 260, y: 220, type: BLOCK_TYPES.NORMAL, imgIndex: 0 },
@@ -149,7 +149,7 @@ const levelBlockLayouts = {
     { x: 340, y: 130, type: BLOCK_TYPES.GLASS },
     { x: 420, y: 130, type: BLOCK_TYPES.NORMAL, imgIndex: 1 },
     { x: 500, y: 130, type: BLOCK_TYPES.NORMAL, imgIndex: 1 },
-  
+
 
     { x: 100, y: 160, type: BLOCK_TYPES.NORMAL, imgIndex: 1 },
     { x: 180, y: 160, type: BLOCK_TYPES.GLASS },
@@ -179,7 +179,7 @@ const levelBlockLayouts = {
     { x: 420, y: 220, type: BLOCK_TYPES.NORMAL, imgIndex: 1 },
     { x: 500, y: 220, type: BLOCK_TYPES.NORMAL, imgIndex: 1 },
     { x: 580, y: 220, type: BLOCK_TYPES.NORMAL, imgIndex: 1 },
-    { x: 660, y: 220, type: BLOCK_TYPES.ITEM_GUIDE},
+    { x: 660, y: 220, type: BLOCK_TYPES.ITEM_GUIDE },
     { x: 740, y: 220, type: BLOCK_TYPES.NORMAL, imgIndex: 1 },
     { x: 820, y: 220, type: BLOCK_TYPES.NORMAL, imgIndex: 1 },
 
@@ -191,9 +191,9 @@ const levelBlockLayouts = {
     { x: 420, y: 250, type: BLOCK_TYPES.NORMAL, imgIndex: 1 },
     { x: 500, y: 250, type: BLOCK_TYPES.NORMAL, imgIndex: 1 },
     { x: 580, y: 250, type: BLOCK_TYPES.NORMAL, imgIndex: 1 },
-    { x: 660, y: 250, type: BLOCK_TYPES.ITEM_COOLER},
+    { x: 660, y: 250, type: BLOCK_TYPES.ITEM_COOLER },
     { x: 740, y: 250, type: BLOCK_TYPES.NORMAL, imgIndex: 1 },
-    { x: 820, y: 250, type: BLOCK_TYPES.LIGHT},
+    { x: 820, y: 250, type: BLOCK_TYPES.LIGHT },
 
     { x: 20, y: 280, type: BLOCK_TYPES.METAL },
     { x: 100, y: 280, type: BLOCK_TYPES.METAL },
@@ -238,9 +238,9 @@ const levelBlockLayouts = {
     { x: 420, y: 250, type: BLOCK_TYPES.NORMAL, imgIndex: 2 },
     { x: 500, y: 250, type: BLOCK_TYPES.NORMAL, imgIndex: 3 },
     { x: 580, y: 250, type: BLOCK_TYPES.NORMAL, imgIndex: 2 },
-    { x: 660, y: 250, type: BLOCK_TYPES.ITEM_GUIDE},
+    { x: 660, y: 250, type: BLOCK_TYPES.ITEM_GUIDE },
     { x: 740, y: 250, type: BLOCK_TYPES.NORMAL, imgIndex: 2 },
-     { x: 820, y: 250, type: BLOCK_TYPES.NORMAL, imgIndex: 3 },
+    { x: 820, y: 250, type: BLOCK_TYPES.NORMAL, imgIndex: 3 },
 
     { x: 260, y: 280, type: BLOCK_TYPES.LIGHT },
     { x: 340, y: 280, type: BLOCK_TYPES.NORMAL, imgIndex: 2 },
@@ -253,25 +253,25 @@ const levelBlockLayouts = {
 
     { x: 180, y: 310, type: BLOCK_TYPES.NORMAL, imgIndex: 3 },
     { x: 260, y: 310, type: BLOCK_TYPES.NORMAL, imgIndex: 2 },
-    { x: 340, y: 310, type: BLOCK_TYPES.METAL},
-    { x: 420, y: 310, type: BLOCK_TYPES.METAL},
+    { x: 340, y: 310, type: BLOCK_TYPES.METAL },
+    { x: 420, y: 310, type: BLOCK_TYPES.METAL },
     { x: 500, y: 310, type: BLOCK_TYPES.METAL },
     { x: 580, y: 310, type: BLOCK_TYPES.METAL },
     { x: 660, y: 310, type: BLOCK_TYPES.METAL },
     { x: 740, y: 310, type: BLOCK_TYPES.NORMAL, imgIndex: 2 },
     { x: 820, y: 310, type: BLOCK_TYPES.NORMAL, imgIndex: 3 },
 
-    { x: 260, y: 340, type: BLOCK_TYPES.METAL},
-    { x: 340, y: 340, type: BLOCK_TYPES.TIRE  },
-    { x: 420, y: 340, type: BLOCK_TYPES.TIRE},
-    { x: 500, y: 340, type: BLOCK_TYPES.TIRE},
+    { x: 260, y: 340, type: BLOCK_TYPES.METAL },
+    { x: 340, y: 340, type: BLOCK_TYPES.TIRE },
+    { x: 420, y: 340, type: BLOCK_TYPES.TIRE },
+    { x: 500, y: 340, type: BLOCK_TYPES.TIRE },
     { x: 580, y: 340, type: BLOCK_TYPES.TIRE },
     { x: 660, y: 340, type: BLOCK_TYPES.TIRE },
-    { x: 740, y: 340, type: BLOCK_TYPES.METAL},
+    { x: 740, y: 340, type: BLOCK_TYPES.METAL },
 
-     { x: 340, y: 370, type: BLOCK_TYPES.METAL },
-    { x: 420, y: 370, type: BLOCK_TYPES.METAL},
-    { x: 500, y: 370, type: BLOCK_TYPES.METAL},
+    { x: 340, y: 370, type: BLOCK_TYPES.METAL },
+    { x: 420, y: 370, type: BLOCK_TYPES.METAL },
+    { x: 500, y: 370, type: BLOCK_TYPES.METAL },
     { x: 580, y: 370, type: BLOCK_TYPES.METAL },
     { x: 660, y: 370, type: BLOCK_TYPES.METAL },
 
@@ -1940,7 +1940,6 @@ function drawBricks() {
 
 
 function collisionDetection() {
-  console.log("[CD] collisionDetection called");
   const BLOCK_WIDTH = 70;
   const BLOCK_HEIGHT = 20;
 
@@ -1992,7 +1991,7 @@ function collisionDetection() {
         target.ignoreCollision = false;
       }, 50);
 
-      // ⛳ 공 위치 밀어내기
+      //  공 위치 밀어내기
       ball.x -= ball.dx * 1.2;
       ball.y -= ball.dy * 1.2;
       ball.dy *= -1;
@@ -2046,7 +2045,7 @@ function collisionDetection() {
     ball.dy *= -1;
   }
 
-  score += 10;
+  applyScore(1, 10);
 }
 
 
@@ -2719,6 +2718,7 @@ $(document).ready(() => {
 
 function handleNormalBlock(block) {
   block.status = 0;
+  applyScore(1, 10);
 }
 
 
