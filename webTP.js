@@ -47,125 +47,228 @@ const START_X = 200; // x축 시작 기준
 const START_Y = 100; // y축 시작 기준
 
 const levelBlockLayouts = {
-  1: [],
+  1: [
+    { x: 260, y: 100, type: BLOCK_TYPES.NORMAL, imgIndex: 0 },
+    { x: 340, y: 100, type: BLOCK_TYPES.NORMAL, imgIndex: 0 },
+    { x: 420, y: 100, type: BLOCK_TYPES.NORMAL, imgIndex: 0 },
+    { x: 500, y: 100, type: BLOCK_TYPES.NORMAL, imgIndex: 0 },
+    { x: 580, y: 100, type: BLOCK_TYPES.NORMAL, imgIndex: 0 },
+    { x: 660, y: 100, type: BLOCK_TYPES.NORMAL, imgIndex: 0 },
+
+    { x: 260, y: 130, type: BLOCK_TYPES.NORMAL, imgIndex: 0 },
+    { x: 340, y: 130, type: BLOCK_TYPES.GLASS },
+    { x: 420, y: 130, type: BLOCK_TYPES.GLASS },
+    { x: 500, y: 130, type: BLOCK_TYPES.GLASS },
+    { x: 580, y: 130, type: BLOCK_TYPES.GLASS },
+    { x: 660, y: 130, type: BLOCK_TYPES.NORMAL, imgIndex: 0 },
+
+    { x: 180, y: 160, type: BLOCK_TYPES.NORMAL, imgIndex: 0 },
+    { x: 260, y: 160, type: BLOCK_TYPES.NORMAL, imgIndex: 0 },
+
+    { x: 340, y: 160, type: BLOCK_TYPES.GLASS },
+    { x: 420, y: 160, type: BLOCK_TYPES.GLASS },
+    { x: 500, y: 160, type: BLOCK_TYPES.GLASS},
+    { x: 580, y: 160, type: BLOCK_TYPES.GLASS},
+
+    { x: 660, y: 160, type: BLOCK_TYPES.NORMAL, imgIndex: 0 },
+    { x: 740, y: 160, type: BLOCK_TYPES.NORMAL, imgIndex: 0 },
+
+    { x: 100, y: 190, type: BLOCK_TYPES.NORMAL, imgIndex: 0 },
+    { x: 180, y: 190, type: BLOCK_TYPES.FUEL },
+    { x: 260, y: 190, type: BLOCK_TYPES.NORMAL, imgIndex: 0 },
+    { x: 340, y: 190, type: BLOCK_TYPES.NORMAL, imgIndex: 0 },
+    { x: 420, y: 190, type: BLOCK_TYPES.NORMAL, imgIndex: 0 },
+    { x: 500, y: 190, type: BLOCK_TYPES.NORMAL, imgIndex: 0 },
+    { x: 580, y: 190, type: BLOCK_TYPES.NORMAL, imgIndex: 0 },
+    { x: 660, y: 190, type: BLOCK_TYPES.NORMAL, imgIndex: 0 },
+    { x: 740, y: 190, type: BLOCK_TYPES.NORMAL, imgIndex: 0 },
+    
+    { x: 100, y: 220, type: BLOCK_TYPES.NORMAL, imgIndex: 0 },
+    { x: 180, y: 220, type: BLOCK_TYPES.NORMAL,imgIndex:0},
+    { x: 260, y: 220, type: BLOCK_TYPES.NORMAL, imgIndex: 0 },
+    { x: 340, y: 220, type: BLOCK_TYPES.NORMAL, imgIndex: 0 },
+    { x: 420, y: 220, type: BLOCK_TYPES.NORMAL, imgIndex: 0 },
+    { x: 500, y: 220, type: BLOCK_TYPES.NORMAL, imgIndex: 0 },
+    { x: 580, y: 220, type: BLOCK_TYPES.NORMAL, imgIndex: 0 },
+    { x: 660, y: 220, type: BLOCK_TYPES.NORMAL, imgIndex: 0 },
+    { x: 740, y: 220, type: BLOCK_TYPES.NORMAL, imgIndex: 0 },
+    { x: 820, y: 220, type: BLOCK_TYPES.NORMAL, imgIndex: 0 },
+
+    { x: 20, y: 250, type: BLOCK_TYPES.NORMAL,imgIndex:0 },
+    { x: 100, y: 250, type: BLOCK_TYPES.LIGHT },
+    { x: 180, y: 250, type: BLOCK_TYPES.NORMAL, imgIndex: 0 },
+    { x: 260, y: 250, type: BLOCK_TYPES.NORMAL, imgIndex: 0 },
+    { x: 340, y: 250, type: BLOCK_TYPES.NORMAL, imgIndex: 0 },
+    { x: 420, y: 250, type: BLOCK_TYPES.NORMAL, imgIndex: 0 },
+    { x: 500, y: 250, type: BLOCK_TYPES.NORMAL, imgIndex: 0 },
+    { x: 580, y: 250, type: BLOCK_TYPES.NORMAL, imgIndex: 0 },
+    { x: 660, y: 250, type: BLOCK_TYPES.NORMAL, imgIndex: 0 },
+    { x: 740, y: 250, type: BLOCK_TYPES.NORMAL, imgIndex: 0 },
+    { x: 820, y: 250, type: BLOCK_TYPES.LIGHT },
+
+    { x: 20, y: 280, type: BLOCK_TYPES.NORMAL, imgIndex: 0 },
+    { x: 100, y: 280, type: BLOCK_TYPES.NORMAL, imgIndex: 0 },
+    { x: 180, y: 280, type: BLOCK_TYPES.NORMAL, imgIndex: 0 },
+    { x: 260, y: 280, type: BLOCK_TYPES.NORMAL, imgIndex: 0 },
+    { x: 340, y: 280, type: BLOCK_TYPES.NORMAL, imgIndex: 0 },
+    { x: 420, y: 280, type: BLOCK_TYPES.NORMAL, imgIndex: 0 },
+    { x: 500, y: 280, type: BLOCK_TYPES.NORMAL, imgIndex: 0 },
+    { x: 580, y: 280, type: BLOCK_TYPES.NORMAL, imgIndex: 0 },
+    { x: 660, y: 280, type: BLOCK_TYPES.NORMAL, imgIndex: 0 },
+    { x: 740, y: 280, type: BLOCK_TYPES.NORMAL, imgIndex: 0 },
+    { x: 820, y: 280, type: BLOCK_TYPES.NORMAL, imgIndex: 0 },
+    { x: 100, y: 310, type: BLOCK_TYPES.NORMAL, imgIndex: 0 },
+    { x: 180, y: 310, type: BLOCK_TYPES.TIRE },
+    { x: 260, y: 310, type: BLOCK_TYPES.TIRE },
+    { x: 340, y: 310, type: BLOCK_TYPES.NORMAL, imgIndex: 0 },
+    { x: 420, y: 310, type: BLOCK_TYPES.NORMAL, imgIndex: 0 },
+    { x: 500, y: 310, type: BLOCK_TYPES.NORMAL, imgIndex: 0 },
+    { x: 580, y: 310, type: BLOCK_TYPES.NORMAL, imgIndex: 0 },
+    { x: 660, y: 310, type: BLOCK_TYPES.TIRE },
+    { x: 740, y: 310, type: BLOCK_TYPES.TIRE },
+    { x: 820, y: 310, type: BLOCK_TYPES.NORMAL, imgIndex: 0 },
+
+    { x: 180, y: 340, type: BLOCK_TYPES.TIRE },
+    { x: 260, y: 340, type: BLOCK_TYPES.TIRE },
+    { x: 660, y: 340, type: BLOCK_TYPES.TIRE },
+    { x: 740, y: 340, type: BLOCK_TYPES.TIRE}
+  ],
   2: [
-    { x: 260, y: 100, type: BLOCK_TYPES.NORMAL },
-    { x: 340, y: 100, type: BLOCK_TYPES.NORMAL },
-    { x: 420, y: 100, type: BLOCK_TYPES.NORMAL },
-    { x: 500, y: 100, type: BLOCK_TYPES.NORMAL },
-    { x: 580, y: 100, type: BLOCK_TYPES.NORMAL },
-    { x: 660, y: 100, type: BLOCK_TYPES.NORMAL },
-    { x: 740, y: 100, type: BLOCK_TYPES.NORMAL },
-    { x: 820, y: 100, type: BLOCK_TYPES.NORMAL },
-    { x: 260, y: 130, type: BLOCK_TYPES.NORMAL },
-    { x: 340, y: 130, type: BLOCK_TYPES.NORMAL },
-    { x: 420, y: 130, type: BLOCK_TYPES.NORMAL },
-    { x: 500, y: 130, type: BLOCK_TYPES.NORMAL },
-    { x: 580, y: 130, type: BLOCK_TYPES.NORMAL },
-    { x: 660, y: 130, type: BLOCK_TYPES.NORMAL },
-    { x: 740, y: 130, type: BLOCK_TYPES.NORMAL },
-    { x: 820, y: 130, type: BLOCK_TYPES.NORMAL },
-    { x: 100, y: 160, type: BLOCK_TYPES.NORMAL },
-    { x: 180, y: 160, type: BLOCK_TYPES.NORMAL },
-    { x: 260, y: 160, type: BLOCK_TYPES.NORMAL },
-    { x: 340, y: 160, type: BLOCK_TYPES.NORMAL },
-    { x: 420, y: 160, type: BLOCK_TYPES.NORMAL },
-    { x: 500, y: 160, type: BLOCK_TYPES.NORMAL },
-    { x: 580, y: 160, type: BLOCK_TYPES.NORMAL },
-    { x: 660, y: 160, type: BLOCK_TYPES.NORMAL },
-    { x: 740, y: 160, type: BLOCK_TYPES.NORMAL },
-    { x: 820, y: 160, type: BLOCK_TYPES.NORMAL },
-    { x: 20, y: 190, type: BLOCK_TYPES.NORMAL },
-    { x: 100, y: 190, type: BLOCK_TYPES.NORMAL },
-    { x: 180, y: 190, type: BLOCK_TYPES.NORMAL },
-    { x: 260, y: 190, type: BLOCK_TYPES.NORMAL },
-    { x: 340, y: 190, type: BLOCK_TYPES.NORMAL },
-    { x: 420, y: 190, type: BLOCK_TYPES.NORMAL },
-    { x: 500, y: 190, type: BLOCK_TYPES.NORMAL },
-    { x: 580, y: 190, type: BLOCK_TYPES.NORMAL },
-    { x: 660, y: 190, type: BLOCK_TYPES.NORMAL },
-    { x: 740, y: 190, type: BLOCK_TYPES.NORMAL },
-    { x: 820, y: 190, type: BLOCK_TYPES.NORMAL },
-    { x: 20, y: 220, type: BLOCK_TYPES.NORMAL },
-    { x: 100, y: 220, type: BLOCK_TYPES.NORMAL },
-    { x: 180, y: 220, type: BLOCK_TYPES.NORMAL },
-    { x: 260, y: 220, type: BLOCK_TYPES.NORMAL },
-    { x: 340, y: 220, type: BLOCK_TYPES.NORMAL },
-    { x: 420, y: 220, type: BLOCK_TYPES.NORMAL },
-    { x: 500, y: 220, type: BLOCK_TYPES.NORMAL },
-    { x: 580, y: 220, type: BLOCK_TYPES.NORMAL },
-    { x: 660, y: 220, type: BLOCK_TYPES.NORMAL },
-    { x: 740, y: 220, type: BLOCK_TYPES.NORMAL },
-    { x: 820, y: 220, type: BLOCK_TYPES.NORMAL },
-    { x: 20, y: 250, type: BLOCK_TYPES.NORMAL },
-    { x: 100, y: 250, type: BLOCK_TYPES.NORMAL },
-    { x: 180, y: 250, type: BLOCK_TYPES.NORMAL },
-    { x: 260, y: 250, type: BLOCK_TYPES.NORMAL },
-    { x: 340, y: 250, type: BLOCK_TYPES.NORMAL },
-    { x: 420, y: 250, type: BLOCK_TYPES.NORMAL },
-    { x: 500, y: 250, type: BLOCK_TYPES.NORMAL },
-    { x: 580, y: 250, type: BLOCK_TYPES.NORMAL },
-    { x: 660, y: 250, type: BLOCK_TYPES.NORMAL },
-    { x: 740, y: 250, type: BLOCK_TYPES.NORMAL },
-    { x: 820, y: 250, type: BLOCK_TYPES.NORMAL },
-    { x: 20, y: 280, type: BLOCK_TYPES.NORMAL },
-    { x: 100, y: 280, type: BLOCK_TYPES.NORMAL },
-    { x: 180, y: 280, type: BLOCK_TYPES.NORMAL },
-    { x: 260, y: 280, type: BLOCK_TYPES.NORMAL },
-    { x: 340, y: 280, type: BLOCK_TYPES.NORMAL },
-    { x: 420, y: 280, type: BLOCK_TYPES.NORMAL },
-    { x: 500, y: 280, type: BLOCK_TYPES.NORMAL },
-    { x: 580, y: 280, type: BLOCK_TYPES.NORMAL },
-    { x: 660, y: 280, type: BLOCK_TYPES.NORMAL },
-    { x: 740, y: 280, type: BLOCK_TYPES.NORMAL },
-    { x: 820, y: 280, type: BLOCK_TYPES.NORMAL },
-    { x: 100, y: 310, type: BLOCK_TYPES.NORMAL },
-    { x: 180, y: 310, type: BLOCK_TYPES.NORMAL },
-    { x: 580, y: 310, type: BLOCK_TYPES.NORMAL },
-    { x: 660, y: 310, type: BLOCK_TYPES.NORMAL },
-    { x: 100, y: 340, type: BLOCK_TYPES.NORMAL },
-    { x: 180, y: 340, type: BLOCK_TYPES.NORMAL },
-    { x: 580, y: 340, type: BLOCK_TYPES.NORMAL },
-    { x: 660, y: 340, type: BLOCK_TYPES.NORMAL },
+    { x: 260, y: 100, type: BLOCK_TYPES.NORMAL, imgIndex: 1 },
+    { x: 340, y: 100, type: BLOCK_TYPES.NORMAL, imgIndex: 1 },
+    { x: 420, y: 100, type: BLOCK_TYPES.NORMAL, imgIndex: 1 },
+    { x: 500, y: 100, type: BLOCK_TYPES.NORMAL, imgIndex: 1 },
+    { x: 580, y: 100, type: BLOCK_TYPES.NORMAL, imgIndex: 1 },
+    { x: 660, y: 100, type: BLOCK_TYPES.NORMAL, imgIndex: 1 },
+    { x: 740, y: 100, type: BLOCK_TYPES.NORMAL, imgIndex: 1 },
+    { x: 820, y: 100, type: BLOCK_TYPES.NORMAL, imgIndex: 1 },
+
+    { x: 260, y: 130, type: BLOCK_TYPES.GLASS },
+    { x: 340, y: 130, type: BLOCK_TYPES.GLASS },
+    { x: 420, y: 130, type: BLOCK_TYPES.NORMAL, imgIndex: 1 },
+    { x: 500, y: 130, type: BLOCK_TYPES.NORMAL, imgIndex: 1 },
+    { x: 580, y: 130, type: BLOCK_TYPES.NORMAL, imgIndex: 1 },
+    { x: 660, y: 130, type: BLOCK_TYPES.NORMAL, imgIndex: 1 },
+    { x: 740, y: 130, type: BLOCK_TYPES.NORMAL, imgIndex: 1 },
+    { x: 820, y: 130, type: BLOCK_TYPES.NORMAL, imgIndex: 1 },
+
+    { x: 100, y: 160, type: BLOCK_TYPES.NORMAL, imgIndex: 1 },
+    { x: 180, y: 160, type: BLOCK_TYPES.GLASS },
+    { x: 260, y: 160, type: BLOCK_TYPES.GLASS },
+    { x: 340, y: 160, type: BLOCK_TYPES.GLASS },
+    { x: 420, y: 160, type: BLOCK_TYPES.NORMAL, imgIndex: 1 },
+    { x: 500, y: 160, type: BLOCK_TYPES.NORMAL, imgIndex: 1 },
+    { x: 580, y: 160, type: BLOCK_TYPES.NORMAL, imgIndex: 1 },
+    { x: 660, y: 160, type: BLOCK_TYPES.NORMAL, imgIndex: 1 },
+    { x: 740, y: 160, type: BLOCK_TYPES.NORMAL, imgIndex: 1 },
+    { x: 820, y: 160, type: BLOCK_TYPES.NORMAL, imgIndex: 1 },
+
+    { x: 20, y: 190, type: BLOCK_TYPES.NORMAL, imgIndex: 1 },
+    { x: 100, y: 190, type: BLOCK_TYPES.NORMAL, imgIndex: 1 },
+    { x: 180, y: 190, type: BLOCK_TYPES.NORMAL, imgIndex: 1 },
+    { x: 260, y: 190, type: BLOCK_TYPES.NORMAL, imgIndex: 1 },
+    { x: 340, y: 190, type: BLOCK_TYPES.NORMAL, imgIndex: 1 },
+    { x: 420, y: 190, type: BLOCK_TYPES.NORMAL, imgIndex: 1 },
+    { x: 500, y: 190, type: BLOCK_TYPES.NORMAL, imgIndex: 1 },
+    { x: 580, y: 190, type: BLOCK_TYPES.NORMAL, imgIndex: 1 },
+    { x: 660, y: 190, type: BLOCK_TYPES.NORMAL, imgIndex: 1 },
+    { x: 740, y: 190, type: BLOCK_TYPES.NORMAL, imgIndex: 1 },
+    { x: 820, y: 190, type: BLOCK_TYPES.NORMAL, imgIndex: 1 },
+
+    { x: 20, y: 220, type: BLOCK_TYPES.NORMAL, imgIndex: 1 },
+    { x: 100, y: 220, type: BLOCK_TYPES.NORMAL, imgIndex: 1 },
+    { x: 180, y: 220, type: BLOCK_TYPES.NORMAL, imgIndex: 1 },
+    { x: 260, y: 220, type: BLOCK_TYPES.NORMAL, imgIndex: 1 },
+    { x: 340, y: 220, type: BLOCK_TYPES.NORMAL, imgIndex: 1 },
+    { x: 420, y: 220, type: BLOCK_TYPES.NORMAL, imgIndex: 1 },
+    { x: 500, y: 220, type: BLOCK_TYPES.NORMAL, imgIndex: 1 },
+    { x: 580, y: 220, type: BLOCK_TYPES.NORMAL, imgIndex: 1 },
+    { x: 660, y: 220, type: BLOCK_TYPES.NORMAL, imgIndex: 1 },
+    { x: 740, y: 220, type: BLOCK_TYPES.NORMAL, imgIndex: 1 },
+    { x: 820, y: 220, type: BLOCK_TYPES.NORMAL, imgIndex: 1 },
+
+    { x: 20, y: 250, type: BLOCK_TYPES.NORMAL, imgIndex: 1 },
+    { x: 100, y: 250, type: BLOCK_TYPES.NORMAL, imgIndex: 1 },
+    { x: 180, y: 250, type: BLOCK_TYPES.NORMAL, imgIndex: 1 },
+    { x: 260, y: 250, type: BLOCK_TYPES.NORMAL, imgIndex: 1 },
+    { x: 340, y: 250, type: BLOCK_TYPES.NORMAL, imgIndex: 1 },
+    { x: 420, y: 250, type: BLOCK_TYPES.NORMAL, imgIndex: 1 },
+    { x: 500, y: 250, type: BLOCK_TYPES.NORMAL, imgIndex: 1 },
+    { x: 580, y: 250, type: BLOCK_TYPES.NORMAL, imgIndex: 1 },
+    { x: 660, y: 250, type: BLOCK_TYPES.NORMAL, imgIndex: 1 },
+    { x: 740, y: 250, type: BLOCK_TYPES.NORMAL, imgIndex: 1 },
+    { x: 820, y: 250, type: BLOCK_TYPES.NORMAL, imgIndex: 1 },
+
+    { x: 20, y: 280, type: BLOCK_TYPES.METAL},
+    { x: 100, y: 280, type: BLOCK_TYPES.METAL },
+    { x: 180, y: 280, type: BLOCK_TYPES.METAL },
+    { x: 260, y: 280, type: BLOCK_TYPES.METAL },
+    { x: 340, y: 280, type: BLOCK_TYPES.METAL },
+    { x: 420, y: 280, type: BLOCK_TYPES.METAL },
+    { x: 500, y: 280, type: BLOCK_TYPES.METAL },
+    { x: 580, y: 280, type: BLOCK_TYPES.METAL },
+    { x: 660, y: 280, type: BLOCK_TYPES.METAL },
+    { x: 740, y: 280, type: BLOCK_TYPES.METAL },
+    { x: 820, y: 280, type: BLOCK_TYPES.LIGHT },
+
+    { x: 100, y: 310, type: BLOCK_TYPES.TIRE },
+    { x: 180, y: 310, type: BLOCK_TYPES.TIRE },
+    { x: 580, y: 310, type: BLOCK_TYPES.TIRE },
+    { x: 660, y: 310, type: BLOCK_TYPES.TIRE },
+
+    { x: 100, y: 340, type: BLOCK_TYPES.TIRE },
+    { x: 180, y: 340, type: BLOCK_TYPES.TIRE },
+    { x: 580, y: 340, type: BLOCK_TYPES.TIRE },
+    { x: 660, y: 340, type: BLOCK_TYPES.TIRE }
+
   ],
   3: [
-    { x: 20, y: 100, type: BLOCK_TYPES.NORMAL },
-    { x: 260, y: 160, type: BLOCK_TYPES.NORMAL },
-    { x: 340, y: 190, type: BLOCK_TYPES.NORMAL },
-    { x: 420, y: 190, type: BLOCK_TYPES.NORMAL },
-    { x: 500, y: 190, type: BLOCK_TYPES.NORMAL },
-    { x: 580, y: 190, type: BLOCK_TYPES.NORMAL },
-    { x: 420, y: 220, type: BLOCK_TYPES.NORMAL },
-    { x: 500, y: 220, type: BLOCK_TYPES.NORMAL },
-    { x: 580, y: 220, type: BLOCK_TYPES.NORMAL },
-    { x: 340, y: 250, type: BLOCK_TYPES.NORMAL },
-    { x: 420, y: 250, type: BLOCK_TYPES.NORMAL },
-    { x: 500, y: 250, type: BLOCK_TYPES.NORMAL },
-    { x: 580, y: 250, type: BLOCK_TYPES.NORMAL },
-    { x: 660, y: 250, type: BLOCK_TYPES.NORMAL },
-    { x: 740, y: 250, type: BLOCK_TYPES.NORMAL },
-    { x: 260, y: 280, type: BLOCK_TYPES.NORMAL },
-    { x: 340, y: 280, type: BLOCK_TYPES.NORMAL },
-    { x: 420, y: 280, type: BLOCK_TYPES.NORMAL },
-    { x: 500, y: 280, type: BLOCK_TYPES.NORMAL },
-    { x: 580, y: 280, type: BLOCK_TYPES.NORMAL },
-    { x: 660, y: 280, type: BLOCK_TYPES.NORMAL },
-    { x: 740, y: 280, type: BLOCK_TYPES.NORMAL },
-    { x: 820, y: 280, type: BLOCK_TYPES.NORMAL },
-    { x: 180, y: 310, type: BLOCK_TYPES.NORMAL },
-    { x: 260, y: 310, type: BLOCK_TYPES.NORMAL },
-    { x: 340, y: 310, type: BLOCK_TYPES.NORMAL },
-    { x: 420, y: 310, type: BLOCK_TYPES.NORMAL },
-    { x: 500, y: 310, type: BLOCK_TYPES.NORMAL },
-    { x: 580, y: 310, type: BLOCK_TYPES.NORMAL },
-    { x: 660, y: 310, type: BLOCK_TYPES.NORMAL },
-    { x: 740, y: 310, type: BLOCK_TYPES.NORMAL },
-    { x: 820, y: 310, type: BLOCK_TYPES.NORMAL },
-    { x: 260, y: 340, type: BLOCK_TYPES.NORMAL },
-    { x: 340, y: 340, type: BLOCK_TYPES.NORMAL },
-    { x: 420, y: 340, type: BLOCK_TYPES.NORMAL },
-    { x: 580, y: 340, type: BLOCK_TYPES.NORMAL },
-    { x: 660, y: 340, type: BLOCK_TYPES.NORMAL },
+    { x: 20, y: 70, type: BLOCK_TYPES.NORMAL, imgIndex: 2 },
+    { x: 100, y: 100, type: BLOCK_TYPES.NORMAL, imgIndex: 2 },
+    { x: 180, y: 130, type: BLOCK_TYPES.NORMAL, imgIndex: 2 },
+
+    { x: 260, y: 160, type: BLOCK_TYPES.NORMAL, imgIndex: 3 },
+    { x: 340, y: 190, type: BLOCK_TYPES.NORMAL, imgIndex: 2 },
+    { x: 420, y: 190, type: BLOCK_TYPES.NORMAL, imgIndex: 3 },
+    { x: 500, y: 190, type: BLOCK_TYPES.NORMAL, imgIndex: 2 },
+    { x: 580, y: 190, type: BLOCK_TYPES.NORMAL, imgIndex: 3 },
+    { x: 420, y: 220, type: BLOCK_TYPES.NORMAL, imgIndex: 2 },
+    { x: 500, y: 220, type: BLOCK_TYPES.NORMAL, imgIndex: 3 },
+    { x: 580, y: 220, type: BLOCK_TYPES.NORMAL, imgIndex: 2 },
+    { x: 340, y: 250, type: BLOCK_TYPES.NORMAL, imgIndex: 3 },
+    { x: 420, y: 250, type: BLOCK_TYPES.NORMAL, imgIndex: 2 },
+    { x: 500, y: 250, type: BLOCK_TYPES.NORMAL, imgIndex: 3 },
+    { x: 580, y: 250, type: BLOCK_TYPES.NORMAL, imgIndex: 2 },
+    { x: 660, y: 250, type: BLOCK_TYPES.NORMAL, imgIndex: 3 },
+    { x: 740, y: 250, type: BLOCK_TYPES.NORMAL, imgIndex: 2 },
+    { x: 260, y: 280, type: BLOCK_TYPES.NORMAL, imgIndex: 3 },
+    { x: 340, y: 280, type: BLOCK_TYPES.NORMAL, imgIndex: 2 },
+    { x: 420, y: 280, type: BLOCK_TYPES.NORMAL, imgIndex: 3 },
+    { x: 500, y: 280, type: BLOCK_TYPES.NORMAL, imgIndex: 2 },
+    { x: 580, y: 280, type: BLOCK_TYPES.NORMAL, imgIndex: 3 },
+    { x: 660, y: 280, type: BLOCK_TYPES.NORMAL, imgIndex: 2 },
+    { x: 740, y: 280, type: BLOCK_TYPES.NORMAL, imgIndex: 3 },
+    { x: 820, y: 280, type: BLOCK_TYPES.NORMAL, imgIndex: 2 },
+
+    { x: 180, y: 310, type: BLOCK_TYPES.NORMAL, imgIndex: 3 },
+    { x: 260, y: 310, type: BLOCK_TYPES.NORMAL, imgIndex: 2 },
+    { x: 340, y: 310, type: BLOCK_TYPES.NORMAL, imgIndex: 3 },
+    { x: 420, y: 310, type: BLOCK_TYPES.NORMAL, imgIndex: 2 },
+    { x: 500, y: 310, type: BLOCK_TYPES.NORMAL, imgIndex: 3 },
+    { x: 580, y: 310, type: BLOCK_TYPES.NORMAL, imgIndex: 2 },
+    { x: 660, y: 310, type: BLOCK_TYPES.NORMAL, imgIndex: 3 },
+    { x: 740, y: 310, type: BLOCK_TYPES.NORMAL, imgIndex: 2 },
+    { x: 820, y: 310, type: BLOCK_TYPES.NORMAL, imgIndex: 3 },
+
+    { x: 260, y: 340, type: BLOCK_TYPES.NORMAL, imgIndex: 2 },
+    { x: 340, y: 340, type: BLOCK_TYPES.NORMAL, imgIndex: 3 },
+    { x: 420, y: 340, type: BLOCK_TYPES.NORMAL, imgIndex: 2 },
+
+    { x: 500, y: 340, type: BLOCK_TYPES.NORMAL, imgIndex: 3 },
+    { x: 580, y: 340, type: BLOCK_TYPES.NORMAL, imgIndex: 2 },
+    { x: 660, y: 340, type: BLOCK_TYPES.NORMAL, imgIndex: 3 },
+    { x: 740, y: 340, type: BLOCK_TYPES.NORMAL, imgIndex: 2 },
+
   ]
 };
 
@@ -1620,7 +1723,7 @@ function draw() {
       GameState.hasCooler = false;
       updateItemUI();
     }
-  } else if(ball.y + ball.radius > paddle.y + paddle.height){
+  } else if (ball.y + ball.radius > paddle.y + paddle.height) {
     if ((GameState.barrierCount || 0) > 0) {
       GameState.barrierCount--;
       updateItemUI();
@@ -1680,47 +1783,47 @@ function draw() {
       gameOver();
       return;
     }
-  
-}
 
-// 속도 및 반사 보정
-let magnitude = Math.sqrt(ball.dx * ball.dx + ball.dy * ball.dy);
-if (magnitude === 0) {
-  ball.dx = 1;
-  ball.dy = -1;
-  magnitude = Math.sqrt(ball.dx * ball.dx + ball.dy * ball.dy);
-}
+  }
 
-ball.speed = Math.min(ball.speed, ball.originalSpeed || 3);
+  // 속도 및 반사 보정
+  let magnitude = Math.sqrt(ball.dx * ball.dx + ball.dy * ball.dy);
+  if (magnitude === 0) {
+    ball.dx = 1;
+    ball.dy = -1;
+    magnitude = Math.sqrt(ball.dx * ball.dx + ball.dy * ball.dy);
+  }
 
-// 수직·수평 방지 보정
-const minComponent = 0.3;
-let dxNorm = ball.dx / magnitude;
-let dyNorm = ball.dy / magnitude;
-if (Math.abs(dxNorm) < minComponent) dxNorm = minComponent * Math.sign(dxNorm);
-if (Math.abs(dyNorm) < minComponent) dyNorm = minComponent * Math.sign(dyNorm);
-const normMag = Math.sqrt(dxNorm * dxNorm + dyNorm * dyNorm);
-ball.dx = (dxNorm / normMag) * ball.speed;
-ball.dy = (dyNorm / normMag) * ball.speed;
+  ball.speed = Math.min(ball.speed, ball.originalSpeed || 3);
 
-ball.x += ball.dx;
-ball.y += ball.dy;
+  // 수직·수평 방지 보정
+  const minComponent = 0.3;
+  let dxNorm = ball.dx / magnitude;
+  let dyNorm = ball.dy / magnitude;
+  if (Math.abs(dxNorm) < minComponent) dxNorm = minComponent * Math.sign(dxNorm);
+  if (Math.abs(dyNorm) < minComponent) dyNorm = minComponent * Math.sign(dyNorm);
+  const normMag = Math.sqrt(dxNorm * dxNorm + dyNorm * dyNorm);
+  ball.dx = (dxNorm / normMag) * ball.speed;
+  ball.dy = (dyNorm / normMag) * ball.speed;
 
-if (paddle.rightPressed) {
-  paddle.x += 5;
-}
-if (paddle.leftPressed) {
-  paddle.x -= 5;
-}
+  ball.x += ball.dx;
+  ball.y += ball.dy;
 
-// 👇 이동 후 화면 안에 있도록 보정
-if (paddle.x < 0) paddle.x = 0;
-if (paddle.x + paddle.width > canvas.width) {
-  paddle.x = canvas.width - paddle.width;
-}
+  if (paddle.rightPressed) {
+    paddle.x += 5;
+  }
+  if (paddle.leftPressed) {
+    paddle.x -= 5;
+  }
+
+  // 👇 이동 후 화면 안에 있도록 보정
+  if (paddle.x < 0) paddle.x = 0;
+  if (paddle.x + paddle.width > canvas.width) {
+    paddle.x = canvas.width - paddle.width;
+  }
 
 
-animationId = requestAnimationFrame(draw);
+  animationId = requestAnimationFrame(draw);
 }
 
 function drawBall() {
@@ -2617,28 +2720,35 @@ function handleMetalBlock(block) {
 }
 
 function handleTireBlock(block) {
-  const prevAngle = Math.atan2(ball.dy, ball.dx);
-  let newAngle;
-
-  for (let i = 0; i < 10; i++) {
-    const offset = (Math.random() * 120 + 30) * (Math.PI / 180);
-    const sign = Math.random() < 0.5 ? -1 : 1;
-    newAngle = prevAngle + offset * sign;
-
-    const angleDiff = Math.abs(newAngle - prevAngle) % (2 * Math.PI);
-    if (angleDiff > Math.PI / 6) break;
-  }
-
-  // 블럭 제거는 즉시
+  // 블럭 제거 먼저
   block.status = 0;
 
-  // 다음 프레임에서 방향 변경 (물리 충돌 이후)
+  // 완전히 새로운 방향으로 튐 (이전 방향 무시)
   setTimeout(() => {
+    let newAngle;
+
+    // 현재 방향과 너무 비슷하지 않은 각도 보장
+    const prevAngle = Math.atan2(ball.dy, ball.dx);
+
+    for (let i = 0; i < 10; i++) {
+      newAngle = Math.random() * 2 * Math.PI; // 0 ~ 360도
+
+      // 최소 각도 차이 계산
+      let angleDiff = Math.abs(newAngle - prevAngle) % (2 * Math.PI);
+      if (angleDiff > Math.PI) angleDiff = 2 * Math.PI - angleDiff;
+
+      if (angleDiff > Math.PI / 3) break; // 최소 60도 이상 차이나야 함
+    }
+
+
     const speed = ball.speed;
     ball.dx = Math.cos(newAngle) * speed;
     ball.dy = Math.sin(newAngle) * speed;
+
   }, 0);
 }
+
+
 
 
 function handleFuelBlock(block) {
@@ -2693,17 +2803,15 @@ function handleLightBlock(block) {
 }
 
 function flashScreen() {
-  const game = document.getElementById("game");
-  if (!game) return; // 예외 방지
+  const overlay = document.getElementById("flashOverlay");
+  if (!overlay) return;
 
-  game.style.backgroundColor = "black";
+  overlay.style.opacity = "1";
   setTimeout(() => {
-    game.style.backgroundColor = "white";
-    setTimeout(() => {
-      game.style.backgroundColor = "#f0f0f0";
-    }, 100);
-  }, 100);
+    overlay.style.opacity = "0";
+  }, 400);
 }
+
 
 function handleItemCoolerBlock(block) {
   if (!GameState.hasCooler) {

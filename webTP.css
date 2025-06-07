@@ -129,3 +129,15 @@ button{
   height: 16px;
   cursor: pointer;
 }
+#flashOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: white;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 99999;
+  transition: opacity 0.3s ease;
+}
