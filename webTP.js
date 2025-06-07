@@ -14,12 +14,21 @@ const BLOCK_TYPES = {
 
 const blockImages = {
   [BLOCK_TYPES.GLASS]: "blocks/glass.png",
-  [BLOCK_TYPES.METAL]: "blocks/iron.png",
   [BLOCK_TYPES.TIRE]: "blocks/tire.png",
   [BLOCK_TYPES.FUEL]: "blocks/motor.png",
   [BLOCK_TYPES.LIGHT]: "blocks/light.png"
 };
-
+const metalBlockImages = {
+  0: "blocks/iron_3.png", // hitCount 0
+  1: "blocks/iron_2.png", // hitCount 1
+  2: "blocks/iron_1.png", // hitCount 2
+};
+const loadedMetalImages = {};
+for (const [hit, src] of Object.entries(metalBlockImages)) {
+  const img = new Image();
+  img.src = src;
+  loadedMetalImages[hit] = img;
+}
 const loadedBlockImages = {};
 for (const [type, src] of Object.entries(blockImages)) {
   const img = new Image();
@@ -1875,6 +1884,18 @@ function drawBricks() {
         }
         return;
       }
+       // 🔸 METAL 블럭: hitCount에 따라 이미지 다르게
+      if (b.type === BLOCK_TYPES.METAL) {
+        const img = loadedMetalImages[b.hitCount];
+        if (img) {
+          ctx.drawImage(img, b.x, b.y, w, h);
+        } else {
+          ctx.fillStyle = getColorByType(b.type, b.hitCount);
+          ctx.fillRect(b.x, b.y, w, h);
+        }
+        return;
+      }
+
 
       // 🔸 기타 타입: blockImages에서 해당 이미지 출력
       const img = loadedBlockImages[b.type];
