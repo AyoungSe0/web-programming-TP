@@ -855,7 +855,7 @@ function goToStoryScene() {
     ctx.fillStyle = "white";
     ctx.font = "24px DungGeunMo, sans-serif";
     ctx.textAlign = "center";
-    ctx.fillText("당신의 이름은?", canvas.width / 2, boxY + 40);
+    ctx.fillText("당신의 이름은? [입력 후 엔터]", canvas.width / 2, boxY + 40);
 
     const composed = Hangul.assemble(nickname.split(''));
     ctx.fillText(composed + "_", canvas.width / 2, boxY + 85);
@@ -1050,8 +1050,8 @@ function goToCharacterSelect() {
 
     // 양쪽 화살표 출력
     ctx.font = "48px DungGeunMo, sans-serif";
-    ctx.fillText("⬅️", 60, canvas.height / 2 + 10);
-    ctx.fillText("➡️", canvas.width - 60, canvas.height / 2 + 10);
+    ctx.fillText("<", 60, canvas.height / 2 + 10);
+    ctx.fillText(">", canvas.width - 60, canvas.height / 2 + 10);
 
     // 선택 버튼 출력 (조금 아래로 이동)
     if (isHoveringSelect) {
