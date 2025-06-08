@@ -1277,15 +1277,13 @@ function goToStoryScene2() {
   const isInBubble = (mx >= bx && mx <= bx + bw && my >= by && my <= by + bh);
 
   canvas.style.cursor = isInBubble
-    ? 'pointer'  // 혹은 'url("cursor.png") 16 16, auto'
+    ? 'pointer'
     : 'url("cursor.png") 16 16, auto';
 });
 
 
   addAds();
 }
-
-
 
 
 
@@ -2294,7 +2292,6 @@ function gameOver() {
 
 
 
-
 // 캔버스 기반 강화 UI 전체 구성 (선택, 버튼, 결과 표시 포함)
 function goToUpgradePopup(stars) {
   // 강화 기회를 별 개수만큼 추가
@@ -2798,14 +2795,14 @@ function handleMetalBlock(block) {
   block.hitCount++;
   if (block.hitCount >= block.maxHits) {
     block.status = 0;
-     applyScore(1, 20);
+    applyScore(1, 20);
   }
 }
 
 function handleTireBlock(block) {
   // 블럭 제거 먼저
   block.status = 0;
-applyScore(1, 5); 
+  applyScore(1, 5); 
   // 완전히 새로운 방향으로 튐 (이전 방향 무시)
   setTimeout(() => {
     let newAngle;
@@ -2883,7 +2880,7 @@ function destroySurroundingBlocks(center) {
 function handleLightBlock(block) {
   flashScreen();
   block.status = 0;
-   applyScore(1, 5);
+  applyScore(1, 5);
 }
 
 function flashScreen() {
@@ -3010,13 +3007,13 @@ function handleItemGuideBlock(block) {
 }
 
 function applyScore(numBlocks = 1, baseScore = 10) {
- //  console.log(`[applyScore] blocks: ${numBlocks}, score: ${baseScore}`);
+  //  console.log(`[applyScore] blocks: ${numBlocks}, score: ${baseScore}`);
   const bonusUpgradeCount = GameState.upgrades.filter(x => x === "보너스점수").length;
   const multiplier = 1 + 0.2 * bonusUpgradeCount;  // 20%씩 증가
   const totalBase = Math.floor(baseScore * numBlocks * multiplier);
 
   comboCount += numBlocks;
-  
+
   let comboBonus = 0;
   if (comboCount >= 2) {
     comboBonus = Math.floor(comboCount ** 1.2);
