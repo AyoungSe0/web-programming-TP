@@ -1812,7 +1812,15 @@ function draw() {
 
       return;
     } else {
-      gameOver();
+      // 🔥 점수로 클리어 가능한지 체크
+      const total = score + comboScore;
+      const [one, _, __] = getStarThreshold(GameState.selectedStage);
+
+      if (total >= one) {
+        endGame(true);  // true: 점수로 클리어
+      } else {
+        gameOver();     // 기준 미달이면 실패
+      }
       return;
     }
 
@@ -1952,6 +1960,14 @@ function drawBricks() {
   });
 }
 
+function gameOver() {
+  cancelAnimationFrame(animationId);
+  isGameOver = true;
+  GameState.score = score + comboScore;
+  $(document).off('keydown');
+  $(document).off('keyup');
+  showStageResultPopup(0);
+}
 
 
 
@@ -2065,16 +2081,16 @@ function collisionDetection() {
 
 
 
-
-
 function checkGameClear() {
   const cleared = bricks.every(b =>
     b.status === 0 && (b.effectStage === null || b.effectStage === "gone")
   );
+
   if (cleared) {
-    endGame();
+    endGame(false);  // false: 완파 클리어
   }
 }
+
 
 
 
@@ -2249,17 +2265,12 @@ function showStageResultPopup(starCount) {
 
 function getStarThreshold(stage) {
   switch (stage) {
-    case 1: return [400, 550, 600];   // 별 3개 기준 = 400 + 콤보 200
-    case 2: return [500, 650, 700];   // 별 3개 기준 = 500 + 콤보 200
-    case 3: return [550, 700, 750];   // 별 3개 기준 = 550 + 콤보 200
-    default: return [500, 650, 700];
+    case 1: return [100, 430, 460];   // 별 3개 기준 = 400 + 콤보 200
+    case 2: return [100, 650, 700];   // 별 3개 기준 = 500 + 콤보 200
+    case 3: return [100, 700, 750];   // 별 3개 기준 = 550 + 콤보 200
   }
 }
-
-
-
-// 게임 종료 처리 함수 (성공 시)
-function endGame() {
+function endGame(isScoreClear = false) {
   cancelAnimationFrame(animationId);
   isGameOver = true;
 
@@ -2272,27 +2283,20 @@ function endGame() {
 
   let stars = 0;
   const [one, two, three] = getStarThreshold(GameState.selectedStage);
-  if (total >= three) stars = 3;
-  else if (total >= two) stars = 2;
-  else if (total >= one) stars = 1;
+
+  if (isScoreClear) {
+    stars = 1; // 점수로 클리어한 경우는 무조건 별 1개
+  } else {
+    if (total >= three) stars = 3;
+    else if (total >= two) stars = 2;
+    else if (total >= one) stars = 1;
+  }
 
   GameState.score = stageScore;
-  GameState.comboScore = stageCombo
+  GameState.comboScore = stageCombo;
 
   showStageResultPopup(stars);
 }
-
-// 게임 종료 처리 함수 (실패 시)
-function gameOver() {
-  cancelAnimationFrame(animationId);
-  isGameOver = true;
-  GameState.score = score + comboScore;
-  $(document).off('keydown');
-  $(document).off('keyup');
-  showStageResultPopup(0);
-}
-
-
 
 
 
