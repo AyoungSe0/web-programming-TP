@@ -8,7 +8,6 @@ const BLOCK_TYPES = {
 
   ITEM_COOLER: "냉각제",
   ITEM_CUTTER: "고출력 커터",
-  // ITEM_BARRIER: "차단막",
   ITEM_GUIDE: "유도로봇팔",
 };
 const ITEM_TYPES = [
@@ -140,6 +139,7 @@ const levelBlockLayouts = {
     { x: 740, y: 310, type: BLOCK_TYPES.TIRE }
   ],
   2: [
+
     { x: 260, y: 100, type: BLOCK_TYPES.NORMAL, imgIndex: 1 },
     { x: 340, y: 100, type: BLOCK_TYPES.NORMAL, imgIndex: 1 },
     { x: 420, y: 100, type: BLOCK_TYPES.NORMAL, imgIndex: 1 },
@@ -278,11 +278,6 @@ const levelBlockLayouts = {
   ]
 };
 
-
-
-
-
-
 // === 블럭 색상 매핑 ===. 나중에 이미지로
 function getColorByType(type, hitCount = 0) {
   switch (type) {
@@ -295,7 +290,6 @@ function getColorByType(type, hitCount = 0) {
     case BLOCK_TYPES.FUEL: return "#f00";
     case BLOCK_TYPES.LIGHT: return "#fff";
     case BLOCK_TYPES.GLASS: return "#0ff";
-    //case BLOCK_TYPES.ITEM_BARRIER: return "#f5a";
     case BLOCK_TYPES.ITEM_COOLER: return "#5af";
     case BLOCK_TYPES.ITEM_CUTTER: return "#fa0";
     case BLOCK_TYPES.ITEM_GUIDE: return "#5f5";
@@ -304,7 +298,6 @@ function getColorByType(type, hitCount = 0) {
   }
 }
 
-// ===== GameState.js =====
 
 const GameState = {
   nickname: "",
@@ -527,16 +520,6 @@ function repositionOptionPanel() {
   panel.style.top = `${rect.top + (rect.height - panelHeight) / 2}px`;
 }
 
-function onThemeChange(newTheme) {
-  GameState.settings.theme = newTheme;
-
-  if (GameState.currentScene === "map") {
-    goToMapScene(); // canvas 다시 그려야 하기 때문에 전체 재진입
-  } else {
-    applyTheme();   // story/start 등은 기존 방식으로 적용
-  }
-}
-
 function applyTheme() {
   const theme = GameState.settings.theme;
 
@@ -747,10 +730,6 @@ function closeAd(id) {
   if (id === "ad5") AdState.ad5Closed = true;
 }
 
-// ===== GameStartUI.js =====
-
-// import { goToStoryScene } from './StoryScene.js';
-
 
 function showStartUI() {
   $('#game').html(`
@@ -812,12 +791,6 @@ function showStartUI() {
   addAds();
 }
 
-
-// ===== StoryScene.js =====
-
-// 파일: StoryScene.js - 이름 입력란 조건부 노출로 수정
-// import { GameState } from './GameState.js';
-// import { goToCharacterSelect } from './CharacterSelector.js';
 function goToStoryScene() {
   $('#game').html(`
     <div style="text-align:center;position:relative;">
@@ -956,24 +929,6 @@ function goToStoryScene() {
 
 
 
-
-// ===== CharacterSelector.js =====
-
-// import { GameState } from './GameState.js';
-// import { goToMapScene } from './MapScene.js';
-
-// ===== CharacterSelector.js =====
-
-// import { GameState } from './GameState.js';
-// import { goToMapScene } from './MapScene.js';
-
-// 캐릭터 선택 화면 구현 (캔버스 기반) - 시각 효과 강화 및 배경, 말풍선 추가 버전
-// 주요 기능:
-// 1. 3개의 캐릭터를 한 화면에 표시
-// 2. 가운데 캐릭터는 컬러와 원본 크기, 좌우 캐릭터는 작고 흐리게 (양옆 배경 기준 위치 조정)
-// 3. 캐릭터마다 배경 추가 (야구장 등) → 중앙 캐릭터 뒤에만 배경을 소형으로 출력
-// 4. 호버 시 말풍선 + 설명 멘트 팝업
-// 5. 선택 애니메이션 포함, GameState 저장
 
 const characters = [
   { name: "야구선수", image: "baseballP.png", bg: "baseball_bg.png", hint: "홈런을 노려라!" },
@@ -1321,10 +1276,9 @@ function goToStoryScene2() {
 
 
 
-// ===== MapScene.js =====
 
-// import { GameState } from './GameState.js';
-// import { startStage } from './GameStage.js';
+
+
 function updateItemUI() {
   const $area = $('#itemStatusArea');
   $area.empty();
@@ -1345,7 +1299,6 @@ function updateItemUI() {
 
 
 function goToMapScene() {
-  GameState.currentScene = "map";
   $('#game').off("keydown");  // 문서 전체에 걸려 있는 keydown 제거
   $(document).off("keydown");  // 키보드 입력 중복 방지
 
@@ -1609,7 +1562,7 @@ function initGameElements() {
   const selected = GameState.selectedCharacter.name;
   const info = ballInfoMap[selected] || { radius: 14, speedFactor: 1.0 };
 
-  const stageSpeed = 2 + GameState.selectedStage +
+  const stageSpeed = 4 + GameState.selectedStage +
     (GameState.upgrades.includes("스피드업") ? 1 : 0);
   const baseSpeed = stageSpeed * info.speedFactor;
 
@@ -2047,7 +2000,6 @@ function collisionDetection() {
     ball.dy *= -1;
   }
 
-  applyScore(1, 10);
 }
 
 
@@ -2234,6 +2186,16 @@ function showStageResultPopup(starCount) {
   }
 }
 
+function getStarThreshold(stage) {
+  switch (stage) {
+    case 1: return [400, 550, 600];   // 별 3개 기준 = 400 + 콤보 200
+    case 2: return [500, 650, 700];   // 별 3개 기준 = 500 + 콤보 200
+    case 3: return [550, 700, 750];   // 별 3개 기준 = 550 + 콤보 200
+    default: return [500, 650, 700];
+  }
+}
+
+
 
 // 게임 종료 처리 함수 (성공 시)
 function endGame() {
@@ -2248,9 +2210,10 @@ function endGame() {
   GameState.totalComboScore += stageCombo;
 
   let stars = 0;
-  if (total >= 300) stars = 3;
-  else if (total >= 200) stars = 2;
-  else if (total >= 100) stars = 1;
+  const [one, two, three] = getStarThreshold(GameState.selectedStage);
+  if (total >= three) stars = 3;
+  else if (total >= two) stars = 2;
+  else if (total >= one) stars = 1;
 
   GameState.score = stageScore;
   GameState.comboScore = stageCombo
@@ -2272,11 +2235,6 @@ function gameOver() {
 
 
 
-// ===== UpgradeManager.js =====
-
-// import { GameState } from './GameState.js';
-// import { startStage } from './GameStage.js';
-// import { showEnding } from './EndingScene.js';
 
 // 캔버스 기반 강화 UI 전체 구성 (선택, 버튼, 결과 표시 포함)
 function goToUpgradePopup(stars) {
@@ -2490,11 +2448,6 @@ function proceedToNextStage() {
 
 
 
-// ===== EndingScene.js =====
-
-// import { GameState } from './GameState.js';
-// import { goToMapScene } from './MapScene.js';
-
 function showEnding() {
   $('#game').html(`
     <div style="text-align:center; position:relative;">
@@ -2699,29 +2652,20 @@ function handleEndingPopupClick(e) {
 
 
 
-
-
-
-// ===== Settings.js =====
-
-// import { GameState } from './GameState.js';
-
 function toggleBGM() {
   GameState.settings.bgm = !GameState.settings.bgm;
 }
 
 
-// ===== webTP.js =====
-
-// import { showStartUI } from './GameStartUI.js';
 
 $(document).ready(() => {
   showStartUI();
 });
 
 function handleNormalBlock(block) {
+  if (block.status === 0) return; 
   block.status = 0;
-  applyScore(1, 10);
+  applyScore(1, 5);
 }
 
 
@@ -2732,7 +2676,7 @@ function handleGlassBlock(block) {
   const visited = new Set();
   visited.add(`${block.x},${block.y}`);
   const count = explodeGlassChain(block, 0, visited); // depth 0부터
-  applyScore(count + 1, 10);
+  applyScore(count + 1, 6);
 }
 
 
@@ -2795,13 +2739,14 @@ function handleMetalBlock(block) {
   block.hitCount++;
   if (block.hitCount >= block.maxHits) {
     block.status = 0;
+     applyScore(1, 20);
   }
 }
 
 function handleTireBlock(block) {
   // 블럭 제거 먼저
   block.status = 0;
-
+applyScore(1, 5); 
   // 완전히 새로운 방향으로 튐 (이전 방향 무시)
   setTimeout(() => {
     let newAngle;
@@ -2832,7 +2777,7 @@ function handleTireBlock(block) {
 
 function handleFuelBlock(block) {
   const count = explodeFuelChain(block);
-  applyScore(count, 15);
+  applyScore(count, 8);
 }
 
 function explodeFuelChain(center) {
@@ -2879,6 +2824,7 @@ function destroySurroundingBlocks(center) {
 function handleLightBlock(block) {
   flashScreen();
   block.status = 0;
+   applyScore(1, 5);
 }
 
 function flashScreen() {
@@ -3005,12 +2951,19 @@ function handleItemGuideBlock(block) {
 }
 
 function applyScore(numBlocks = 1, baseScore = 10) {
+ //  console.log(`[applyScore] blocks: ${numBlocks}, score: ${baseScore}`);
   const bonusUpgradeCount = GameState.upgrades.filter(x => x === "보너스점수").length;
   const multiplier = 1 + 0.2 * bonusUpgradeCount;  // 20%씩 증가
   const totalBase = Math.floor(baseScore * numBlocks * multiplier);
 
   comboCount += numBlocks;
-  comboScore += comboCount * 5;
+  
+  let comboBonus = 0;
+  if (comboCount >= 2) {
+    comboBonus = Math.floor(comboCount ** 1.2);
+    comboScore += comboBonus;
+  }
+
   score += totalBase;
 
   $('#score').text(score + comboScore);
