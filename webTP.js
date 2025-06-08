@@ -797,7 +797,7 @@ function goToStoryScene() {
       <canvas id="gameCanvas" width="1000" height="600" style="background-color:black; border:none;"></canvas>
       <img id="skipBtn_w" src="skipBtnN.png"  
       style="position:absolute; 
-      top:20px; right:20px; width:50px; z-index:10;">
+      top:20px; right:20px; width:50px; z-index:10; cursor:pointer;">
     </div>
   `);
   playBGM("audio/cute.mp3");
@@ -1167,7 +1167,7 @@ function goToStoryScene2() {
   $('#game').html(`
     <div style="text-align:center; position:relative;">
       <canvas id="gameCanvas" width="1000" height="600" style="background-color:black; border:none;"></canvas>
-      <img id="skipBtn" src="skipBtn.png" style="position:absolute; top:20px; right:20px; width:50px; z-index:10;">
+      <img id="skipBtn" src="skipBtn.png" style="position:absolute; top:20px; right:20px; width:50px; z-index:10; cursor:pointer;">
     </div>
   `);
 
