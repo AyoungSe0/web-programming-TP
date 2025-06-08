@@ -855,10 +855,13 @@ function goToStoryScene() {
     ctx.fillStyle = "white";
     ctx.font = "24px DungGeunMo, sans-serif";
     ctx.textAlign = "center";
-    ctx.fillText("당신의 이름은? [입력 후 엔터]", canvas.width / 2, boxY + 40);
+    ctx.fillText("당신의 이름은?", canvas.width / 2, boxY + 40);
 
     const composed = Hangul.assemble(nickname.split(''));
     ctx.fillText(composed + "_", canvas.width / 2, boxY + 85);
+
+    ctx.font = "16px DungGeunMo, sans-serif";
+    ctx.fillText("입력 후 Enter 키를 눌러 계속하세요", canvas.width / 2, boxY + 140);
 
     document.getElementById("skipBtn_w")?.remove();
   }
@@ -1266,20 +1269,20 @@ function goToStoryScene2() {
   });
 
   canvas.addEventListener("mousemove", function (e) {
-  const rect = canvas.getBoundingClientRect();
-  const mx = e.clientX - rect.left;
-  const my = e.clientY - rect.top;
+    const rect = canvas.getBoundingClientRect();
+    const mx = e.clientX - rect.left;
+    const my = e.clientY - rect.top;
 
-  const bw = 900, bh = 140;
-  const bx = (canvas.width - bw) / 2;
-  const by = canvas.height - bh - 30;
+    const bw = 900, bh = 140;
+    const bx = (canvas.width - bw) / 2;
+    const by = canvas.height - bh - 30;
 
-  const isInBubble = (mx >= bx && mx <= bx + bw && my >= by && my <= by + bh);
+    const isInBubble = (mx >= bx && mx <= bx + bw && my >= by && my <= by + bh);
 
-  canvas.style.cursor = isInBubble
-    ? 'pointer'
-    : 'url("cursor.png") 16 16, auto';
-});
+    canvas.style.cursor = isInBubble
+      ? 'pointer'
+      : 'url("cursor.png") 16 16, auto';
+  });
 
 
   addAds();
@@ -1488,7 +1491,7 @@ function goToMapScene() {
 
   currentDrawScene = drawScene;
 
-  if(rulePopup){
+  if (rulePopup) {
     showRulePopUp();
     rulePopup = false;
   }
@@ -2719,7 +2722,7 @@ $(document).ready(() => {
 });
 
 function handleNormalBlock(block) {
-  if (block.status === 0) return; 
+  if (block.status === 0) return;
   block.status = 0;
   applyScore(1, 5);
 }
@@ -2802,7 +2805,7 @@ function handleMetalBlock(block) {
 function handleTireBlock(block) {
   // 블럭 제거 먼저
   block.status = 0;
-  applyScore(1, 5); 
+  applyScore(1, 5);
   // 완전히 새로운 방향으로 튐 (이전 방향 무시)
   setTimeout(() => {
     let newAngle;
