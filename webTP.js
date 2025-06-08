@@ -827,7 +827,7 @@ function goToStoryScene() {
       top:20px; right:20px; width:50px; z-index:10;">
     </div>
   `);
-  playBGM("audio/cut2.mp3");
+  playBGM("audio/cute.mp3");
 
   addOptionButton();
   const canvas = document.getElementById("gameCanvas");
@@ -1369,6 +1369,7 @@ function goToMapScene() {
               style="position: absolute; top: 0; left: 0; z-index: 1; border: none;"></canvas>
     </div>
   `);
+  playBGM("audio/Itty_Bitty.mp3")
 
   addOptionButton();  // 옵션 버튼 추가
 
@@ -1559,6 +1560,7 @@ function startStage(stageNumber) {
       <canvas id="gameCanvas" width="1000" height="600"></canvas>
     </div>
   `);
+  playBGM("audio/rbgm.mp3")
   addOptionButton();
   canvas = document.getElementById("gameCanvas");
   ctx = canvas.getContext("2d");
@@ -2499,6 +2501,7 @@ function showEnding() {
       <canvas id="gameCanvas" width="1000" height="600" style="background:black;"></canvas>
     </div>
   `);
+  playBGM("audio/Up_In_My_Jam.mp3")
   addOptionButton();
   const canvas = document.getElementById("gameCanvas");
   const ctx = canvas.getContext("2d");
