@@ -1463,6 +1463,7 @@ function goToMapScene() {
   });
 
   $(document).on("keydown", function (e) {
+    if (document.getElementById("rulePopup")) return;
     if (e.key === "Enter") {
       GameState.selectedStage = selectedIndex + 1;
       startStage(GameState.selectedStage);
