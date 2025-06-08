@@ -1338,10 +1338,12 @@ function goToMapScene() {
   playBGM("audio/Itty_Bitty.mp3")
 
   addOptionButton();  // 옵션 버튼 추가
-
   const canvas = document.getElementById("gameCanvas");
   const ctx = canvas.getContext("2d");
-
+  ctx.fillStyle = "white";
+  ctx.font = "40px DungGeunMo, sans-serif";
+  ctx.textAlign = "center";
+  ctx.fillText("로딩 중...", canvas.width / 2, canvas.height / 2);
   // 테마에 맞는 배경 이미지 설정
   stageBgImg = new Image();
   stageBgImg.src = GameState.settings.theme === "night"
@@ -2266,8 +2268,8 @@ function showStageResultPopup(starCount) {
 function getStarThreshold(stage) {
   switch (stage) {
     case 1: return [100, 430, 460];   // 별 3개 기준 = 400 + 콤보 200
-    case 2: return [100, 650, 700];   // 별 3개 기준 = 500 + 콤보 200
-    case 3: return [100, 700, 750];   // 별 3개 기준 = 550 + 콤보 200
+    case 2: return [100, 500, 550];   // 별 3개 기준 = 500 + 콤보 200
+    case 3: return [100, 450, 500];   // 별 3개 기준 = 550 + 콤보 200
   }
 }
 function endGame(isScoreClear = false) {
