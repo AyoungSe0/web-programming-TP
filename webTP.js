@@ -959,7 +959,7 @@ function goToCharacterSelect() {
   addOptionButton();
   const canvas = document.getElementById("gameCanvas");
   const ctx = canvas.getContext("2d");
-
+  playBGM("audio/Pixelland.mp3");  
   // 이미지 로딩
   characters.forEach((char) => {
     const img = new Image();
@@ -1173,6 +1173,7 @@ function goToStoryScene2() {
       <img id="skipBtn" src="skipBtn.png" style="position:absolute; top:20px; right:20px; width:50px; z-index:10; cursor:pointer;">
     </div>
   `);
+  playBGM("audio/cute.mp3");
 
   addOptionButton();
 
@@ -2267,9 +2268,9 @@ function showStageResultPopup(starCount) {
 
 function getStarThreshold(stage) {
   switch (stage) {
-    case 1: return [100, 430, 460];   // 별 3개 기준 = 400 + 콤보 200
-    case 2: return [100, 500, 550];   // 별 3개 기준 = 500 + 콤보 200
-    case 3: return [100, 450, 500];   // 별 3개 기준 = 550 + 콤보 200
+    case 1: return [100, 430, 460];  
+    case 2: return [100, 500, 550]; 
+    case 3: return [100, 450, 500]; 
   }
 }
 function endGame(isScoreClear = false) {
