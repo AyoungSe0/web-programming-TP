@@ -1165,12 +1165,6 @@ function goToCharacterSelect() {
 
 function goToStoryScene2() {
   $('#game').html(`
-    <style>
-      canvas, #skipBtn {
-        cursor: url("cursor.png") 16 16, auto !important;
-      }
-    </style>
-
     <div style="text-align:center; position:relative;">
       <canvas id="gameCanvas" width="1000" height="600" style="background-color:black; border:none;"></canvas>
       <img id="skipBtn" src="skipBtn.png" style="position:absolute; top:20px; right:20px; width:50px; z-index:10;">
@@ -1271,6 +1265,23 @@ function goToStoryScene2() {
     }
   });
 
+  canvas.addEventListener("mousemove", function (e) {
+  const rect = canvas.getBoundingClientRect();
+  const mx = e.clientX - rect.left;
+  const my = e.clientY - rect.top;
+
+  const bw = 900, bh = 140;
+  const bx = (canvas.width - bw) / 2;
+  const by = canvas.height - bh - 30;
+
+  const isInBubble = (mx >= bx && mx <= bx + bw && my >= by && my <= by + bh);
+
+  canvas.style.cursor = isInBubble
+    ? 'pointer'  // 혹은 'url("cursor.png") 16 16, auto'
+    : 'url("cursor.png") 16 16, auto';
+});
+
+
   addAds();
 }
 
@@ -1297,6 +1308,7 @@ function updateItemUI() {
   }
 }
 
+let rulePopup = true;
 
 function goToMapScene() {
   $('#game').off("keydown");  // 문서 전체에 걸려 있는 keydown 제거
@@ -1478,9 +1490,56 @@ function goToMapScene() {
 
   currentDrawScene = drawScene;
 
+  if(rulePopup){
+    showRulePopUp();
+    rulePopup = false;
+  }
   addAds();
 }
 
+function showRulePopUp() {
+  const gameContainer = document.querySelector("#game > div"); // canvas를 포함한 wrapper div
+
+  const overlay = document.createElement("div");
+  overlay.id = "ruleOverlay";
+  overlay.style.position = "absolute";
+  overlay.style.top = "0";
+  overlay.style.left = "0";
+  overlay.style.width = "100%";
+  overlay.style.height = "100%";
+  overlay.style.backgroundColor = "rgba(255, 255, 255, 0.4)";  // 반투명 하양
+  overlay.style.zIndex = "1001";  // canvas 위, popup 아래
+  overlay.style.pointerEvents = "auto";
+
+  const popup = document.createElement("div");
+  popup.id = "rulePopup";
+  popup.style.position = "absolute";
+  popup.style.width = "600px";
+  popup.style.height = "400px";
+  popup.style.left = "50%";
+  popup.style.top = "50%";
+  popup.style.transform = "translate(-50%, -50%)";  // 중앙 정렬 핵심
+  popup.style.zIndex = "1002";
+  popup.style.pointerEvents = "auto";
+
+  popup.innerHTML = `
+    <img src="rule.png"
+         style="width:100%; height:100%; position:absolute; top:0; left:0;">
+
+    <img id="ruleCloseBtn"
+         src="ruleX.png"
+         style="position:absolute; top:22px; right:22px;
+                width:24px; height:24px; cursor:pointer; z-index:2;">
+  `;
+
+  gameContainer.appendChild(overlay);
+  gameContainer.appendChild(popup);
+
+  document.getElementById("ruleCloseBtn").addEventListener("click", () => {
+    popup.remove();
+    overlay.remove();
+  });
+}
 
 let canvas, ctx;
 let ball, paddle, bricks;
