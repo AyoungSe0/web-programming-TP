@@ -1808,14 +1808,14 @@ function draw() {
 
           paddle.x = (canvas.width - paddle.width) / 2;
 
-          // ✅ draw 직접 호출 대신 안전하게 루프 재개
+          //  draw 직접 호출 대신 안전하게 루프 재개
           animationId = requestAnimationFrame(draw);
         }
       }, 1000);
 
       return;
     } else {
-      // 🔥 점수로 클리어 가능한지 체크
+      //  점수로 클리어 가능한지 체크
       const total = score + comboScore;
       const [one, _, __] = getStarThreshold(GameState.selectedStage);
 
@@ -1859,7 +1859,7 @@ function draw() {
     paddle.x -= 5;
   }
 
-  // 👇 이동 후 화면 안에 있도록 보정
+  //  이동 후 화면 안에 있도록 보정
   if (paddle.x < 0) paddle.x = 0;
   if (paddle.x + paddle.width > canvas.width) {
     paddle.x = canvas.width - paddle.width;
@@ -1903,7 +1903,7 @@ function drawBricks() {
     if (b.status === 1 || (b.effectStage !== null && b.effectStage !== "gone")) {
       const w = 70, h = 20;
 
-      // 🔸 NORMAL 블럭: imgIndex에 따라 이미지 사용
+      //  NORMAL 블럭: imgIndex에 따라 이미지 사용
       if (b.type === BLOCK_TYPES.NORMAL && b.imgIndex !== undefined) {
         const img = loadedNormalImages[b.imgIndex];
         if (img) {
@@ -1918,7 +1918,7 @@ function drawBricks() {
         }
         return;
       }
-      // 🔸 METAL 블럭: hitCount에 따라 이미지 다르게
+      //  METAL 블럭: hitCount에 따라 이미지 다르게
       if (b.type === BLOCK_TYPES.METAL) {
         const img = loadedMetalImages[b.hitCount];
         if (img) {
@@ -1947,12 +1947,12 @@ function drawBricks() {
         return;
       }
 
-      // 🔸 기타 타입: blockImages에서 해당 이미지 출력
+      // 기타 타입: blockImages에서 해당 이미지 출력
       const img = loadedBlockImages[b.type];
       if (img) {
         ctx.drawImage(img, b.x, b.y, w, h);
       } else {
-        // ✅ 이미지가 없으면 fallback 색상으로 표시
+        //  이미지가 없으면 fallback 색상으로 표시
         ctx.beginPath();
         ctx.rect(b.x, b.y, w, h);
         ctx.fillStyle = "#00ffff"; // 눈에 띄는 색상으로 문제 확인
@@ -2124,7 +2124,7 @@ function showStageResultPopup(starCount) {
   const currentComboScore = GameState.comboScore;
   ///////////////////////////////////////
 
-  // ⭐ 별 이미지 추가
+  //  별 이미지 추가
   const starImg = document.createElement('img');
   starImg.src = `starImg/star${starCount}.png`;
   starImg.alt = `별 ${starCount}개`;
@@ -2932,12 +2932,12 @@ function applyCutterIfAvailable(block) {
   // 아이템 블럭 처리
   if (ITEM_TYPES.includes(block.type)) {
     if (block.hitCount === 0) {
-      // ✅ 위장 상태일 경우 → 그냥 부서짐 (노말 블럭처럼 처리)
+      //  위장 상태일 경우 → 그냥 부서짐 (노말 블럭처럼 처리)
       block.status = 0;
       return true;
     }
 
-    // ✅ 정체 드러난 이후일 경우 → 효과 발동
+    //  정체 드러난 이후일 경우 → 효과 발동
     switch (block.type) {
       case BLOCK_TYPES.ITEM_COOLER: handleItemCoolerBlock(block); break;
       case BLOCK_TYPES.ITEM_CUTTER: handleItemCutterBlock(block); break;
